@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import swp.internmanagement.internmanagement.models.UserAccount;
+import swp.internmanagement.internmanagement.payload.response.GetAllUserByParamResponse;
 import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
 import swp.internmanagement.internmanagement.repository.UserRepository;
 
@@ -19,11 +20,24 @@ public class UserAccountServiceImpl implements UserAccountService {
     private UserRepository userAccountRepository;
 
 
+    //This method is for admin
     @Override
-    public List<UserAccount> getAllUserAccountsByParam(String param) {
-        return userAccountRepository.findUserAccountByParam(param);
+    public GetAllUserByParamResponse getAllUserAccountsByParam(String param, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<UserAccount> userAccounts = userAccountRepository.findUserAccountByParam(param, pageable);
+        List<UserAccount> userAccountList = userAccounts.getContent();
+
+        GetAllUserByParamResponse getAllUserByParamResponse = new GetAllUserByParamResponse();
+        getAllUserByParamResponse.setUserList(userAccountList);
+        getAllUserByParamResponse.setPageNo(userAccounts.getNumber());
+        getAllUserByParamResponse.setPageSize(userAccounts.getSize());
+        getAllUserByParamResponse.setTotalItems(userAccounts.getTotalElements());
+        getAllUserByParamResponse.setTotalPages(userAccounts.getTotalPages());
+
+        return getAllUserByParamResponse;
     }
 
+    //This method is for coordinator
     @Override
     public GetUserInSameCompanyResponse getUserInSameCompany(int companyId, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
