@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import swp.internmanagement.internmanagement.models.User_account;
+import swp.internmanagement.internmanagement.models.UserAccount;
 
 @Getter
 @Setter
@@ -48,7 +48,7 @@ public class UserDetailsImpl implements UserDetails {
         return username;
     }
 
-    public static UserDetailsImpl build(User_account user) {
+    public static UserDetailsImpl build(UserAccount user) {
         GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
         return new UserDetailsImpl(
             user.getId(),

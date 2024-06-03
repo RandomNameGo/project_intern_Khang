@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import swp.internmanagement.internmanagement.entity.Request;
-import swp.internmanagement.internmanagement.models.User_account;
+import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.HelpRequest;
 import swp.internmanagement.internmanagement.repository.RequestRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
@@ -25,7 +25,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public Request saveRequest(HelpRequest helpRequest) {
         Request request = new Request();
-        User_account userAccount = new User_account();
+        UserAccount userAccount = new UserAccount();
         int userId = helpRequest.getSenderId();
         userAccount = userAccountRepository.findById(userId).get();
         request.setUser(userAccount);

@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import swp.internmanagement.internmanagement.models.User_account;
+import swp.internmanagement.internmanagement.models.UserAccount;
 
 @Getter
 @Setter
@@ -30,12 +30,12 @@ public class MentorFeedbackIntern {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mentor_id", referencedColumnName = "user_id",nullable = false)
-    private User_account mentor;
+    private UserAccount mentor;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "intern_id", referencedColumnName = "user_id",nullable = false)
-    private User_account intern;
+    private UserAccount intern;
 
     @NotNull
     @Nationalized

@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 import jakarta.validation.Valid;
 import swp.internmanagement.internmanagement.entity.Company;
-import swp.internmanagement.internmanagement.models.User_account;
+import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.LoginRequest;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
 import swp.internmanagement.internmanagement.payload.response.MessageResponse;
@@ -84,7 +84,7 @@ public class AuthController {
             for (SignupRequest signRequest : listSignUpRequest) {
                 int id=userRepository.findLastUserId()+1;
                 String userName=generateUserName(signRequest.getFullName(), signRequest.getRole(), id);
-                User_account user= new User_account();
+                UserAccount user= new UserAccount();
                 Company company= new Company();
                 company.setId(signRequest.getCompany_id());
                 user.setUserName(userName);

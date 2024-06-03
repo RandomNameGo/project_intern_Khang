@@ -36,7 +36,7 @@ import swp.internmanagement.internmanagement.entity.Request;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User_account {
+public class UserAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)

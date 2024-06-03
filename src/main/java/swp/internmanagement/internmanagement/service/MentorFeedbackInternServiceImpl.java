@@ -3,7 +3,7 @@ package swp.internmanagement.internmanagement.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import swp.internmanagement.internmanagement.entity.MentorFeedbackIntern;
-import swp.internmanagement.internmanagement.models.User_account;
+import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.MentorFeedbackInternRequest;
 import swp.internmanagement.internmanagement.repository.MentorFeedbackInternRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
@@ -21,8 +21,8 @@ public class MentorFeedbackInternServiceImpl implements MentorFeedbackInternServ
     public MentorFeedbackIntern sendFeedbackIntern(MentorFeedbackInternRequest mentorFeedbackInternRequest) {
         int mentorId = mentorFeedbackInternRequest.getMentorId();
         int internId = mentorFeedbackInternRequest.getInternId();
-        User_account mentor = userAccountRepository.findById(mentorId).get();
-        User_account intern = userAccountRepository.findById(internId).get();
+        UserAccount mentor = userAccountRepository.findById(mentorId).get();
+        UserAccount intern = userAccountRepository.findById(internId).get();
         MentorFeedbackIntern mentorFeedbackIntern = new MentorFeedbackIntern();
         mentorFeedbackIntern.setMentor(mentor);
         mentorFeedbackIntern.setIntern(intern);
