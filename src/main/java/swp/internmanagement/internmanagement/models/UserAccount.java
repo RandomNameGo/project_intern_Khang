@@ -2,7 +2,9 @@ package swp.internmanagement.internmanagement.models;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.Nationalized;
 
@@ -27,6 +29,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import swp.internmanagement.internmanagement.entity.Company;
+import swp.internmanagement.internmanagement.entity.Course;
 import swp.internmanagement.internmanagement.entity.MentorFeedbackIntern;
 import swp.internmanagement.internmanagement.entity.Request;
 
@@ -99,6 +102,8 @@ public class UserAccount {
     @JsonIgnore
     private List<Request> requests = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "mentor")
+    @JsonIgnore
+    private List<Course> courses = new ArrayList<>();
 
 }

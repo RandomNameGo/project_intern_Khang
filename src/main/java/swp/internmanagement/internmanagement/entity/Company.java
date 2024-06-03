@@ -1,5 +1,6 @@
 package swp.internmanagement.internmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +12,9 @@ import lombok.Setter;
 import swp.internmanagement.internmanagement.models.UserAccount;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.Nationalized;
 
@@ -46,10 +49,14 @@ public class Company {
     private String location;
 
     @OneToMany(mappedBy = "company")
+    @JsonIgnore
     private List<Job> jobs = new ArrayList<>();
 
     @OneToMany(mappedBy = "company")
-    @JsonManagedReference
+    @JsonIgnore
     private List<UserAccount> userAccounts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "company")
+    @JsonIgnore
+    private List<Course> courses = new ArrayList<>();
 }

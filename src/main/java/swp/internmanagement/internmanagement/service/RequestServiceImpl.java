@@ -4,11 +4,15 @@ package swp.internmanagement.internmanagement.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import swp.internmanagement.internmanagement.entity.Request;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.HelpRequest;
+import swp.internmanagement.internmanagement.payload.response.GetAllRequestResponse;
 import swp.internmanagement.internmanagement.repository.RequestRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
 
@@ -36,8 +40,18 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<Request> getRequests() {
-        return requestRepository.findAll();
+    public GetAllRequestResponse getRequests(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Request> requests = requestRepository.findAll(pageable);
+        List<Request> requestList = requests.getContent();
+
+        GetAllRequestResponse response = new GetAllRequestResponse();
+        response.setRequests(requestList);
+        response.setPageNo(requests.getNumber());
+        response.setPageSize(requests.getSize());
+        response.setTotalItems(requests.getTotalElements());
+        response.setTotalPages(requests.getTotalPages());
+        return response;
     }
 
 

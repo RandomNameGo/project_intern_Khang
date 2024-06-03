@@ -14,6 +14,7 @@ import swp.internmanagement.internmanagement.entity.Request;
 import swp.internmanagement.internmanagement.payload.request.HelpRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllFieldsResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllJobsResponse;
+import swp.internmanagement.internmanagement.payload.response.SearchJobsResponse;
 import swp.internmanagement.internmanagement.service.FieldService;
 import swp.internmanagement.internmanagement.service.JobService;
 import swp.internmanagement.internmanagement.service.RequestService;
@@ -46,9 +47,14 @@ public class HomeController {
         return ResponseEntity.ok(jobService.getAllJobs(pageNo, pageSize));
     }
 
-    @GetMapping("/jobs/search={jobName}")
-    public ResponseEntity<List<Job>> getJob(@PathVariable String jobName) {
-        return ResponseEntity.ok(jobService.getJobs(jobName));
+
+    @GetMapping("/jobs/{jobName}")
+    public ResponseEntity<SearchJobsResponse> getJob(
+            @PathVariable String jobName,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
+            ) {
+        return ResponseEntity.ok(jobService.getJobs(jobName, pageNo, pageSize));
     }
 
     @GetMapping("/fields")

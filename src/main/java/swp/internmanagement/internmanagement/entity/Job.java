@@ -32,7 +32,6 @@ public class Job {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id", nullable = false)
-    @JsonBackReference
     private Company company;
 
     @Size(max = 50)
