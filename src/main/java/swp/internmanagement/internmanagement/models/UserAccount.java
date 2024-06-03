@@ -89,11 +89,6 @@ public class UserAccount {
     @Column(name = "verification_code", length = 50)
     private String verificationCode;
 
-    @Size(max = 50)
-    @Nationalized
-    @Column(name="status")
-    private int status;
-
     @OneToMany(mappedBy = "intern")
     @JsonIgnore
     private List<MentorFeedbackIntern> mentorFeedbackInterns = new ArrayList<>();
