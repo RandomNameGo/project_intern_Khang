@@ -3,7 +3,7 @@ package swp.internmanagement.internmanagement.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import swp.internmanagement.internmanagement.models.User_account;
+import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.repository.UserRepository;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
 
     @Override
-    public List<User_account> getAllUserAccountsByParam(String param) {
+    public List<UserAccount> getAllUserAccountsByParam(String param) {
         return userAccountRepository.findUserAccountByParam(param);
     }
 }

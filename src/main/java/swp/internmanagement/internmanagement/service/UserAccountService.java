@@ -1,10 +1,10 @@
 package swp.internmanagement.internmanagement.service;
 
-import swp.internmanagement.internmanagement.models.User_account;
+import swp.internmanagement.internmanagement.models.UserAccount;
 
 import java.util.List;
 
 public interface UserAccountService {
 
-    List<User_account> getAllUserAccountsByParam(String param);
+    List<UserAccount> getAllUserAccountsByParam(String param);
 }

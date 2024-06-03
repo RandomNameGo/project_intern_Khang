@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import swp.internmanagement.internmanagement.models.User_account;
+import swp.internmanagement.internmanagement.models.UserAccount;
 
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "build")
@@ -39,7 +39,7 @@ public class Request {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
-    private User_account user;
+    private UserAccount user;
 
     @Size(max = 50)
     @NotNull

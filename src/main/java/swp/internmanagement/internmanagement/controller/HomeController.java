@@ -46,7 +46,7 @@ public class HomeController {
         return ResponseEntity.ok(jobService.getAllJobs(pageNo, pageSize));
     }
 
-    @GetMapping("/jobs/{jobName}")
+    @GetMapping("/jobs/search={jobName}")
     public ResponseEntity<List<Job>> getJob(@PathVariable String jobName) {
         return ResponseEntity.ok(jobService.getJobs(jobName));
     }

@@ -18,16 +18,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import jakarta.validation.Valid;
 import swp.internmanagement.internmanagement.entity.Company;
-import swp.internmanagement.internmanagement.models.User_account;
+import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.LoginRequest;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
 import swp.internmanagement.internmanagement.payload.response.MessageResponse;
 import swp.internmanagement.internmanagement.payload.response.UserInfoResponse;
 import swp.internmanagement.internmanagement.repository.UserRepository;
 import swp.internmanagement.internmanagement.security.jwt.JwtUtils;
+import swp.internmanagement.internmanagement.service.EmailService;
 import swp.internmanagement.internmanagement.service.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -42,6 +47,8 @@ public class AuthController {
     PasswordEncoder encoder;
     @Autowired
     JwtUtils jwtUtils;
+    @Autowired
+    private EmailService emailService;
 
 
     public String generateUserName(String fullName, String role, int user_id) {
@@ -70,7 +77,8 @@ public class AuthController {
             ResponseCookie jwtCookie=jwtUtils.generateJwtCookie(userDetails);
             String role= userDetails.getAuthorities().iterator().next().getAuthority();
             return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                    .body(new UserInfoResponse(userDetails.getUser_id(),userDetails.getUsername(),userDetails.getEmail(),role,userDetails.getCompany_id()));
+                    .body(new UserInfoResponse(userDetails.getUser_id(),userDetails.getUsername()
+                    ,userDetails.getEmail(),role,userDetails.getCompany_id(),userDetails.getFullName()));
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -79,12 +87,14 @@ public class AuthController {
     }
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody List<SignupRequest> listSignUpRequest) {
+        Map<String, Object> templateModel = new HashMap<>();
+        templateModel.put("verificationCode", "Click it to to change your password");
         try {
             LocalDate dateOfBirth = LocalDate.of(1990, 5, 15);
             for (SignupRequest signRequest : listSignUpRequest) {
                 int id=userRepository.findLastUserId()+1;
                 String userName=generateUserName(signRequest.getFullName(), signRequest.getRole(), id);
-                User_account user= new User_account();
+                UserAccount user= new UserAccount();
                 Company company= new Company();
                 company.setId(signRequest.getCompany_id());
                 user.setUserName(userName);
@@ -92,8 +102,12 @@ public class AuthController {
                 user.setFullName(signRequest.getFullName());
                 user.setRole(signRequest.getRole());
                 user.setEmail(signRequest.getEmail());
+                UUID verifyCode =UUID.randomUUID();
+                templateModel.put("verificationUrl", "https://example.com/verify?code=" + encoder.encode(verifyCode.toString())+"&username="+jwtUtils.generateTokenFromUsername(userName));
+                user.setVerificationCode(verifyCode.toString());
                 user.setDateOfBirth(dateOfBirth);
                 user.setCompany(company);
+                emailService.sendEmail(signRequest.getEmail(), "Verify your email", templateModel);
                 userRepository.save(user);
             }
 

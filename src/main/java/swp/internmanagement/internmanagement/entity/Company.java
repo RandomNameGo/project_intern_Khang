@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import swp.internmanagement.internmanagement.models.User_account;
+import swp.internmanagement.internmanagement.models.UserAccount;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +50,6 @@ public class Company {
 
     @OneToMany(mappedBy = "company")
     @JsonManagedReference
-    private List<User_account> userAccounts = new ArrayList<>();
+    private List<UserAccount> userAccounts = new ArrayList<>();
 
 }

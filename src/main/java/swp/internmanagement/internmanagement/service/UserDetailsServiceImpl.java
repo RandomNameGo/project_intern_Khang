@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import swp.internmanagement.internmanagement.models.User_account;
+import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.repository.UserRepository;
 
 @Service
@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         try {
             logger.info("Attempting to load user by username: {}", userName);
-            User_account user = userRepository.findByUserName(userName)
+            UserAccount user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("User not Found with username: " + userName));
             logger.info("User found: {}", user);
             return UserDetailsImpl.build(user);

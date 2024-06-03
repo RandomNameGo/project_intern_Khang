@@ -36,7 +36,7 @@ import swp.internmanagement.internmanagement.entity.Request;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User_account {
+public class UserAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
@@ -85,6 +85,11 @@ public class User_account {
     @Nationalized
     @Column(name = "verification_code", length = 50)
     private String verificationCode;
+
+    @Size(max = 50)
+    @Nationalized
+    @Column(name = "status", length = 50)
+    private int status;
 
     @OneToMany(mappedBy = "intern")
     @JsonIgnore
