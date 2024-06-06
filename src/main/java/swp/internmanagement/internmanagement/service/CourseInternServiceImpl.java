@@ -11,6 +11,8 @@ import swp.internmanagement.internmanagement.repository.CourseInternRepository;
 import swp.internmanagement.internmanagement.repository.CourseRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
 
+import java.util.List;
+
 @Service
 public class CourseInternServiceImpl implements CourseInternService {
 
@@ -43,5 +45,10 @@ public class CourseInternServiceImpl implements CourseInternService {
             courseInternRepository.save(courseIntern);
         }
         return "Added successfully";
+    }
+
+    @Override
+    public List<CourseIntern> geCoursesByInternId(int internId) {
+        return courseInternRepository.findByInternId(internId);
     }
 }
