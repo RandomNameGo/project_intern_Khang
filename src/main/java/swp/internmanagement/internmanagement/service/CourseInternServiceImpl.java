@@ -25,10 +25,12 @@ public class CourseInternServiceImpl implements CourseInternService {
 
     //This method is used by coordinator to add interns to course
     @Override
-    public String addInternToCourse(AddInternToCourseRequest request) {
-        int courseId = request.getCourseId();
+    public String addInternToCourse(AddInternToCourseRequest request, int courseId) {
         int[] internId = request.getInternId();
         CourseIntern courseIntern = new CourseIntern();
+        if(!courseRepository.existsById(courseId)){
+            return "Course not found";
+        }
         Course course = courseRepository.findById(courseId).get();
         CourseInternId courseInternId = new CourseInternId();
         courseIntern.setCourse(course);

@@ -4,6 +4,6 @@ import swp.internmanagement.internmanagement.payload.request.AddInternToCourseRe
 
 public interface CourseInternService {
 
-    String addInternToCourse(AddInternToCourseRequest request);
+    String addInternToCourse(AddInternToCourseRequest request, int courseId);
 
 }
