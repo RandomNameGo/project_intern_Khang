@@ -1,5 +1,6 @@
 package swp.internmanagement.internmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -9,6 +10,8 @@ import org.hibernate.annotations.Nationalized;
 import swp.internmanagement.internmanagement.models.UserAccount;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -48,5 +51,9 @@ public class Course {
     @Nationalized
     @Column(name = "status", length = 10)
     private String status;
+
+    @OneToMany(mappedBy = "course")
+    @JsonIgnore
+    private Set<Task> tasks = new LinkedHashSet<>();
 
 }
