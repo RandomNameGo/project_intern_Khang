@@ -42,7 +42,7 @@ public class CoordinatorController {
             @RequestParam String role,
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
-        return ResponseEntity.ok(userAccountService.getAllMentor(companyId, role, pageNo, pageSize));
+        return ResponseEntity.ok(userAccountService.getAllUserByRole(companyId, role, pageNo, pageSize));
     }
 
     //create a course

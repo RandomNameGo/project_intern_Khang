@@ -56,7 +56,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public GetAllUserByRoleResponse getAllMentor(int companyId, String role, int pageNo, int pageSize) {
+    public GetAllUserByRoleResponse getAllUserByRole(int companyId, String role, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         Page<UserAccount> userAccounts = userAccountRepository.findAllMemberInCompany(companyId, role, pageable);
         List<UserAccount> userAccountList = userAccounts.getContent();
