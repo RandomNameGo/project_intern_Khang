@@ -103,11 +103,12 @@ public class AuthController {
                 user.setRole(signRequest.getRole());
                 user.setEmail(signRequest.getEmail());
                 UUID verifyCode =UUID.randomUUID();
-                templateModel.put("verificationUrl", "https://example.com/verify?code=" + encoder.encode(verifyCode.toString())+"&username="+jwtUtils.generateTokenFromUsername(userName));
+                // templateModel.put("verificationUrl", "https://example.com/verify?code=" + encoder.encode(verifyCode.toString())+"&username="+jwtUtils.generateTokenFromUsername(userName));
                 user.setVerificationCode(verifyCode.toString());
                 user.setDateOfBirth(dateOfBirth);
                 user.setCompany(company);
-                emailService.sendEmail(signRequest.getEmail(), "Verify your email", templateModel);
+                user.setStatus(0);
+                // emailService.sendEmail(signRequest.getEmail(), "Verify your email", templateModel);
                 userRepository.save(user);
             }
 

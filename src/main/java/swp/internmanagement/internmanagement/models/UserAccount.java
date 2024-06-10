@@ -34,7 +34,7 @@ import swp.internmanagement.internmanagement.entity.MentorFeedbackIntern;
 import swp.internmanagement.internmanagement.entity.Request;
 
 @Entity
-@Table(name = "User_account")
+@Table(name = "user_account")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -89,10 +89,9 @@ public class UserAccount {
     @Column(name = "verification_code", length = 50)
     private String verificationCode;
 
-    @Size(max = 50)
-    @Nationalized
-    @Column(name = "status", length = 50)
-    private int status;
+    @NotNull
+    @Column(name = "status", nullable = false)
+    private Integer status;
 
     @OneToMany(mappedBy = "intern")
     @JsonIgnore
