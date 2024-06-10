@@ -68,7 +68,6 @@ public class HomeController {
     public List<Field> getMethodName() {
         return fieldService.getField();
     }
-    
 
     @PostMapping("/sendRequest")
     public ResponseEntity<Request> sendRequest(@RequestBody HelpRequest helpRequest) {

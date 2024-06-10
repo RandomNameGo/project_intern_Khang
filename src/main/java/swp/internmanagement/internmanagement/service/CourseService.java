@@ -7,4 +7,5 @@ public interface CourseService {
 
     Course addCourse(CreateCourseRequest createCourseRequest, int companyId);
 
+    Course getCourse(int courseId);
 }

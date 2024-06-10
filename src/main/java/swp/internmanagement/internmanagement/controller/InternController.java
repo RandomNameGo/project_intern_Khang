@@ -14,9 +14,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/internbridge/intern")
 public class InternController {
+
     @Autowired
     private CourseInternService courseInternService;
 
+    //Show all course intern attended
     @GetMapping("/allCourse/{internId}")
     public ResponseEntity<List<CourseIntern>> getCourse(@PathVariable int internId) {
         return ResponseEntity.ok(courseInternService.geCoursesByInternId(internId));

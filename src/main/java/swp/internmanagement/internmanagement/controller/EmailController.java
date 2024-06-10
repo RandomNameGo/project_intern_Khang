@@ -23,7 +23,6 @@ public class EmailController {
         Map<String, Object> templateModel = new HashMap<>();
         templateModel.put("verificationCode", "a");
         templateModel.put("verificationUrl", "https://example.com/verify?code=" + "a");
-
         try {
             emailService.sendEmail("anhtdse184413@fpt.edu.vn", "Verify your email", templateModel);
             return "Email sent successfully";

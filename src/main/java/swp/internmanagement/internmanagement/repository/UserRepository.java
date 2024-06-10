@@ -24,5 +24,9 @@ public interface UserRepository extends JpaRepository<UserAccount, Integer> {
 
     //Coordinator search intern and mentor in same company
     @Query("select u from UserAccount u where u.role = 'ROLE_MENTOR' or u.role = 'ROLE_INTERN' and u.company.id = ?1")
-    Page<UserAccount> findAllUsersInCompany(int companyId , Pageable pageable);
+    Page<UserAccount> findAllUsersInCompany(int companyId, Pageable pageable);
+
+    @Query("select u from UserAccount u where u.company.id = ?1 and u.role = ?2")
+    Page<UserAccount> findAllMemberInCompany(int companyId, String role, Pageable pageable);
+
 }

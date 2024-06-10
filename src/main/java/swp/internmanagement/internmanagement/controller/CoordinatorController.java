@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import swp.internmanagement.internmanagement.entity.Course;
 import swp.internmanagement.internmanagement.payload.request.AddInternToCourseRequest;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
+import swp.internmanagement.internmanagement.payload.response.GetAllUserByRoleResponse;
 import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
 import swp.internmanagement.internmanagement.service.CourseInternService;
 import swp.internmanagement.internmanagement.service.CourseService;
@@ -33,6 +34,17 @@ public class CoordinatorController {
         return ResponseEntity.ok(userAccountService.getUserInSameCompany(companyId, pageNo, pageSize));
     }
 
+    //filter bt role
+    //enter parameter role to filter
+    @GetMapping("/search/filter/{companyId}")
+    public ResponseEntity<GetAllUserByRoleResponse> getAllMentors(
+            @PathVariable int companyId,
+            @RequestParam String role,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
+        return ResponseEntity.ok(userAccountService.getAllMentor(companyId, role, pageNo, pageSize));
+    }
+
     //create a course
     @PostMapping("createCourse/{companyId}")
     public ResponseEntity<Course> createCourse(@RequestBody CreateCourseRequest createCourseRequest, @PathVariable int companyId) {
@@ -43,5 +55,11 @@ public class CoordinatorController {
     @PostMapping("addIntern/{courseId}")
     public ResponseEntity<String> addIntern(@RequestBody AddInternToCourseRequest addInternToCourseRequest, @PathVariable int courseId) {
         return  new ResponseEntity<>(courseInternService.addInternToCourse(addInternToCourseRequest, courseId), HttpStatus.CREATED);
+    }
+
+    //show course detail
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<Course> getUserInSameCompany(@PathVariable int courseId) {
+        return ResponseEntity.ok(courseService.getCourse(courseId));
     }
 }
