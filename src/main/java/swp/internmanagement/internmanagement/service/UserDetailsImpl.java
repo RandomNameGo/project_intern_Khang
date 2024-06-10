@@ -30,6 +30,7 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
     private Integer company_id;
+    private String fullName;
     private GrantedAuthority authority;
     
 
@@ -56,6 +57,7 @@ public class UserDetailsImpl implements UserDetails {
             user.getEmail(),
             user.getPassword(),
             user.getCompany().getId(),
+            user.getFullName(),
             authority
         );
     }

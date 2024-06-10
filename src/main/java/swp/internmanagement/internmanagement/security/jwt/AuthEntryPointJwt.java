@@ -18,7 +18,27 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint{
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
-                logger.error("Unauthorized: {}", authException.getMessage());
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Error: Unauthorized");
+                String errorMessage = "Unauthorized";
+                int errorCode = HttpServletResponse.SC_UNAUTHORIZED;
+        
+                // Customize the response based on the exception type or message
+                if (authException.getMessage().contains("expired")) {
+                    errorMessage = "Token has expired";
+                    errorCode = HttpServletResponse.SC_UNAUTHORIZED;
+                } else if (authException.getMessage().contains("invalid")) {
+                    errorMessage = "Invalid token";
+                    errorCode = HttpServletResponse.SC_BAD_REQUEST;
+                } else if (authException.getMessage().contains("missing")) {
+                    errorMessage = "Token is missing";
+                    errorCode = HttpServletResponse.SC_BAD_REQUEST;
+                } else {
+                    logger.error("Unauthorized: {}", authException.getMessage());
+                }
+        
+                response.sendError(errorCode, "Error: " + errorMessage);
     }
+    // logger.error("Unauthorized: {}", authException.getMessage());
+    // response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Error: Unauthorized");
+
+
 }

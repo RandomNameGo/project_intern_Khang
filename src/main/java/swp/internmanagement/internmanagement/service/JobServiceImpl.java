@@ -11,6 +11,7 @@ import swp.internmanagement.internmanagement.payload.response.SearchJobsResponse
 import swp.internmanagement.internmanagement.repository.JobRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class JobServiceImpl implements JobService{
@@ -48,6 +49,12 @@ public class JobServiceImpl implements JobService{
         searchJobsResponse.setTotalPages(jobs.getTotalPages());
 
         return searchJobsResponse;
+    }
+
+    @Override
+    public Job getJobId(Integer id) {
+        Optional<Job> job = jobRepository.findById(id);
+        return job.orElse(null);
     }
 
 }

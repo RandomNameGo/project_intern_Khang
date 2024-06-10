@@ -21,7 +21,7 @@ import lombok.Setter;
 import swp.internmanagement.internmanagement.entity.*;
 
 @Entity
-@Table(name = "User_account")
+@Table(name = "user_account")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -75,6 +75,10 @@ public class UserAccount {
     @Nationalized
     @Column(name = "verification_code", length = 50)
     private String verificationCode;
+
+    @NotNull
+    @Column(name = "status", nullable = false)
+    private Integer status;
 
     @OneToMany(mappedBy = "intern")
     @JsonIgnore

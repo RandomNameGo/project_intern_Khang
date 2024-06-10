@@ -59,5 +59,4 @@ public class Company {
     @OneToMany(mappedBy = "company")
     @JsonIgnore
     private List<Course> courses = new ArrayList<>();
-
 }
