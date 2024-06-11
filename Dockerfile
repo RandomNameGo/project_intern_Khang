@@ -3,6 +3,6 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 FROM openjdk:17-ea-28-jdk-slim
-COPY --from=build target/project_intership_management-main.jar project_intership_management-main.jar
+COPY --from=build target/internmanagement-0.0.1-SNAPSHOT.jar project_intership_management-main.jar
 EXPOSE 8080
 ENTRYPOINT [ "java", "jar", "project_intership_management-main.jar" ]
