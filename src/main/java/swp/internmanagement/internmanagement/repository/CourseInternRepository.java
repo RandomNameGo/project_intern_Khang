@@ -9,6 +9,5 @@ import java.util.List;
 
 public interface CourseInternRepository extends JpaRepository<CourseIntern, CourseInternId> {
 
-
     List<CourseIntern> findByInternId(int internId);
 }

@@ -16,9 +16,10 @@ public class MentorController {
     @Autowired
     private TaskService taskService;
 
-
+    //create task
     @PostMapping("/addactivities/{courseId}")
     public ResponseEntity<Task> addActivities(@RequestBody CreateTaskRequest createTaskRequest, @PathVariable int courseId) {
         return new ResponseEntity<>(taskService.createTask(createTaskRequest, courseId), HttpStatus.CREATED);
     }
+
 }

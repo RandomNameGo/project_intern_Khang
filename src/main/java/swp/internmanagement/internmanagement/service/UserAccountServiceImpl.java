@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import swp.internmanagement.internmanagement.models.UserAccount;
+import swp.internmanagement.internmanagement.payload.response.GetAllUserByRoleResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserByParamResponse;
 import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
 import swp.internmanagement.internmanagement.repository.UserRepository;
@@ -53,4 +54,22 @@ public class UserAccountServiceImpl implements UserAccountService {
 
         return getUserInSameCompanyResponse;
     }
+
+    @Override
+    public GetAllUserByRoleResponse getAllUserByRole(int companyId, String role, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<UserAccount> userAccounts = userAccountRepository.findAllMemberInCompany(companyId, role, pageable);
+        List<UserAccount> userAccountList = userAccounts.getContent();
+
+        GetAllUserByRoleResponse getAllMentorResponse = new GetAllUserByRoleResponse();
+        getAllMentorResponse.setUserAccountList(userAccountList);
+        getAllMentorResponse.setPageNo(userAccounts.getNumber());
+        getAllMentorResponse.setPageSize(userAccounts.getSize());
+        getAllMentorResponse.setTotalItems(userAccounts.getTotalElements());
+        getAllMentorResponse.setTotalPages(userAccounts.getTotalPages());
+
+        return getAllMentorResponse;
+    }
+
+
 }

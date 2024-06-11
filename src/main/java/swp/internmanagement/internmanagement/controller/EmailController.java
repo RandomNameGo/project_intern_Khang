@@ -2,7 +2,6 @@ package swp.internmanagement.internmanagement.controller;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,16 +20,12 @@ public class EmailController {
     
     @Autowired
     private EmailService emailService;
-    @Autowired
-    PasswordEncoder encoder;
 
     @GetMapping("/email")
     public String sendVerificationEmail() {
         Map<String, Object> templateModel = new HashMap<>();
-        UUID verifyCode =UUID.randomUUID();
-        
-        templateModel.put("verificationCode", verifyCode.toString());
-        templateModel.put("verificationUrl", "https://example.com/verify?code=" + encoder.encode(verifyCode.toString()));
+        templateModel.put("verificationCode", "a");
+        templateModel.put("verificationUrl", "https://example.com/verify?code=" + "a");
 
         try {
             emailService.sendEmail("anhtdse184413@fpt.edu.vn", "Verify your email", templateModel);

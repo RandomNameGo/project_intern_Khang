@@ -16,9 +16,11 @@ import java.util.List;
 @RequestMapping("/internbridge/intern")
 @CrossOrigin(origins = "http://localhost:3000")
 public class InternController {
+
     @Autowired
     private CourseInternService courseInternService;
 
+    //Show all course intern attended
     @GetMapping("/allCourse/{internId}")
     public ResponseEntity<List<CourseIntern>> getCourse(@PathVariable int internId) {
         return ResponseEntity.ok(courseInternService.geCoursesByInternId(internId));
