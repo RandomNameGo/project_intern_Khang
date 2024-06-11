@@ -1,12 +1,8 @@
-FROM ubuntu:latest
-LABEL authors="Admin"
-
-
-
-FROM maven:3.8.3-openjdk-17 as build
+FROM maven:3.8.5-openjdk-17 AS build
 COPY . .
 RUN mvn clean package -DskipTests
 
-FROM openjdk:17.0.2-jdk-slim
-COPY --from=build /target/project_intern-0.0.1-SNAPSHOT.jar demo.jar
-ENTRYPOINT ["java","-jar","demo.jar"]
+FROM openjdk:17-ea-28-jdk-slim
+COPY --from=build project_intership_management-main-0.0.1-SNAPSHOT.jar project_intership_management-main.jar
+EXPOSE 8080
+ENTRYPOINT [ "java", "-jar", "project_intership_management-main.jar" ]

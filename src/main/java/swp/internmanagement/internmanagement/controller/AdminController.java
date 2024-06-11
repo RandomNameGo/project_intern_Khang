@@ -10,6 +10,7 @@ import swp.internmanagement.internmanagement.service.UserAccountService;
 
 @RestController
 @RequestMapping("/internbridge/admin")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AdminController {
 
     @Autowired

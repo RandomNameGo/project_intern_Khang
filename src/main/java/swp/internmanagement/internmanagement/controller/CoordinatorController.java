@@ -15,6 +15,7 @@ import swp.internmanagement.internmanagement.service.UserAccountService;
 
 @RestController
 @RequestMapping("/internbridge/coordinator")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CoordinatorController {
     @Autowired
     private UserAccountService userAccountService;
