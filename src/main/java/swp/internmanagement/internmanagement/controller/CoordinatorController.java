@@ -14,6 +14,7 @@ import swp.internmanagement.internmanagement.service.UserAccountService;
 
 @RestController
 @RequestMapping("/internbridge/coordinator")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CoordinatorController {
     @Autowired
     private UserAccountService userAccountService;
@@ -44,4 +45,5 @@ public class CoordinatorController {
     public ResponseEntity<String> addIntern(@RequestBody AddInternToCourseRequest addInternToCourseRequest, @PathVariable int courseId) {
         return  new ResponseEntity<>(courseInternService.addInternToCourse(addInternToCourseRequest, courseId), HttpStatus.CREATED);
     }
+
 }
