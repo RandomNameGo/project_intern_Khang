@@ -18,10 +18,10 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     @Autowired
-    private TaskRepository taskRepository;
+    private CourseRepository courseRepository;
 
     @Autowired
-    private CourseRepository courseRepository;
+    private TaskRepository taskRepository;
 
     @Override
     public Task createTask(CreateTaskRequest createTaskRequest, int courseId) {
@@ -40,9 +40,14 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public GetAllTaskInCourseResponse getTasks(int courseId, int pageNo, int pageSize) {
+        if(!courseRepository.existsById(courseId)){
+            return null;
+        }
+
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         Page<Task> tasks = taskRepository.findAllInCourse(courseId, pageable);
         List<Task> taskList = tasks.getContent();
+
 
         GetAllTaskInCourseResponse getAllTaskInCourseResponse = new GetAllTaskInCourseResponse();
         getAllTaskInCourseResponse.setTasks(taskList);
