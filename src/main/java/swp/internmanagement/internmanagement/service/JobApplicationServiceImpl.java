@@ -14,6 +14,7 @@ import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.entity.Job;
 import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
+import swp.internmanagement.internmanagement.payload.response.AcceptedJobApplicationResponse;
 import swp.internmanagement.internmanagement.payload.response.JobApplicationResponse;
 import swp.internmanagement.internmanagement.repository.JobApplicationRepository;
 import swp.internmanagement.internmanagement.repository.JobRepository;
@@ -99,5 +100,21 @@ public class JobApplicationServiceImpl implements JobApplicationService{
             message="Error";
         }
         return message;
+    }
+
+    @Override
+    public AcceptedJobApplicationResponse getAcceptedJobApplication(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<JobApplication> jobApplications = jobApplicationRepository.findAcceptedJobApplications(pageable);
+        List<JobApplication> jobApplicationList = jobApplications.getContent();
+
+        AcceptedJobApplicationResponse response = new AcceptedJobApplicationResponse();
+        response.setJobApplications(jobApplicationList);
+        response.setPageSize(jobApplications.getSize());
+        response.setPageNo(jobApplications.getNumber());
+        response.setTotalItems(jobApplications.getTotalElements());
+        response.setTotalPages(jobApplications.getTotalPages());
+
+        return response;
     }
 }

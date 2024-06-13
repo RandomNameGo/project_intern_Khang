@@ -72,4 +72,13 @@ public class UserAccountServiceImpl implements UserAccountService {
         return getAllMentorResponse;
     }
 
+    @Override
+    public String deleteUserAccount(int userId) {
+        if(!userAccountRepository.existsById(userId)) {
+            return "User not found";
+        }
+        userAccountRepository.deleteById(userId);
+        return "Deleted successfully";
+    }
+
 }

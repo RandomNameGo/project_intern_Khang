@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
@@ -17,11 +15,6 @@ import swp.internmanagement.internmanagement.payload.request.JobApplicationReque
 import swp.internmanagement.internmanagement.payload.response.JobApplicationResponse;
 import swp.internmanagement.internmanagement.service.JobApplicationService;
 import swp.internmanagement.internmanagement.service.RequestService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -77,7 +70,7 @@ public class ManagerController {
         
         return ResponseEntity.ok(jobApplicationService.getAllJobApplication(pageNo, pageSize, companyId));
     }
-    @GetMapping("/jobApplication/id={id}&status={status}")
+    @PutMapping("/jobApplication/id={id}&status={status}")
     public String update(@PathVariable Integer id, @PathVariable Integer status){
         return jobApplicationService.updateJobApplication(id,status);
     }

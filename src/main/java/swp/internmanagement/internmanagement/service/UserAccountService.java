@@ -16,4 +16,5 @@ public interface UserAccountService {
 
     GetAllUserByRoleResponse getAllUserByRole(int roleId, String role, int pageNo, int pageSize);
 
+    String deleteUserAccount(int userId);
 }

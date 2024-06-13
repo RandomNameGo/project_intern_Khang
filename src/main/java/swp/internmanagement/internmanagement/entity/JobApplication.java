@@ -40,11 +40,11 @@ public class JobApplication {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "full_Name")
+    @Column(name = "full_name")
     private String fullName;
     
     @Lob
-    @Column(name = "CV")
+    @Column(name = "cv")
     private byte[] CV;
     
     @Column(name = "status")
