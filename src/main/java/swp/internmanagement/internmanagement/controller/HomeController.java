@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import swp.internmanagement.internmanagement.entity.Field;
 import swp.internmanagement.internmanagement.entity.Job;
@@ -21,10 +23,12 @@ import swp.internmanagement.internmanagement.entity.Request;
 // import swp.internmanagement.internmanagement.service.JobService;
 // import swp.internmanagement.internmanagement.service.RequestService;
 import swp.internmanagement.internmanagement.payload.request.HelpRequest;
+import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllFieldsResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllJobsResponse;
 import swp.internmanagement.internmanagement.payload.response.SearchJobsResponse;
 import swp.internmanagement.internmanagement.service.FieldService;
+import swp.internmanagement.internmanagement.service.JobApplicationService;
 import swp.internmanagement.internmanagement.service.JobService;
 import swp.internmanagement.internmanagement.service.RequestService;
 import swp.internmanagement.internmanagement.service.UserAccountService;
@@ -90,5 +94,28 @@ public class HomeController {
     @PostMapping("/sendRequest")
     public ResponseEntity<Request> sendRequest(@RequestBody HelpRequest helpRequest) {
         return new ResponseEntity<>(requestService.saveRequest(helpRequest), HttpStatus.CREATED);
+    }
+    @Autowired
+    private JobApplicationService jobApplicationService;
+
+
+    @PostMapping("/applyjob")
+    public ResponseEntity<?>  ApplyJob(
+        @RequestParam("jobId") Integer jobId,
+        @RequestParam("email") String email,
+        @RequestParam("fullName") String fullName,
+        @RequestParam("cv") MultipartFile cv
+    ) {
+        JobApplicationRequest jobApplicationRequest = new JobApplicationRequest();
+        jobApplicationRequest.setJobId(jobId);
+        jobApplicationRequest.setEmail(email);
+        jobApplicationRequest.setFullName(fullName);
+        jobApplicationRequest.setCV(cv);
+        boolean result = jobApplicationService.addJobApplication(jobApplicationRequest);
+        if (result) {
+            return ResponseEntity.ok("Job application submitted successfully.");
+        } else {
+            return ResponseEntity.status(500).body("Failed to submit job application.");
+        }
     }
 }

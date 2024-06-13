@@ -13,4 +13,6 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
     Page<Job> findJobs(String name, Pageable pageable);
     @Query("select j from Job j where j.id = :id")
     Page<Job> findById(Integer id, Pageable pageable);
+    Page<Job> findByCompanyId(Integer companyId, Pageable pageable);
+
 }

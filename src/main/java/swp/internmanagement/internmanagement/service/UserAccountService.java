@@ -15,4 +15,5 @@ public interface UserAccountService {
     GetUserInSameCompanyResponse getUserInSameCompany(int companyId, int pageNo, int pageSize);
 
     GetAllUserByRoleResponse getAllUserByRole(int roleId, String role, int pageNo, int pageSize);
+
 }

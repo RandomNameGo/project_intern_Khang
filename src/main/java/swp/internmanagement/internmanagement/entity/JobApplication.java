@@ -1,5 +1,7 @@
 package swp.internmanagement.internmanagement.entity;
 
+import java.util.Base64;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
@@ -54,5 +56,8 @@ public class JobApplication {
         this.fullName = fullName;
         CV = cV;
         this.status = status;
+    }
+    public String getCVAsBase64() {
+        return Base64.getEncoder().encodeToString(this.CV);
     }
 }

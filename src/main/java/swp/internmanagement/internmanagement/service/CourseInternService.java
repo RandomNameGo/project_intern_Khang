@@ -10,6 +10,4 @@ public interface CourseInternService {
     String addInternToCourse(AddInternToCourseRequest request, int courseId);
 
     List<CourseIntern> geCoursesByInternId(int internId);
-
-
 }

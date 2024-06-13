@@ -13,6 +13,7 @@ import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompa
 import swp.internmanagement.internmanagement.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
@@ -70,6 +71,5 @@ public class UserAccountServiceImpl implements UserAccountService {
 
         return getAllMentorResponse;
     }
-
 
 }
