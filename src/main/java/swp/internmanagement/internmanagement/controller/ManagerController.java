@@ -20,6 +20,7 @@ import swp.internmanagement.internmanagement.service.RequestService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -77,8 +78,8 @@ public class ManagerController {
         
         return ResponseEntity.ok(jobApplicationService.getAllJobApplication(pageNo, pageSize, companyId));
     }
-    @GetMapping("/jobApplication/id={id}&status={status}")
-    public String update(@PathVariable Integer id, @PathVariable Integer status){
+    @PutMapping("/jobApplication/id={id}&status={status}")
+    public String update(@PathVariable Integer id, @PathVariable int status){
         return jobApplicationService.updateJobApplication(id,status);
     }
 }

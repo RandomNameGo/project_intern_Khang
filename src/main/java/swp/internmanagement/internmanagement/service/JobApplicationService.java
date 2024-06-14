@@ -13,5 +13,5 @@ public interface JobApplicationService {
 
     JobApplicationResponse getAllJobApplication(int pageNo, int pageSize, int id);
 
-    String updateJobApplication(Integer id, Integer status);
+    String updateJobApplication(Integer id, int status);
 }

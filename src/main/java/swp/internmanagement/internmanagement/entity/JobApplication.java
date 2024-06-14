@@ -48,7 +48,7 @@ public class JobApplication {
     private byte[] CV;
     
     @Column(name = "status")
-    private int status;
+    private Integer status;
 
     public JobApplication(@NotNull Job job, String email, String fullName, byte[] cV, int status) {
         this.job = job;
