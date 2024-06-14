@@ -20,7 +20,7 @@ import swp.internmanagement.internmanagement.repository.JobApplicationRepository
 import swp.internmanagement.internmanagement.repository.JobRepository;
 
 @Service
-public class JobApplicationServiceImpl implements JobApplicationService{
+public class JobApplicationServiceImpl implements JobApplicationService {
     @Autowired
     private JobApplicationRepository jobApplicationRepository;
     @Autowired
@@ -29,14 +29,14 @@ public class JobApplicationServiceImpl implements JobApplicationService{
     @Override
     public boolean addJobApplication(JobApplicationRequest jobApplicationRequest) {
         try {
-            JobApplication jobApplication= new JobApplication();
-            Job job =new Job();
+            JobApplication jobApplication = new JobApplication();
+            Job job = new Job();
             job.setId(jobApplicationRequest.getJobId());
             jobApplication.setJob(job);
             jobApplication.setEmail(jobApplicationRequest.getEmail());
             jobApplication.setFullName(jobApplicationRequest.getFullName());
             jobApplication.setCV(jobApplicationRequest.getCV().getBytes());
-            jobApplication.setStatus(0); 
+            jobApplication.setStatus(null);
             jobApplicationRepository.save(jobApplication);
             return true;
         } catch (Exception e) {
@@ -44,27 +44,30 @@ public class JobApplicationServiceImpl implements JobApplicationService{
             return false;
         }
     }
+
     @Override
     public Optional<JobApplication> getJobApplicationById(Integer id) {
         return jobApplicationRepository.findById(id);
     }
+
     @Override
     public JobApplicationResponse getAllJobApplication(int pageNo, int pageSize, int id) {
 
         // Pageable pageable = PageRequest.of(pageNo, pageSize);
         // Company company = new Company();
         // company.setId(id);
-        // Page<Job> jobResponse = jobRepository.findByCompanyId(company.getId(), pageable);
-    
+        // Page<Job> jobResponse = jobRepository.findByCompanyId(company.getId(),
+        // pageable);
+
         // List<Job> listJob = jobResponse.getContent();
-    
+
         // JobApplicationResponse response = new JobApplicationResponse();
         // response.setJobList(listJob);
         // response.setPageSize(jobResponse.getSize());
         // response.setPageNo(jobResponse.getNumber());
         // response.setTotalItems(jobResponse.getTotalElements());
         // response.setTotalPages(jobResponse.getTotalPages());
-    
+
         // return response;
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         Company company = new Company();
@@ -86,15 +89,20 @@ public class JobApplicationServiceImpl implements JobApplicationService{
         response.setTotalPages(totalPages);
         return response;
     }
+
     @Override
-    public String updateJobApplication(Integer id, Integer status) {
+    public String updateJobApplication(Integer id, int status) {
         Optional<JobApplication> jobApplicationOptional=jobApplicationRepository.findById(id);
         String message="";
         try {
-            JobApplication jApplication=jobApplicationOptional.get();
-            jApplication.setStatus(status);
-            jobApplicationRepository.save(jApplication);
-            message="Sucess";
+            if(status==1 || status ==0){
+                JobApplication jApplication=jobApplicationOptional.get();
+                jApplication.setStatus(status);
+                jobApplicationRepository.save(jApplication);
+                message="Sucess";
+            }else{
+                throw new Exception ("");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             message="Error";
