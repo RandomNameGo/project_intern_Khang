@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import swp.internmanagement.internmanagement.entity.CourseIntern;
 import swp.internmanagement.internmanagement.payload.response.GetAllTaskInCourseResponse;
+import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
 import swp.internmanagement.internmanagement.service.CourseInternService;
+import swp.internmanagement.internmanagement.service.CourseService;
 import swp.internmanagement.internmanagement.service.TaskService;
 
 import java.util.List;
@@ -21,6 +23,9 @@ public class InternController {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private CourseService courseService;
+
     //Show all course intern attended
     @GetMapping("/allCourse/{internId}")
     public ResponseEntity<List<CourseIntern>> getCourse(@PathVariable int internId) {
@@ -34,5 +39,10 @@ public class InternController {
             @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
     ) {
         return ResponseEntity.ok(taskService.getTasks(courseId, pageNo, pageSize));
+    }
+
+    @GetMapping("/courseName/{courseId}")
+    public ResponseEntity<GetCourseNameResponse> getCourseName(@PathVariable int courseId) {
+        return ResponseEntity.ok(courseService.getCourseName(courseId));
     }
 }

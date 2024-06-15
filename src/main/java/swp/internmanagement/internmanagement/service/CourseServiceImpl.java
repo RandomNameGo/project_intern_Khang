@@ -6,6 +6,7 @@ import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.entity.Course;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
+import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
 import swp.internmanagement.internmanagement.repository.CompanyRepository;
 import swp.internmanagement.internmanagement.repository.CourseRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
@@ -40,5 +41,16 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course getCourse(int courseId) {
         return courseRepository.findById(courseId).get();
+    }
+
+    @Override
+    public GetCourseNameResponse getCourseName(int courseId) {
+        if(!courseRepository.existsById(courseId)) {
+            return null;
+        }
+        Course course = courseRepository.findById(courseId).get();
+        GetCourseNameResponse getCourseNameResponse = new GetCourseNameResponse();
+        getCourseNameResponse.setCourseName(course.getCourseDescription());
+        return getCourseNameResponse;
     }
 }
