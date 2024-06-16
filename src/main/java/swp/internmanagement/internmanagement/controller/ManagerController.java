@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
+import swp.internmanagement.internmanagement.entity.InternDetail;
 import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
+import swp.internmanagement.internmanagement.payload.request.UpdateInternDetailRequest;
 import swp.internmanagement.internmanagement.payload.response.JobApplicationResponse;
+import swp.internmanagement.internmanagement.service.InternDetailService;
 import swp.internmanagement.internmanagement.service.JobApplicationService;
 import swp.internmanagement.internmanagement.service.RequestService;
 
@@ -24,6 +27,9 @@ public class ManagerController {
 
     @Autowired
     private JobApplicationService jobApplicationService;
+
+    @Autowired
+    private InternDetailService internDetailService;
 
     @PostMapping("/postjob")
     public ResponseEntity<?>  PostRecruitment(
@@ -73,5 +79,10 @@ public class ManagerController {
     @PutMapping("/jobApplication/id={id}&status={status}")
     public String update(@PathVariable Integer id, @PathVariable Integer status){
         return jobApplicationService.updateJobApplication(id,status);
+    }
+
+    @PutMapping("/intern/internDetail/update/{interId}")
+    public ResponseEntity<?> updateInternDetail(@RequestBody UpdateInternDetailRequest updateInternDetailRequest, @PathVariable Integer interId){
+        return ResponseEntity.ok(internDetailService.updateInternDetail(updateInternDetailRequest,interId));
     }
 }

@@ -92,4 +92,7 @@ public class UserAccount {
     @JsonIgnore
     private List<Course> courses = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user")
+    private InternDetail internDetails;
+
 }
