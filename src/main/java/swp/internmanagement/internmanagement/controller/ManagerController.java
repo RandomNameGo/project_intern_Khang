@@ -6,23 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
 import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
+import swp.internmanagement.internmanagement.payload.request.PostJobApplicationRequest;
 import swp.internmanagement.internmanagement.payload.response.JobApplicationResponse;
 import swp.internmanagement.internmanagement.service.JobApplicationService;
 import swp.internmanagement.internmanagement.service.RequestService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -35,21 +28,18 @@ public class ManagerController {
 
     @PostMapping("/postjob")
     public ResponseEntity<?>  PostRecruitment(
-        @RequestParam("jobId") Integer jobId,
-        @RequestParam("email") String email,
-        @RequestParam("fullName") String fullName,
-        @RequestParam("cv") MultipartFile cv
+        @RequestParam("field_id") int field_id,
+        @RequestParam("company_id") int company_id,
+        @RequestParam("job_name") String job_name,
+        @RequestParam("job_description") String job_description
     ) {
-        JobApplicationRequest jobApplicationRequest = new JobApplicationRequest();
-        jobApplicationRequest.setJobId(jobId);
-        jobApplicationRequest.setEmail(email);
-        jobApplicationRequest.setFullName(fullName);
-        jobApplicationRequest.setCV(cv);
-        boolean result = jobApplicationService.addJobApplication(jobApplicationRequest);
+        PostJobApplicationRequest postJobApplicationRequest=new PostJobApplicationRequest(field_id,company_id,job_name,job_description);
+        boolean result = jobApplicationService.postJobApplication(postJobApplicationRequest);
+        String response="";
         if (result) {
-            return ResponseEntity.ok("Job application submitted successfully.");
+            return ResponseEntity.ok("Post job submitted successfully.");
         } else {
-            return ResponseEntity.status(500).body("Failed to submit job application.");
+            return ResponseEntity.status(500).body("Failed to post job.");
         }
     }
 
@@ -79,7 +69,12 @@ public class ManagerController {
         return ResponseEntity.ok(jobApplicationService.getAllJobApplication(pageNo, pageSize, companyId));
     }
     @PutMapping("/jobApplication/id={id}&status={status}")
-    public String update(@PathVariable Integer id, @PathVariable int status){
-        return jobApplicationService.updateJobApplication(id,status);
+    public String update(@PathVariable Integer id, @PathVariable Integer status){
+        try {
+            return jobApplicationService.updateJobApplication(id,status);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -33,6 +33,7 @@ import swp.internmanagement.internmanagement.payload.response.UserInfoResponse;
 import swp.internmanagement.internmanagement.repository.UserRepository;
 import swp.internmanagement.internmanagement.security.jwt.JwtUtils;
 import swp.internmanagement.internmanagement.service.EmailService;
+import swp.internmanagement.internmanagement.service.UserAccountService;
 import swp.internmanagement.internmanagement.service.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -49,6 +50,7 @@ public class AuthController {
     JwtUtils jwtUtils;
     @Autowired
     private EmailService emailService;
+    @Autowired UserAccountService userAccountService;
 
 
     public String generateUserName(String fullName, String role, int user_id) {
@@ -87,34 +89,15 @@ public class AuthController {
     }
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody List<SignupRequest> listSignUpRequest) {
-        Map<String, Object> templateModel = new HashMap<>();
-        templateModel.put("verificationCode", "Click it to to change your password");
         try {
-            LocalDate dateOfBirth = LocalDate.of(1990, 5, 15);
-            for (SignupRequest signRequest : listSignUpRequest) {
-                int id=userRepository.findLastUserId()+1;
-                String userName=generateUserName(signRequest.getFullName(), signRequest.getRole(), id);
-                UserAccount user= new UserAccount();
-                Company company= new Company();
-                company.setId(signRequest.getCompany_id());
-                user.setUserName(userName);
-                user.setPassword(encoder.encode("admin"));
-                user.setFullName(signRequest.getFullName());
-                user.setRole(signRequest.getRole());
-                user.setEmail(signRequest.getEmail());
-                UUID verifyCode =UUID.randomUUID();
-                // templateModel.put("verificationUrl", "https://example.com/verify?code=" + encoder.encode(verifyCode.toString())+"&username="+jwtUtils.generateTokenFromUsername(userName));
-                user.setVerificationCode(verifyCode.toString());
-                user.setDateOfBirth(dateOfBirth);
-                user.setCompany(company);
-                user.setStatus(0);
-                // emailService.sendEmail(signRequest.getEmail(), "Verify your email", templateModel);
-                userRepository.save(user);
+            boolean check =userAccountService.RegisterUser(listSignUpRequest);
+            if(check){
+                return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+            }else{
+                throw new Exception();
             }
-
-            return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
         } catch (Exception ex) {
-            ex.printStackTrace(); // Print the stack trace for debugging
+            ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new MessageResponse("An error occurred while processing your request."));
         }

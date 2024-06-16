@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
+import swp.internmanagement.internmanagement.payload.request.PostJobApplicationRequest;
+import swp.internmanagement.internmanagement.payload.response.AcceptedJobApplicationResponse;
 import swp.internmanagement.internmanagement.payload.response.JobApplicationResponse;
 
 public interface JobApplicationService {
@@ -14,4 +16,10 @@ public interface JobApplicationService {
     JobApplicationResponse getAllJobApplication(int pageNo, int pageSize, int id);
 
     String updateJobApplication(Integer id, int status);
+
+    AcceptedJobApplicationResponse getAcceptedJobApplication(int pageNo, int pageSize);
+    
+    AcceptedJobApplicationResponse getAllAcceptedJobApplication(int pageNo, int pageSize);
+
+    boolean postJobApplication (PostJobApplicationRequest postJobApplicationRequest);
 }
