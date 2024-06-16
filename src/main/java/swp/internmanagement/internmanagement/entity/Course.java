@@ -10,7 +10,9 @@ import org.hibernate.annotations.Nationalized;
 import swp.internmanagement.internmanagement.models.UserAccount;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -50,10 +52,10 @@ public class Course {
     @Size(max = 10)
     @Nationalized
     @Column(name = "status", length = 10)
-    private String status;
+    private Integer status;
 
     @OneToMany(mappedBy = "course")
     @JsonIgnore
-    private Set<Task> tasks = new LinkedHashSet<>();
+    private List<Task> tasks = new ArrayList<>();
 
 }

@@ -1,6 +1,7 @@
 package swp.internmanagement.internmanagement.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import swp.internmanagement.internmanagement.models.UserAccount;
@@ -20,7 +21,11 @@ public class CourseIntern {
 
     @MapsId("internId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "intern_id", referencedColumnName = "user_id", nullable = false)
+    @JoinColumn(name = "intern_id", nullable = false)
     private UserAccount intern;
+
+    @NotNull
+    @Column(name = "result", nullable = false)
+    private Double result;
 
 }
