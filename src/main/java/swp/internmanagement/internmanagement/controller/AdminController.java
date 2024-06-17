@@ -49,6 +49,8 @@ public class AdminController {
         return ResponseEntity.ok(jobApplicationService.getAcceptedJobApplication(pageNo, pageSize));
     }
 
+    
+
     @DeleteMapping("/userAccount/delete/id={userId}")
     public ResponseEntity<?> deleteUserAccount(@PathVariable int userId){
         return ResponseEntity.ok(userAccountService.deleteUserAccount(userId));

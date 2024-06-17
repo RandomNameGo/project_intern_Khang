@@ -28,4 +28,6 @@ public interface UserRepository extends JpaRepository<UserAccount, Integer> {
     @Query("select u from UserAccount u where u.company.id = ?1 and u.role = ?2")
     Page<UserAccount> findAllMemberInCompany(int companyId, String role, Pageable pageable);
 
+    Optional<UserAccount> findByVerificationCodeAndUserName(String verificationCode, String userName);
+
 }
