@@ -36,16 +36,16 @@ public class CourseServiceImpl implements CourseService {
         course.setCourseDescription(createCourseRequest.getCourseDescription());
         course.setStartDate(createCourseRequest.getStartDate());
         course.setEndDate(createCourseRequest.getEndDate());
-        course.setStatus(0);
+        if(createCourseRequest.getStartDate().isEqual(LocalDate.now())){
+            course.setStatus(0);
+        }
         courseRepository.save(course);
         return course;
     }
 
     @Override
     public Course getCourse(int courseId) {
-        Course course = courseRepository.findById(courseId).get();
-        updateCourseStatus(course);
-        return course;
+        return courseRepository.findById(courseId).get();
     }
 
     @Override
@@ -58,13 +58,4 @@ public class CourseServiceImpl implements CourseService {
         getCourseNameResponse.setCourseName(course.getCourseDescription());
         return getCourseNameResponse;
     }
-
-    @Override
-    public void updateCourseStatus(Course course) {
-        if(course.getEndDate().isBefore(LocalDate.now())){
-            course.setStatus(1);
-        }
-    }
-
-
 }
