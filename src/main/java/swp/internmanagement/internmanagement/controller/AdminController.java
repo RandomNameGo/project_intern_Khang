@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import swp.internmanagement.internmanagement.payload.response.AcceptedJobApplicationResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllRequestResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserByParamResponse;
+import swp.internmanagement.internmanagement.payload.response.JobApplicationResponse;
 import swp.internmanagement.internmanagement.service.JobApplicationService;
 import swp.internmanagement.internmanagement.service.RequestService;
 import swp.internmanagement.internmanagement.service.UserAccountService;
@@ -46,7 +47,7 @@ public class AdminController {
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
     ){
-        return ResponseEntity.ok(jobApplicationService.getAcceptedJobApplication(pageNo, pageSize));
+        return ResponseEntity.ok(jobApplicationService.getAllAcceptedJobApplication(pageNo, pageSize));
     }
 
     

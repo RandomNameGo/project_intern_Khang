@@ -9,10 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignupRequest {
-    private int jobApplicationId;
-    private String fullName;
-    private int companyId;
-    private String email;
-    private String role;
+public class PostJobApplicationRequest {
+    private int field_id;
+    private int company_id;
+    private String job_name;
+    private String job_description;
 }

@@ -1,4 +1,4 @@
-package swp.internmanagement.internmanagement.payload.request;
+package swp.internmanagement.internmanagement.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignupRequest {
-    private int jobApplicationId;
+public class JobApplicationDTO {
+    private Integer jobApplicationId;
     private String fullName;
-    private int companyId;
     private String email;
-    private String role;
+    private Integer companyId;
+    private String companyName;
+
 }

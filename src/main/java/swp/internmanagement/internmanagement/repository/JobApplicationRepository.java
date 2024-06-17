@@ -12,4 +12,9 @@ import swp.internmanagement.internmanagement.entity.JobApplication;
 public interface JobApplicationRepository extends JpaRepository <JobApplication,Integer>{
     @Query("select ja from JobApplication ja where ja.status = 1")
     Page<JobApplication> findAcceptedJobApplications(Pageable pageable);
+
+    @Query("SELECT ja FROM JobApplication ja JOIN FETCH ja.job j JOIN FETCH j.company c WHERE ja.status = :status")
+    Page<JobApplication> findByStatus(Integer status, Pageable pageable);
+
+
 }

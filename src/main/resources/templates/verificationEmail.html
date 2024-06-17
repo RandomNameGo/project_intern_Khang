@@ -37,6 +37,16 @@
             border-radius: 5px;
             text-decoration: none;
         }
+        #link{
+            color: white;
+            font-size: 2rem;
+        }
+        #link:hover{
+            background-color: #104c8c;
+        }
+        #link:active{
+            background-color: #06315f;
+        }
     </style>
 </head>
 <body>
@@ -45,16 +55,17 @@
             <img src="cid:logoImage" alt="Mailmodo Logo" style="width: 100px;">
         </div>
         <div class="email-content">
-            <h1>You Are Almost There!</h1>
-            <p>Only one step left to become a part of Mailmodo's family. Please enter this verification code in the window where you started creating your account.</p>
+            <h1>Activate Your Account</h1>
+            <img src="" alt="">
+            <p>Only one step left to become a part of InternBridge's family. Please enter this verification code in the window where you started creating your account.</p>
             <div class="verification-code" th:text="${verificationCode}">XRTy0945</div>
-            <p>This code is valid for the next 15 minutes.</p>
+            <h2 th:text="${userName}">Your custom message here</h2>
             <p>Or click on the button below to verify your email 👇</p>
-            <a href="#" th:href="${verificationUrl}" class="btn">Confirm my email</a>
+            <a href="#" th:href="${verificationUrl}" class="btn" id="link">Confirm my email</a>
         </div>
         <div class="email-footer">
-            <p>Have a question or trouble logging in? Please contact us <a href="mailto:support@example.com">here</a>.</p>
-            <p>800 Boardway Suit 1500 New York, NY 000423, USA<br>Call us - 0800 000 900</p>
+            <p>Have a question or trouble logging in? Please contact us <a href="mailto:tranduyanh7766@gmail.com">here</a>.</p>
+            <p>FPT University,D1 Street, Saigon Hi-tech Park, Long Thanh My Ward, District 9, Ho Chi Minh City, Vietnam.<br>Call us - 091294214421</p>
         </div>
     </div>
 </body>
