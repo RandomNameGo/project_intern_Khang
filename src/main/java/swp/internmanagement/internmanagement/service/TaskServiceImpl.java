@@ -12,6 +12,8 @@ import swp.internmanagement.internmanagement.payload.response.GetAllTaskInCourse
 import swp.internmanagement.internmanagement.repository.CourseRepository;
 import swp.internmanagement.internmanagement.repository.TaskRepository;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -29,11 +31,23 @@ public class TaskServiceImpl implements TaskService {
         if(!courseRepository.existsById(courseId)){
             return null;
         }
+
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate startDate = LocalDate.parse(createTaskRequest.getStartDate(), inputFormatter);
+        LocalDate endDate = LocalDate.parse(createTaskRequest.getEndDate(), inputFormatter);
+
+        String formattedStartDate = startDate.format(formatter);
+        String formattedEndDate = endDate.format(formatter);
+
+        LocalDate startDateAfter = LocalDate.parse(formattedStartDate, formatter);
+        LocalDate endDateAfter = LocalDate.parse(formattedEndDate, formatter);
+
         Course course = courseRepository.findById(courseId).get();
         task.setCourse(course);
         task.setTaskContent(createTaskRequest.getTaskContent());
-        task.setStartDate(createTaskRequest.getStartDate());
-        task.setEndDate(createTaskRequest.getEndDate());
+        task.setStartDate(startDateAfter);
+        task.setEndDate(endDateAfter);
         taskRepository.save(task);
         return task;
     }

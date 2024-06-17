@@ -12,6 +12,7 @@ import swp.internmanagement.internmanagement.repository.CourseRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -28,14 +29,26 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course addCourse(CreateCourseRequest createCourseRequest, int companyId) {
         int mentorId = createCourseRequest.getMentorId();
+
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate startDate = LocalDate.parse(createCourseRequest.getStartDate(), inputFormatter);
+        LocalDate endDate = LocalDate.parse(createCourseRequest.getEndDate(), inputFormatter);
+
+        String formattedStartDate = startDate.format(formatter);
+        String formattedEndDate = endDate.format(formatter);
+
+        LocalDate startDateAfter = LocalDate.parse(formattedStartDate, formatter);
+        LocalDate endDateAfter = LocalDate.parse(formattedEndDate, formatter);
+
         UserAccount mentorAccount = userRepository.findById(mentorId).get();
         Company company = companyRepository.findById(companyId).get();
         Course course = new Course();
         course.setCompany(company);
         course.setMentor(mentorAccount);
         course.setCourseDescription(createCourseRequest.getCourseDescription());
-        course.setStartDate(createCourseRequest.getStartDate());
-        course.setEndDate(createCourseRequest.getEndDate());
+        course.setStartDate(startDateAfter);
+        course.setEndDate(endDateAfter);
         course.setStatus(0);
         courseRepository.save(course);
         return course;

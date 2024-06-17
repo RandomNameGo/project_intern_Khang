@@ -30,4 +30,6 @@ public interface UserRepository extends JpaRepository<UserAccount, Integer> {
 
     Optional<UserAccount> findByVerificationCodeAndUserName(String verificationCode, String userName);
 
+    @Query("select u from UserAccount u where u.company.id = ?1 and u.role = ?2")
+    List<UserAccount> findAllUserByRole(int companyId, String role);
 }

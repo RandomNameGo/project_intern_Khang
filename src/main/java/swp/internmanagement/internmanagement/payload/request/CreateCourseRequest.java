@@ -11,6 +11,6 @@ import java.time.LocalDate;
 public class CreateCourseRequest {
     private int mentorId;
     private String courseDescription;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private String startDate;
+    private String endDate;
 }

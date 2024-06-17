@@ -44,6 +44,8 @@ public class UserAccountServiceImpl implements UserAccountService {
     private EmailService emailService;
     @Autowired
     private JobApplicationRepository jobApplicationRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public String generateUserName(String fullName, String role, int user_id) {
         String[] splitFullNames = fullName.split("\\s+");
@@ -173,5 +175,10 @@ public class UserAccountServiceImpl implements UserAccountService {
             return false;
         }
         return false;
+    }
+
+    @Override
+    public List<UserAccount> getAllUserAccountByRole(int companyId, String role) {
+        return userRepository.findAllUserByRole(companyId, role);
     }
 }
