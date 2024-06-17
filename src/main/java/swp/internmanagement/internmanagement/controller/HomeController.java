@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -118,4 +119,21 @@ public class HomeController {
             return ResponseEntity.status(500).body("Failed to submit job application.");
         }
     }
+    @PutMapping("/verify")
+    public ResponseEntity<?> VerifyAndActivate(
+        @RequestParam("code") String code,
+        @RequestParam("userName") String userName
+    ) {
+        try {
+            boolean check = userAccountService.verifyAndActivate(code, userName);
+            if(check){
+                return ResponseEntity.ok("Success to activate");
+            }else{
+             return ResponseEntity.status(500).body("Error to activate");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error to activate");
+        }
+    }
+    
 }

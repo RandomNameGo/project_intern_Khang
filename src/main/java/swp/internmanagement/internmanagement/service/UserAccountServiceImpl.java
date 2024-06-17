@@ -139,7 +139,7 @@ public class UserAccountServiceImpl implements UserAccountService {
                 user.setRole(signRequest.getRole());
                 user.setEmail(signRequest.getEmail());
                 UUID verifyCode =UUID.randomUUID();
-                templateModel.put("verificationUrl", "http://localhost:3000/verify?code=" + encoder.encode(verifyCode.toString())+"&username="+jwtUtils.generateTokenFromUsername(userName));
+                templateModel.put("verificationUrl", "http://localhost:3000/verify?code=" +verifyCode.toString()+"&username="+jwtUtils.generateTokenFromUsername(userName));
                 user.setVerificationCode(verifyCode.toString());
                 user.setDateOfBirth(dateOfBirth);
                 user.setCompany(company);
@@ -154,5 +154,22 @@ public class UserAccountServiceImpl implements UserAccountService {
             ex.printStackTrace();
             return false;
         }
+    }
+    @Override
+    public boolean verifyAndActivate(String code, String userName) {
+        try {
+            String userNameFromToken =jwtUtils.getUserNameFromJwtToken(userName);
+            Optional<UserAccount> user = userAccountRepository.findByVerificationCodeAndUserName(code, userNameFromToken);
+            if(user.isPresent()){
+                user.get().setStatus(1);
+                user.get().setVerificationCode(null);
+                userAccountRepository.save(user.get());
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return false;
     }
 }

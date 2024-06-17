@@ -13,7 +13,9 @@ import jakarta.validation.Valid;
 import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
 import swp.internmanagement.internmanagement.payload.request.PostJobApplicationRequest;
+import swp.internmanagement.internmanagement.payload.request.UpdateInternDetailRequest;
 import swp.internmanagement.internmanagement.payload.response.JobApplicationResponse;
+import swp.internmanagement.internmanagement.service.InternDetailService;
 import swp.internmanagement.internmanagement.service.JobApplicationService;
 import swp.internmanagement.internmanagement.service.RequestService;
 
@@ -25,6 +27,9 @@ public class ManagerController {
 
     @Autowired
     private JobApplicationService jobApplicationService;
+
+     @Autowired
+    private InternDetailService internDetailService;
 
     @PostMapping("/postjob")
     public ResponseEntity<?>  PostRecruitment(
@@ -68,6 +73,7 @@ public class ManagerController {
         
         return ResponseEntity.ok(jobApplicationService.getAllJobApplication(pageNo, pageSize, companyId));
     }
+
     @PutMapping("/jobApplication/id={id}&status={status}")
     public String update(@PathVariable Integer id, @PathVariable Integer status){
         try {
@@ -76,5 +82,10 @@ public class ManagerController {
             e.printStackTrace();
             return null;
         }
+    }
+    
+    @PutMapping("/intern/internDetail/update/{interId}")
+    public ResponseEntity<?> updateInternDetail(@RequestBody UpdateInternDetailRequest updateInternDetailRequest, @PathVariable Integer interId){
+        return ResponseEntity.ok(internDetailService.updateInternDetail(updateInternDetailRequest,interId));
     }
 }

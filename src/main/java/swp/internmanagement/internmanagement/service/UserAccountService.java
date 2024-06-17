@@ -20,4 +20,6 @@ public interface UserAccountService {
     String deleteUserAccount(int userId);
 
     boolean RegisterUser(List<SignupRequest> listSignUpRequest);
+
+    boolean verifyAndActivate(String code, String userName);
 }
