@@ -10,4 +10,6 @@ import swp.internmanagement.internmanagement.entity.CourseInternId;
 public interface CourseInternRepository extends JpaRepository<CourseIntern, CourseInternId> {
 
     List<CourseIntern> findByInternId(int internId);
+
+    List<CourseIntern> findByCourseId(int courseId);
 }

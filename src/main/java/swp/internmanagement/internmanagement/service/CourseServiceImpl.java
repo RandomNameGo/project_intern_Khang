@@ -36,9 +36,7 @@ public class CourseServiceImpl implements CourseService {
         course.setCourseDescription(createCourseRequest.getCourseDescription());
         course.setStartDate(createCourseRequest.getStartDate());
         course.setEndDate(createCourseRequest.getEndDate());
-        if(createCourseRequest.getStartDate().isEqual(LocalDate.now())){
-            course.setStatus(0);
-        }
+        course.setStatus(0);
         courseRepository.save(course);
         return course;
     }
