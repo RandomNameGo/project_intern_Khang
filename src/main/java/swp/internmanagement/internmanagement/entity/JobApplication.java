@@ -34,8 +34,7 @@ public class JobApplication {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "job_id", nullable = false)
-    @JsonBackReference
-    private Job job; 
+    private Job job;
 
     @Column(name = "email")
     private String email;

@@ -12,4 +12,6 @@ public interface CourseService {
 
     GetCourseNameResponse getCourseName(int courseId);
 
+    void updateCourseStatus(Course course);
+
 }

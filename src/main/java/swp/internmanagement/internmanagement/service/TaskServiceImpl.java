@@ -48,7 +48,6 @@ public class TaskServiceImpl implements TaskService {
         Page<Task> tasks = taskRepository.findAllInCourse(courseId, pageable);
         List<Task> taskList = tasks.getContent();
 
-
         GetAllTaskInCourseResponse getAllTaskInCourseResponse = new GetAllTaskInCourseResponse();
         getAllTaskInCourseResponse.setTasks(taskList);
         getAllTaskInCourseResponse.setPageNo(tasks.getNumber());

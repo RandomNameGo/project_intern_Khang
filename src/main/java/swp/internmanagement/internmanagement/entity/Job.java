@@ -2,6 +2,7 @@ package swp.internmanagement.internmanagement.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Nationalized;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -39,7 +40,7 @@ public class Job {
     private Company company;
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonIgnore
     private List<JobApplication> jobApplications;
 
     @Size(max = 50)

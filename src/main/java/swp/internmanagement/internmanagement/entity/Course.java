@@ -49,9 +49,8 @@ public class Course {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @Size(max = 10)
     @Nationalized
-    @Column(name = "status", length = 10)
+    @Column(name = "status")
     private Integer status;
 
     @OneToMany(mappedBy = "course")
