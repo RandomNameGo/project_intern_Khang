@@ -21,5 +21,5 @@ public interface UserAccountService {
 
     boolean RegisterUser(List<SignupRequest> listSignUpRequest);
 
-    boolean verifyAndActivate(String code, String userName);
+    boolean verifyAndActivate(String code, String userName, String password);
 }
