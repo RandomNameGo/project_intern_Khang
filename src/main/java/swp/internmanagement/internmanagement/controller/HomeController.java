@@ -122,10 +122,11 @@ public class HomeController {
     @PutMapping("/verify")
     public ResponseEntity<?> VerifyAndActivate(
         @RequestParam("code") String code,
-        @RequestParam("userName") String userName
+        @RequestParam("userName") String userName,
+        @RequestParam("password") String password
     ) {
         try {
-            boolean check = userAccountService.verifyAndActivate(code, userName);
+            boolean check = userAccountService.verifyAndActivate(code, userName, password);
             if(check){
                 return ResponseEntity.ok("Success to activate");
             }else{
