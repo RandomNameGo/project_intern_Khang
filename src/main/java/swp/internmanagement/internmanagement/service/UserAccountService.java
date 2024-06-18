@@ -6,6 +6,7 @@ import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserByParamResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserByRoleResponse;
+import swp.internmanagement.internmanagement.payload.response.GetAllUserResponse;
 import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
 
 public interface UserAccountService {
@@ -28,4 +29,5 @@ public interface UserAccountService {
     
     boolean handleChangePasswordUrl(String code);
 
+    GetAllUserResponse getAllUser(int pageNo, int pageSize);
 }

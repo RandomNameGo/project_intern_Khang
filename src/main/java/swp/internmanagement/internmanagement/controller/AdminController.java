@@ -9,6 +9,7 @@ import swp.internmanagement.internmanagement.payload.request.UpdateCompanyReques
 import swp.internmanagement.internmanagement.payload.response.AcceptedJobApplicationResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllRequestResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserByParamResponse;
+import swp.internmanagement.internmanagement.payload.response.GetAllUserResponse;
 import swp.internmanagement.internmanagement.service.CompanyService;
 import swp.internmanagement.internmanagement.service.JobApplicationService;
 import swp.internmanagement.internmanagement.service.RequestService;
@@ -38,12 +39,19 @@ public class AdminController {
         return ResponseEntity.ok(requestService.getRequests(pageNo, pageSize));
     }
 
-    @GetMapping("/search/param={param}")
-    public ResponseEntity<GetAllUserByParamResponse> getAllUserByParamResponse(
-            @PathVariable String param,
+//    @GetMapping("/search/param={param}")
+//    public ResponseEntity<GetAllUserByParamResponse> getAllUserByParamResponse(
+//            @PathVariable String param,
+//            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+//            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
+//        return ResponseEntity.ok(userAccountService.getAllUserAccountsByParam(param, pageNo, pageSize));
+//    }
+
+    @GetMapping("/search")
+    public ResponseEntity<GetAllUserResponse> getAllUserResponse(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
-        return ResponseEntity.ok(userAccountService.getAllUserAccountsByParam(param, pageNo, pageSize));
+        return ResponseEntity.ok(userAccountService.getAllUser(pageNo, pageSize));
     }
 
     @GetMapping("/jobApplication")

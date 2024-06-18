@@ -1,11 +1,7 @@
 package swp.internmanagement.internmanagement.service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,9 +17,7 @@ import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
-import swp.internmanagement.internmanagement.payload.response.GetAllUserByParamResponse;
-import swp.internmanagement.internmanagement.payload.response.GetAllUserByRoleResponse;
-import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
+import swp.internmanagement.internmanagement.payload.response.*;
 import swp.internmanagement.internmanagement.repository.JobApplicationRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
 import swp.internmanagement.internmanagement.security.jwt.JwtUtils;
@@ -237,6 +231,33 @@ public class UserAccountServiceImpl implements UserAccountService {
         } catch (Exception e) {
             return false;
         }return false;
+    }
+
+    @Override
+    public GetAllUserResponse getAllUser(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<UserAccount> userAccounts = userAccountRepository.findAllUserAccount(pageable);
+        List<UserAccount> userAccountList = userAccounts.getContent();
+
+        List<UserInfoResponse> userInfoResponseList = new ArrayList<>();
+        for (UserAccount userAccount : userAccountList) {
+            UserInfoResponse userInfoResponse = new UserInfoResponse();
+            userInfoResponse.setUser_id(userAccount.getId());
+            userInfoResponse.setRole(userAccount.getRole());
+            userInfoResponse.setUsername(userAccount.getUserName());
+            userInfoResponse.setCompany_id(userAccount.getCompany().getId());
+            userInfoResponse.setEmail(userAccount.getEmail());
+            userInfoResponse.setFullName(userAccount.getFullName());
+            userInfoResponseList.add(userInfoResponse);
+        }
+
+        GetAllUserResponse getAllUserResponse = new GetAllUserResponse();
+        getAllUserResponse.setUsersList(userInfoResponseList);
+        getAllUserResponse.setPageNo(userAccounts.getNumber());
+        getAllUserResponse.setPageSize(userAccounts.getSize());
+        getAllUserResponse.setTotalItems(userAccounts.getTotalElements());
+        getAllUserResponse.setTotalPages(userAccounts.getTotalPages());
+        return getAllUserResponse;
     }
 
     private static String extractValue(String input, String pattern) {
