@@ -1,11 +1,10 @@
 package swp.internmanagement.internmanagement.payload.response;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
-import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.models.JobApplicationDTO;
-
-import java.util.List;
 @Getter
 @Setter
 public class AcceptedJobApplicationResponse {

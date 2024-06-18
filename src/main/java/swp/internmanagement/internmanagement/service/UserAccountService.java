@@ -1,13 +1,12 @@
 package swp.internmanagement.internmanagement.service;
 
+import java.util.List;
+
 import swp.internmanagement.internmanagement.models.UserAccount;
-import swp.internmanagement.internmanagement.payload.request.CreateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserByParamResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserByRoleResponse;
 import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
-
-import java.util.List;
 
 public interface UserAccountService {
 

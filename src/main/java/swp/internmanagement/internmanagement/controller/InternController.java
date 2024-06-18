@@ -1,19 +1,26 @@
 package swp.internmanagement.internmanagement.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import swp.internmanagement.internmanagement.entity.CourseIntern;
-import swp.internmanagement.internmanagement.entity.InternTask;
-import swp.internmanagement.internmanagement.entity.MentorFeedbackIntern;
-import swp.internmanagement.internmanagement.payload.response.GetAllTaskInCourseResponse;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
 import swp.internmanagement.internmanagement.payload.response.ShowAllFeedbackFromMentorResponse;
 import swp.internmanagement.internmanagement.payload.response.ShowInternTaskResponse;
-import swp.internmanagement.internmanagement.service.*;
-
-import java.util.List;
+import swp.internmanagement.internmanagement.service.CourseInternService;
+import swp.internmanagement.internmanagement.service.CourseService;
+import swp.internmanagement.internmanagement.service.InternTaskService;
+import swp.internmanagement.internmanagement.service.MentorFeedbackInternService;
+import swp.internmanagement.internmanagement.service.TaskService;
 
 @RestController
 @RequestMapping("/internbridge/intern")

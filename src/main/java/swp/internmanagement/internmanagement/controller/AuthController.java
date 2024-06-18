@@ -1,6 +1,8 @@
 package swp.internmanagement.internmanagement.controller;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,22 +19,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import jakarta.validation.Valid;
-import swp.internmanagement.internmanagement.entity.Company;
-import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.LoginRequest;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
 import swp.internmanagement.internmanagement.payload.response.MessageResponse;
 import swp.internmanagement.internmanagement.payload.response.UserInfoResponse;
 import swp.internmanagement.internmanagement.repository.UserRepository;
 import swp.internmanagement.internmanagement.security.jwt.JwtUtils;
-import swp.internmanagement.internmanagement.service.EmailService;
 import swp.internmanagement.internmanagement.service.UserAccountService;
 import swp.internmanagement.internmanagement.service.UserDetailsImpl;
 
@@ -48,8 +41,6 @@ public class AuthController {
     PasswordEncoder encoder;
     @Autowired
     JwtUtils jwtUtils;
-    @Autowired
-    private EmailService emailService;
     @Autowired UserAccountService userAccountService;
 
 

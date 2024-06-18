@@ -1,11 +1,10 @@
 package swp.internmanagement.internmanagement.payload.response;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
-import swp.internmanagement.internmanagement.entity.Request;
 import swp.internmanagement.internmanagement.entity.Task;
-
-import java.util.List;
 
 @Getter
 @Setter
