@@ -3,18 +3,11 @@ package swp.internmanagement.internmanagement.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -53,15 +46,15 @@ public class Company {
     @Column(name = "location", nullable = false, length = 50)
     private String location;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Job> jobs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<UserAccount> userAccounts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Course> courses = new ArrayList<>();
 }
