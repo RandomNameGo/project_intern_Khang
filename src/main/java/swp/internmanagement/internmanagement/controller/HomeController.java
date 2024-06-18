@@ -25,6 +25,7 @@ import swp.internmanagement.internmanagement.entity.Request;
 // import swp.internmanagement.internmanagement.service.RequestService;
 import swp.internmanagement.internmanagement.payload.request.HelpRequest;
 import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
+import swp.internmanagement.internmanagement.payload.request.LoginRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllFieldsResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllJobsResponse;
 import swp.internmanagement.internmanagement.payload.response.SearchJobsResponse;
@@ -60,17 +61,18 @@ public class HomeController {
 
     // @GetMapping("/jobs/id={id}")
     // public ResponseEntity<SearchJobsResponse> getJobID(
-    //         @PathVariable Integer id,
-    //         @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-    //         @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
-    //     return ResponseEntity.ok(jobService.getJobById(id, pageNo, pageSize));
+    // @PathVariable Integer id,
+    // @RequestParam(value = "pageNo", defaultValue = "0", required = false) int
+    // pageNo,
+    // @RequestParam(value = "pageSize", defaultValue = "0", required = false) int
+    // pageSize) {
+    // return ResponseEntity.ok(jobService.getJobById(id, pageNo, pageSize));
     // }
     @GetMapping("/jobs/id={id}")
-    public ResponseEntity<Job> getJobId( @PathVariable Integer id) {
+    public ResponseEntity<Job> getJobId(@PathVariable Integer id) {
         Job job = jobService.getJobId(id);
         return job != null ? ResponseEntity.ok(job) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
-    
 
     @GetMapping("/jobs/{jobName}")
     public ResponseEntity<SearchJobsResponse> getJob(
@@ -96,17 +98,16 @@ public class HomeController {
     public ResponseEntity<Request> sendRequest(@RequestBody HelpRequest helpRequest) {
         return new ResponseEntity<>(requestService.saveRequest(helpRequest), HttpStatus.CREATED);
     }
+
     @Autowired
     private JobApplicationService jobApplicationService;
 
-
     @PostMapping("/applyjob")
-    public ResponseEntity<?>  ApplyJob(
-        @RequestParam("jobId") Integer jobId,
-        @RequestParam("email") String email,
-        @RequestParam("fullName") String fullName,
-        @RequestParam("cv") MultipartFile cv
-    ) {
+    public ResponseEntity<?> ApplyJob(
+            @RequestParam("jobId") Integer jobId,
+            @RequestParam("email") String email,
+            @RequestParam("fullName") String fullName,
+            @RequestParam("cv") MultipartFile cv) {
         JobApplicationRequest jobApplicationRequest = new JobApplicationRequest();
         jobApplicationRequest.setJobId(jobId);
         jobApplicationRequest.setEmail(email);
@@ -119,22 +120,55 @@ public class HomeController {
             return ResponseEntity.status(500).body("Failed to submit job application.");
         }
     }
+
     @PutMapping("/verify")
     public ResponseEntity<?> VerifyAndActivate(
-        @RequestParam("code") String code,
-        @RequestParam("userName") String userName,
-        @RequestParam("password") String password
-    ) {
+            @RequestParam("code") String code,
+            @RequestParam("userName") String userName,
+            @RequestParam("password") String password) {
         try {
             boolean check = userAccountService.verifyAndActivate(code, userName, password);
-            if(check){
+            if (check) {
                 return ResponseEntity.ok("Success to activate");
-            }else{
-             return ResponseEntity.status(500).body("Error to activate");
+            } else {
+                return ResponseEntity.status(500).body("Error to activate");
             }
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error to activate");
         }
     }
-    
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody LoginRequest loginRequest) {
+        try {
+            if (loginRequest.getPassword() != null && loginRequest.getUsername() != null) {
+                boolean check = userAccountService.checkUserEsistAndSendEmail(loginRequest.getUsername(),
+                        loginRequest.getPassword());
+                if (check) {
+                    userAccountService.checkUserEsistAndSendEmail(loginRequest.getUsername(),
+                            loginRequest.getPassword());
+                    return ResponseEntity.ok("Success to change please check your mail");
+                }
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error to activate");
+        }
+        return ResponseEntity.status(500).body("Error to activate");
+    }
+
+    @PutMapping("/verifyPassword")
+    public ResponseEntity<?> VerificationPasswordChanging(@RequestParam("code") String code) {
+        try {
+            if (code != null) {
+                boolean check = userAccountService.handleChangePasswordUrl(code);
+                if (check) {
+                    return ResponseEntity.ok("Success to sending");
+                }
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error to activate");
+        }
+        return ResponseEntity.status(500).body("Error to activate");
+    }
 }

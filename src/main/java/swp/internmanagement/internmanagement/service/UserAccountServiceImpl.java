@@ -14,6 +14,7 @@ import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserByRoleResponse;
+import swp.internmanagement.internmanagement.payload.request.CreateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserByParamResponse;
 import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
@@ -28,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
@@ -60,8 +63,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         return result.toLowerCase();
     }
 
-
-    //This method is for admin
+    // This method is for admin
     @Override
     public GetAllUserByParamResponse getAllUserAccountsByParam(String param, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
@@ -78,7 +80,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         return getAllUserByParamResponse;
     }
 
-    //This method is for coordinator
+    // This method is for coordinator
     @Override
     public GetUserInSameCompanyResponse getUserInSameCompany(int companyId, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
@@ -113,12 +115,13 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public String deleteUserAccount(int userId) {
-        if(!userAccountRepository.existsById(userId)) {
+        if (!userAccountRepository.existsById(userId)) {
             return "User not found";
         }
         userAccountRepository.deleteById(userId);
         return "Deleted successfully";
     }
+
     @Override
     public boolean RegisterUser(List<SignupRequest> listSignUpRequest) {
         Map<String, Object> templateModel = new HashMap<>();
@@ -126,11 +129,11 @@ public class UserAccountServiceImpl implements UserAccountService {
         try {
             LocalDate dateOfBirth = LocalDate.of(1990, 5, 15);
             for (SignupRequest signRequest : listSignUpRequest) {
-                int id=userAccountRepository.findLastUserId()+1;
-                String userName=generateUserName(signRequest.getFullName(), signRequest.getRole(), id);
-                UserAccount user= new UserAccount();
-                JobApplication jobApplication=new JobApplication();
-                Company company= new Company();
+                int id = userAccountRepository.findLastUserId() + 1;
+                String userName = generateUserName(signRequest.getFullName(), signRequest.getRole(), id);
+                UserAccount user = new UserAccount();
+                JobApplication jobApplication = new JobApplication();
+                Company company = new Company();
                 jobApplication.setId(signRequest.getJobApplicationId());
                 company.setId(signRequest.getCompanyId());
                 user.setUserName(userName);
@@ -138,9 +141,10 @@ public class UserAccountServiceImpl implements UserAccountService {
                 user.setFullName(signRequest.getFullName());
                 user.setRole(signRequest.getRole());
                 user.setEmail(signRequest.getEmail());
-                UUID verifyCode =UUID.randomUUID();
-                templateModel.put("verificationUrl", "http://localhost:3000/verify?code=" +verifyCode.toString()+"&username="+jwtUtils.generateTokenFromUsername(userName));
-                templateModel.put("userName", "Your username: "+userName);
+                UUID verifyCode = UUID.randomUUID();
+                templateModel.put("verificationUrl", "http://localhost:3000/verify?code=" + verifyCode.toString()
+                        + "&username=" + jwtUtils.generateTokenFromUsername(userName));
+                templateModel.put("userName", "Your username: " + userName);
                 user.setVerificationCode(verifyCode.toString());
                 user.setDateOfBirth(dateOfBirth);
                 user.setCompany(company);
@@ -156,12 +160,14 @@ public class UserAccountServiceImpl implements UserAccountService {
             return false;
         }
     }
+
     @Override
     public boolean verifyAndActivate(String code, String userName, String password) {
         try {
-            String userNameFromToken =jwtUtils.getUserNameFromJwtToken(userName);
-            Optional<UserAccount> user = userAccountRepository.findByVerificationCodeAndUserName(code, userNameFromToken);
-            if(user.isPresent()){
+            String userNameFromToken = jwtUtils.getUserNameFromJwtToken(userName);
+            Optional<UserAccount> user = userAccountRepository.findByVerificationCodeAndUserName(code,
+                    userNameFromToken);
+            if (user.isPresent()) {
                 user.get().setStatus(1);
                 user.get().setPassword(encoder.encode(password));
                 user.get().setVerificationCode(null);
@@ -174,4 +180,69 @@ public class UserAccountServiceImpl implements UserAccountService {
         }
         return false;
     }
+
+    @Override
+    public boolean checkUserEsistAndSendEmail(String userName, String password) {
+        try {
+            Optional<UserAccount> user = userAccountRepository.findByUserName(userName);
+            if (user.isPresent()) {
+                UUID verificationcode = UUID.randomUUID();
+                user.get().setVerificationCode(verificationcode.toString());
+                userAccountRepository.save(user.get());
+                sendEmailForgotPassword(userName, encoder.encode(password), verificationcode.toString());
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
+
+    public void sendEmailForgotPassword(String username, String password, String verificationCode) {
+        Map<String, Object> templateModel = new HashMap<>();
+        String code = "code=" + verificationCode + "&userName=" + username + "&password=" + password;
+        templateModel.put("verificationCode", "Click button below to confirm your changing");
+        templateModel.put("verificationUrl",
+                "http://localhost:3000/verifyPassword?code=" + jwtUtils.generateTokenFromUsername(code));
+        try {
+            emailService.sendEmailForgotPassword("anhtdse184413@fpt.edu.vn", "Verify your email", templateModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean handleChangePasswordUrl(String code) {
+        try {
+            String result = jwtUtils.getUserNameFromJwtToken(code);
+            String codeVerifyPattern = "code=([^&]+)";
+            String userNamePattern = "userName=([^&]+)";
+            String passwordPattern = "password=([^&]+)";
+
+            String codeVerify = extractValue(result, codeVerifyPattern);
+            String userName = extractValue(result, userNamePattern);
+            String password = extractValue(result, passwordPattern);
+
+            Optional<UserAccount> user = userAccountRepository.findByUserName(userName);
+            if (user.isPresent()) {
+                user.get().setPassword(password);
+                user.get().setVerificationCode(null);
+                userAccountRepository.save(user.get());
+                return true;
+            }
+
+        } catch (Exception e) {
+            return false;
+        }return false;
+    }
+
+    private static String extractValue(String input, String pattern) {
+        Pattern compiledPattern = Pattern.compile(pattern);
+        Matcher matcher = compiledPattern.matcher(input);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
 }

@@ -84,6 +84,8 @@ public class ManagerController {
         }
     }
     
+    
+
     @PutMapping("/intern/internDetail/update/{interId}")
     public ResponseEntity<?> updateInternDetail(@RequestBody UpdateInternDetailRequest updateInternDetailRequest, @PathVariable Integer interId){
         return ResponseEntity.ok(internDetailService.updateInternDetail(updateInternDetailRequest,interId));

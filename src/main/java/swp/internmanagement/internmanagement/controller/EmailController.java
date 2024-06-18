@@ -24,12 +24,10 @@ public class EmailController {
     @GetMapping("/email")
     public String sendVerificationEmail() {
         Map<String, Object> templateModel = new HashMap<>();
-        templateModel.put("verificationCode", "a");
+        templateModel.put("verificationCode", "Click button below to activate your account");
         templateModel.put("verificationUrl", "https://example.com/verify?code=" + "a");
-        templateModel.put("userName", "Your username: fdasdafasd");
-
         try {
-            emailService.sendEmail("anhtdse184413@fpt.edu.vn", "Verify your email", templateModel);
+            emailService.sendEmailForgotPassword("hungpltse172380@fpt.edu.vn", "Verify your email", templateModel);
             return "Email sent successfully";
         } catch (Exception e) {
             e.printStackTrace();

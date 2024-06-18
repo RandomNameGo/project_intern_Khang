@@ -2,6 +2,7 @@ package swp.internmanagement.internmanagement.service;
 
 import org.springframework.data.domain.Pageable;
 import swp.internmanagement.internmanagement.models.UserAccount;
+import swp.internmanagement.internmanagement.payload.request.CreateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserByParamResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserByRoleResponse;
@@ -22,4 +23,9 @@ public interface UserAccountService {
     boolean RegisterUser(List<SignupRequest> listSignUpRequest);
 
     boolean verifyAndActivate(String code, String userName, String password);
+
+    boolean checkUserEsistAndSendEmail(String userName, String password);
+    
+    boolean handleChangePasswordUrl(String code);
+
 }
