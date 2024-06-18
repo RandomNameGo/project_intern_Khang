@@ -69,4 +69,13 @@ public class CourseServiceImpl implements CourseService {
         getCourseNameResponse.setCourseName(course.getCourseDescription());
         return getCourseNameResponse;
     }
+
+    @Override
+    public String deleteCourse(int courseId) {
+        if(!courseRepository.existsById(courseId)) {
+            return "Course not found";
+        }
+        courseRepository.deleteById(courseId);
+        return "Deleted course";
+    }
 }

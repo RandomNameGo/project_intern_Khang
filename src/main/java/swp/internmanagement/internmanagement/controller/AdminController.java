@@ -8,7 +8,6 @@ import swp.internmanagement.internmanagement.payload.request.CreateCompanyReques
 import swp.internmanagement.internmanagement.payload.request.UpdateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.response.AcceptedJobApplicationResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllRequestResponse;
-import swp.internmanagement.internmanagement.payload.response.GetAllUserByParamResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserResponse;
 import swp.internmanagement.internmanagement.service.CompanyService;
 import swp.internmanagement.internmanagement.service.JobApplicationService;
