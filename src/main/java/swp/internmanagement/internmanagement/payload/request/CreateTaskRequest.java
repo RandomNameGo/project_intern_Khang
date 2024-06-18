@@ -10,6 +10,6 @@ import java.time.LocalDate;
 @Setter
 public class CreateTaskRequest {
     private String taskContent;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private String startDate;
+    private String endDate;
 }

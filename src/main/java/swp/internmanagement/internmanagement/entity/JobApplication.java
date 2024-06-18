@@ -4,16 +4,8 @@ import java.util.Base64;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,6 +41,10 @@ public class JobApplication {
     
     @Column(name = "status")
     private Integer status;
+
+    @OneToOne(mappedBy = "application")
+    @JsonManagedReference
+    private Schedule schedules;
 
     public JobApplication(@NotNull Job job, String email, String fullName, byte[] cV, int status) {
         this.job = job;

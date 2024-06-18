@@ -5,13 +5,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import swp.internmanagement.internmanagement.entity.Course;
+import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.AddInternToCourseRequest;
+import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserByRoleResponse;
 import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
 import swp.internmanagement.internmanagement.service.CourseInternService;
 import swp.internmanagement.internmanagement.service.CourseService;
+import swp.internmanagement.internmanagement.service.InterviewScheduleService;
 import swp.internmanagement.internmanagement.service.UserAccountService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/internbridge/coordinator")
@@ -26,6 +31,10 @@ public class CoordinatorController {
     @Autowired
     private CourseInternService courseInternService;
 
+
+    @Autowired
+    private InterviewScheduleService interviewScheduleService;
+
     //show mentor and intern in the same company
     @GetMapping("search/{companyId}")
     public ResponseEntity<GetUserInSameCompanyResponse> search(
@@ -38,12 +47,15 @@ public class CoordinatorController {
     //filter bt role
     //enter parameter role to filter
     @GetMapping("/search/filter/{companyId}")
-    public ResponseEntity<GetAllUserByRoleResponse> getAllMentors(
-            @PathVariable int companyId,
-            @RequestParam String role,
-            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
-        return ResponseEntity.ok(userAccountService.getAllUserByRole(companyId, role, pageNo, pageSize));
+//    public ResponseEntity<GetAllUserByRoleResponse> getAllMentors(
+//            @PathVariable int companyId,
+//            @RequestParam String role,
+//            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+//            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
+//        return ResponseEntity.ok(userAccountService.getAllUserByRole(companyId, role, pageNo, pageSize));
+//    }
+    public ResponseEntity<List<UserAccount>> getAllUserByRole(@PathVariable int companyId, @RequestParam String role) {
+        return ResponseEntity.ok(userAccountService.getAllUserAccountByRole(companyId, role));
     }
 
     //create a course
@@ -62,5 +74,10 @@ public class CoordinatorController {
     @GetMapping("/course/{courseId}")
     public ResponseEntity<Course> getUserInSameCompany(@PathVariable int courseId) {
         return ResponseEntity.ok(courseService.getCourse(courseId));
+    }
+
+    @PostMapping("/schedule/create")
+    public ResponseEntity<?> addSchedule(@RequestBody AddScheduleRequest addScheduleRequest) {
+        return new ResponseEntity<>(interviewScheduleService.addSchedule(addScheduleRequest), HttpStatus.CREATED);
     }
 }

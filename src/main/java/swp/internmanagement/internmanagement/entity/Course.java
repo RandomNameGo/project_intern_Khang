@@ -49,7 +49,6 @@ public class Course {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @Size(max = 10)
     @Nationalized
     @Column(name = "status", length = 10)
     private Integer status;

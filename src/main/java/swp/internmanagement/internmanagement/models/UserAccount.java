@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
@@ -93,6 +94,7 @@ public class UserAccount {
     private List<Course> courses = new ArrayList<>();
 
     @OneToOne(mappedBy = "user")
+    @JsonManagedReference
     private InternDetail internDetails;
 
 }

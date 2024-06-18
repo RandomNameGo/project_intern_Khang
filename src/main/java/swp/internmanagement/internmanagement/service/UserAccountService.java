@@ -1,6 +1,5 @@
 package swp.internmanagement.internmanagement.service;
 
-import org.springframework.data.domain.Pageable;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.CreateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
@@ -16,13 +15,15 @@ public interface UserAccountService {
 
     GetUserInSameCompanyResponse getUserInSameCompany(int companyId, int pageNo, int pageSize);
 
-    GetAllUserByRoleResponse getAllUserByRole(int roleId, String role, int pageNo, int pageSize);
+    GetAllUserByRoleResponse getAllUserByRole(int companyId, String role, int pageNo, int pageSize);
 
     String deleteUserAccount(int userId);
 
     boolean RegisterUser(List<SignupRequest> listSignUpRequest);
 
     boolean verifyAndActivate(String code, String userName, String password);
+
+    List<UserAccount> getAllUserAccountByRole(int companyId, String role);
 
     boolean checkUserEsistAndSendEmail(String userName, String password);
     
