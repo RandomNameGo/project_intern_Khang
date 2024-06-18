@@ -63,9 +63,9 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     // This method is for admin
     @Override
-    public GetAllUserByParamResponse getAllUserAccountsByParam(String param, int pageNo, int pageSize) {
+    public GetAllUserByParamResponse getAllUserAccountsByParam(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<UserAccount> userAccounts = userAccountRepository.findUserAccountByParam(param, pageable);
+        Page<UserAccount> userAccounts = userAccountRepository.findUserAccountByParam(pageable);
         List<UserAccount> userAccountList = userAccounts.getContent();
 
         GetAllUserByParamResponse getAllUserByParamResponse = new GetAllUserByParamResponse();

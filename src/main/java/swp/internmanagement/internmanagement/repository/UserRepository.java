@@ -18,8 +18,8 @@ public interface UserRepository extends JpaRepository<UserAccount, Integer> {
     Boolean existsByEmail(String email);
     @Query(value = "SELECT TOP 1 user_id FROM User_account ORDER BY user_id DESC", nativeQuery = true)
     int findLastUserId();
-    @Query("SELECT u from UserAccount u where u.company.companyName like %?1% or u.role like %?1% and u.role != 'ROLE_ADMIN' ")
-    Page<UserAccount> findUserAccountByParam(String param, Pageable pageable);
+    @Query("SELECT u from UserAccount u where u.role != 'ROLE_ADMIN' ")
+    Page<UserAccount> findUserAccountByParam(Pageable pageable);
 
     //Coordinator search intern and mentor in same company
     @Query("select u from UserAccount u where u.role = 'ROLE_MENTOR' or u.role = 'ROLE_INTERN' and u.company.id = ?1")

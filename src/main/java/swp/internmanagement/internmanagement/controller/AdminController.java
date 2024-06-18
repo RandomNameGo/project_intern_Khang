@@ -45,12 +45,11 @@ public class AdminController {
         return ResponseEntity.ok(requestService.getRequests(pageNo, pageSize));
     }
 
-    @GetMapping("/search/param={param}")
+    @GetMapping("/search")
     public ResponseEntity<GetAllUserByParamResponse> getAllUserByParamResponse(
-            @PathVariable String param,
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
-        return ResponseEntity.ok(userAccountService.getAllUserAccountsByParam(param, pageNo, pageSize));
+        return ResponseEntity.ok(userAccountService.getAllUserAccountsByParam(pageNo, pageSize));
     }
 
     @GetMapping("/jobApplication")
@@ -73,6 +72,18 @@ public class AdminController {
         }
         return ResponseEntity.status(500).body("Failed to create company.");
     }
+    @GetMapping("/viewCompany")
+    public ResponseEntity<?> getAllCompanyInCurrent(
+        @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+        @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
+    ) {
+        try {
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to get company.");
+        }
+        return ResponseEntity.status(500).body("Failed to get company.");
+    }
+    
 
     @DeleteMapping("/userAccount/delete/id={userId}")
     public ResponseEntity<?> deleteUserAccount(@PathVariable int userId) {

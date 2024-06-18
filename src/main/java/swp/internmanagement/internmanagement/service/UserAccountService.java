@@ -10,7 +10,7 @@ import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompa
 
 public interface UserAccountService {
 
-    GetAllUserByParamResponse getAllUserAccountsByParam(String param, int pageNo, int pageSize);
+    GetAllUserByParamResponse getAllUserAccountsByParam(int pageNo, int pageSize);
 
     GetUserInSameCompanyResponse getUserInSameCompany(int companyId, int pageNo, int pageSize);
 
