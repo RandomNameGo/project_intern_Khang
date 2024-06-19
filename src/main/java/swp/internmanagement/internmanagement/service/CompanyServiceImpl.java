@@ -1,5 +1,7 @@
 package swp.internmanagement.internmanagement.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.payload.request.CreateCompanyRequest;
+import swp.internmanagement.internmanagement.payload.request.UpdateCompanyRequest;
+import swp.internmanagement.internmanagement.payload.response.CompanyResponse;
 import swp.internmanagement.internmanagement.repository.CompanyRepository;
 
 @Service
@@ -34,5 +38,41 @@ public class CompanyServiceImpl implements CompanyService {
         }
 
         return false;
+    }
+
+    @Override
+    public String deleteCompany(int companyId) {
+        if (!companyRepository.existsById(companyId)) {
+            return "Company not found";
+        }
+        companyRepository.deleteById(companyId);
+        return "Deleted Company";
+    }
+
+    @Override
+    public String updateCompany(int courseId, UpdateCompanyRequest companyRequest) {
+        if (!companyRepository.existsById(courseId)) {
+            return "Company not found";
+        }
+        Company company = companyRepository.findById(courseId).get();
+        String newCompanyName = companyRequest.getCompanyName();
+        String newLocation = companyRequest.getLocation();
+        String newDescription = companyRequest.getDescription();
+        if(!newCompanyName.isEmpty()) {
+            company.setCompanyName(newCompanyName);
+        }
+        if(!newLocation.isEmpty()) {
+            company.setLocation(newLocation);
+        }
+        if(!newDescription.isEmpty()) {
+            company.setCompanyDescription(newDescription);
+        }
+        companyRepository.save(company);
+        return "Updated Company";
+    }
+    @Override
+    public List<Company> getAllCompany() {
+        List<Company> list = companyRepository.findAll();      
+        return list;
     }
 }

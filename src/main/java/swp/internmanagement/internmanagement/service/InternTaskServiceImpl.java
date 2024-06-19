@@ -38,6 +38,7 @@ public class InternTaskServiceImpl implements InternTaskService {
         for (InternTask internTask : internTasks) {
             InternTaskResponse internTaskResponse = new InternTaskResponse();
             internTaskResponse.setTaskId(internTask.getTask().getId());
+            internTaskResponse.setTaskId(internTask.getTask().getCourse().getId());
             internTaskResponse.setTaskContent(internTask.getTask().getTaskContent());
             internTaskResponse.setStartDate(internTask.getTask().getStartDate());
             internTaskResponse.setEndDate(internTask.getTask().getEndDate());

@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Data
 public class InternTaskResponse {
     private int taskId;
+    private int courseId;
     private String taskContent;
     private LocalDate startDate;
     private LocalDate endDate;

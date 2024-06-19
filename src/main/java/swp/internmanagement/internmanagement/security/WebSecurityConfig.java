@@ -36,7 +36,7 @@ public class WebSecurityConfig {
     private AuthEntryPointJwt unauthorizeHandler;
 
     @Bean
-    public AuthTokenFilter authenticatioTokenFilter(){
+    public AuthTokenFilter authenticationTokenFilter(){
         return new AuthTokenFilter();
     }
     @Bean
@@ -68,7 +68,7 @@ public class WebSecurityConfig {
                     .anyRequest().authenticated()
             );
             http.authenticationProvider(authenticationProvider());
-            http.addFilterBefore((Filter) authenticatioTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+            http.addFilterBefore((Filter) authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
             return http.build();
     }
 }

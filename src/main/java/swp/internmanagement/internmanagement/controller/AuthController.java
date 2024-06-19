@@ -29,9 +29,10 @@ import swp.internmanagement.internmanagement.security.jwt.JwtUtils;
 import swp.internmanagement.internmanagement.service.UserAccountService;
 import swp.internmanagement.internmanagement.service.UserDetailsImpl;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true",allowedHeaders = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/internbridge/auth")
+
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import swp.internmanagement.internmanagement.payload.request.UpdateInternDetailR
 import swp.internmanagement.internmanagement.payload.response.JobApplicationResponse;
 import swp.internmanagement.internmanagement.service.InternDetailService;
 import swp.internmanagement.internmanagement.service.JobApplicationService;
+import swp.internmanagement.internmanagement.service.JobService;
 
 
 @RestController
@@ -34,6 +36,9 @@ public class ManagerController {
 
      @Autowired
     private InternDetailService internDetailService;
+
+    @Autowired
+    private JobService jobService;
 
     @PostMapping("/postjob")
     public ResponseEntity<?>  PostRecruitment(
@@ -66,7 +71,9 @@ public class ManagerController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    
     @PostMapping("/jobApplication")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<JobApplicationResponse> getJobApplication
     (
         @RequestParam("companyid") int companyId,
@@ -87,10 +94,36 @@ public class ManagerController {
         }
     }
     
-    
-
     @PutMapping("/intern/internDetail/update/{interId}")
     public ResponseEntity<?> updateInternDetail(@RequestBody UpdateInternDetailRequest updateInternDetailRequest, @PathVariable Integer interId){
         return ResponseEntity.ok(internDetailService.updateInternDetail(updateInternDetailRequest,interId));
+    }
+   
+    @GetMapping("/viewJob")
+    public ResponseEntity<?> getAllJob(
+        @RequestParam("companyid") int companyId,
+        @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+        @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
+    ) {
+        return ResponseEntity.ok(jobService.getAllJobsByCompanyId(companyId, pageNo, pageSize));
+    }
+    @PutMapping("/updateJob")
+    public ResponseEntity<?> updateJob(
+        @RequestParam("job_id") Integer job_id,
+        @RequestParam("job_discription") String job_discription
+    ) {
+        try {
+            if(job_id!=null && job_discription!=null){
+                boolean check=jobService.updateJob(job_id, job_discription);
+                if(check){
+                    return ResponseEntity.ok("Update job submitted successfully.");
+                }else{
+                 throw new Exception();
+                }
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to Update job.");
+        }
+        return ResponseEntity.status(500).body("Failed to Update job.");
     }
 }

@@ -56,5 +56,34 @@ public class JobServiceImpl implements JobService{
         Optional<Job> job = jobRepository.findById(id);
         return job.orElse(null);
     }
-
+    @Override
+    public GetAllJobsResponse getAllJobsByCompanyId(Integer companyId, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Job> jobs = jobRepository.findByCompanyId(companyId, pageable);
+        List<Job> listOfJobs = jobs.getContent();
+        GetAllJobsResponse allJobsResponse= new GetAllJobsResponse();
+        allJobsResponse.setJobs(listOfJobs);
+        allJobsResponse.setPageNo(jobs.getNumber());
+        allJobsResponse.setPageSize(jobs.getSize());
+        allJobsResponse.setTotalItems(jobs.getTotalElements());
+        allJobsResponse.setTotalPages(jobs.getTotalPages());
+        return allJobsResponse;
+    }
+    @Override
+    public boolean updateJob(Integer id, String discription) {
+        try {
+            Optional<Job> job=jobRepository.findById(id);
+            Job jobData=job.get();
+            jobData.setJobDescription(discription);
+            if(job.isPresent()){
+                jobRepository.save(jobData);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        
+        return false;
+    }
 }

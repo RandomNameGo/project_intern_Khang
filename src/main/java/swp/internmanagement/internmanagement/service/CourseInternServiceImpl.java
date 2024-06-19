@@ -42,6 +42,7 @@ public class CourseInternServiceImpl implements CourseInternService {
             courseIntern.setIntern(userAccount);
             courseInternId.setInternId(i);
             courseIntern.setId(courseInternId);
+            courseIntern.setResult(0.0);
             courseInternRepository.save(courseIntern);
         }
         return "Added successfully";

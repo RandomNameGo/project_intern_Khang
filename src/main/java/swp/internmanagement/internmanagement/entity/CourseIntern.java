@@ -25,7 +25,7 @@ public class CourseIntern {
     private UserAccount intern;
 
     @NotNull
-    @Column(name = "result", nullable = false)
+    @Column(name = "task_result", nullable = false)
     private Double result;
 
 }
