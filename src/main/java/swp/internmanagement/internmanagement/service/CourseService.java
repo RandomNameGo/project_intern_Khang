@@ -2,6 +2,7 @@ package swp.internmanagement.internmanagement.service;
 
 import swp.internmanagement.internmanagement.entity.Course;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
+import swp.internmanagement.internmanagement.payload.response.GetAllCourseByMentorIdResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
 
@@ -19,7 +20,7 @@ public interface CourseService {
 
     void updateCourseStatus();
 
-    List<Course> getCourseByMentor(int mentorId);
+    GetAllCourseByMentorIdResponse getCourseByMentor(int mentorId, int pageNo, int pageSize);
 
     GetAllCourseInCompanyResponse getAllCourseInCompanyResponse(int companyId, int pageNo, int pageSize);
 }

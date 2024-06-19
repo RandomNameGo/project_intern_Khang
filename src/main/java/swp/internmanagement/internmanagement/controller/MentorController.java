@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import swp.internmanagement.internmanagement.entity.Course;
 import swp.internmanagement.internmanagement.entity.Task;
 import swp.internmanagement.internmanagement.payload.request.CreateTaskRequest;
+import swp.internmanagement.internmanagement.payload.response.GetAllCourseByMentorIdResponse;
 import swp.internmanagement.internmanagement.service.CourseService;
 import swp.internmanagement.internmanagement.service.InternTaskService;
 import swp.internmanagement.internmanagement.service.TaskService;
@@ -36,7 +37,11 @@ public class MentorController {
     }
 
     @GetMapping("/course/{mentorId}")
-    public ResponseEntity<List<Course>> getCourse(@PathVariable int mentorId) {
-        return ResponseEntity.ok(courseService.getCourseByMentor(mentorId));
+    public ResponseEntity<GetAllCourseByMentorIdResponse> getCourse(
+            @PathVariable int mentorId,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
+    ) {
+        return ResponseEntity.ok(courseService.getCourseByMentor(mentorId, pageNo, pageSize));
     }
 }

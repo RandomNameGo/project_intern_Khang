@@ -11,7 +11,7 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Integer> {
 
     @Query("select c from Course c where c.mentor.id = :mentorId")
-    List<Course> findByMentor(int mentorId);
+    Page<Course> findByMentor(int mentorId, Pageable pageable);
 
     @Query("select c from Course c where c.company.id = :companyId")
     Page<Course> findByCompany(int companyId, Pageable pageable);
