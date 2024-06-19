@@ -1,5 +1,6 @@
 package swp.internmanagement.internmanagement.service;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import swp.internmanagement.internmanagement.entity.Company;
@@ -13,6 +14,7 @@ import swp.internmanagement.internmanagement.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -77,5 +79,17 @@ public class CourseServiceImpl implements CourseService {
         }
         courseRepository.deleteById(courseId);
         return "Deleted course";
+    }
+
+    @Override
+    @PostConstruct
+    public void updateCourseStatus() {
+        LocalDate today = LocalDate.now();
+        List<Course> courses = courseRepository.findAll();
+        for(Course course : courses) {
+            if(course.getEndDate().isBefore(today)) {
+                course.setStatus(1);
+            }
+        }
     }
 }
