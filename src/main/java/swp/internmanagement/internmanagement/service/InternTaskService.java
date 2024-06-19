@@ -5,7 +5,7 @@ import swp.internmanagement.internmanagement.payload.response.ShowInternTaskResp
 
 public interface InternTaskService {
 
-    ShowInternTaskResponse getInternTaskByCourseId(int courseId);
+    ShowInternTaskResponse getInternTaskByCourseId(int courseId, int internId);
 
     void addInternToTask(Task task);
 

@@ -32,8 +32,8 @@ public class InternTaskServiceImpl implements InternTaskService {
     InternTaskRepository internTaskRepository;
 
     @Override
-    public ShowInternTaskResponse getInternTaskByCourseId(int courseId) {
-        List<InternTask> internTasks = internTaskRepository.findByCourseId(courseId);
+    public ShowInternTaskResponse getInternTaskByCourseId(int courseId, int internId) {
+        List<InternTask> internTasks = internTaskRepository.findByCourseId(courseId, internId);
         List<InternTaskResponse> responses = new ArrayList<>();
         for (InternTask internTask : internTasks) {
             InternTaskResponse internTaskResponse = new InternTaskResponse();

@@ -48,7 +48,7 @@ public class InternController {
         return ResponseEntity.ok(courseInternService.geCoursesByInternId(internId));
     }
 
-    @GetMapping("/course/task/{courseId}")
+    @GetMapping("/course/task/{courseId}&{internId}")
 //    public ResponseEntity<GetAllTaskInCourseResponse> getAllTaskInCourse(
 //            @PathVariable int courseId,
 //            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
@@ -56,8 +56,8 @@ public class InternController {
 //    ) {
 //        return ResponseEntity.ok(taskService.getTasks(courseId, pageNo, pageSize));
 //    }
-    public ResponseEntity<ShowInternTaskResponse> getTask(@PathVariable int courseId) {
-        return ResponseEntity.ok(internTaskService.getInternTaskByCourseId(courseId));
+    public ResponseEntity<ShowInternTaskResponse> getTask(@PathVariable int courseId, @PathVariable int internId) {
+        return ResponseEntity.ok(internTaskService.getInternTaskByCourseId(courseId, internId));
     }
 
     @GetMapping("/courseName/{courseId}")
