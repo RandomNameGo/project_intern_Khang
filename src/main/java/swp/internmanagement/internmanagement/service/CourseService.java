@@ -2,7 +2,10 @@ package swp.internmanagement.internmanagement.service;
 
 import swp.internmanagement.internmanagement.entity.Course;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
+import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
+
+import java.util.List;
 
 public interface CourseService {
 
@@ -15,4 +18,8 @@ public interface CourseService {
     String deleteCourse(int courseId);
 
     void updateCourseStatus();
+
+    List<Course> getCourseByMentor(int mentorId);
+
+    GetAllCourseInCompanyResponse getAllCourseInCompanyResponse(int companyId, int pageNo, int pageSize);
 }

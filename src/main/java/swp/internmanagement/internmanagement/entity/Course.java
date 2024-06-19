@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
@@ -53,7 +54,7 @@ public class Course {
     private Integer status;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonManagedReference
     private List<Task> tasks = new ArrayList<>();
 
 }

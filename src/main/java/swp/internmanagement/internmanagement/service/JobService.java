@@ -11,4 +11,6 @@ public interface JobService {
     SearchJobsResponse getJobs(String jobName, int pageNo, int pageSize);
 
     Job getJobId(Integer id);
+
+    Boolean deleteJob(Integer jobId);
 }

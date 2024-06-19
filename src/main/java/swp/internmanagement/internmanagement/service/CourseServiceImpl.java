@@ -2,11 +2,17 @@ package swp.internmanagement.internmanagement.service;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.entity.Course;
+import swp.internmanagement.internmanagement.entity.Request;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
+import swp.internmanagement.internmanagement.payload.response.CourseResponse;
+import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
 import swp.internmanagement.internmanagement.repository.CompanyRepository;
 import swp.internmanagement.internmanagement.repository.CourseRepository;
@@ -14,6 +20,7 @@ import swp.internmanagement.internmanagement.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -92,4 +99,45 @@ public class CourseServiceImpl implements CourseService {
             }
         }
     }
+
+    @Override
+    public List<Course> getCourseByMentor(int mentorId) {
+        List<Course> courses = courseRepository.findByMentor(mentorId);
+        if(courses.isEmpty()) {
+            return null;
+        }
+        return courses;
+    }
+
+    @Override
+    public GetAllCourseInCompanyResponse getAllCourseInCompanyResponse(int companyId, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Course> courses = courseRepository.findByCompany(companyId, pageable);
+        List<Course> courseList = courses.getContent();
+        List<CourseResponse> courseResponseList = new ArrayList<>();
+        for(Course course : courseList) {
+            CourseResponse courseResponse = new CourseResponse();
+
+            courseResponse.setCourseId(course.getId());
+            courseResponse.setCourseName(course.getCourseDescription());
+            courseResponse.setCompanyId(course.getCompany().getId());
+            courseResponse.setCompanyName(course.getCompany().getCompanyName());
+            courseResponse.setMentorId(course.getMentor().getId());
+            courseResponse.setMentorName(course.getMentor().getFullName());
+            courseResponse.setStartDate(course.getStartDate());
+            courseResponse.setEndDate(course.getEndDate());
+            courseResponse.setStatus(course.getStatus());
+
+            courseResponseList.add(courseResponse);
+        }
+        GetAllCourseInCompanyResponse getAllCourseInCompanyResponse = new GetAllCourseInCompanyResponse();
+        getAllCourseInCompanyResponse.setCourses(courseResponseList);
+        getAllCourseInCompanyResponse.setPageNo(courses.getNumber());
+        getAllCourseInCompanyResponse.setPageSize(courses.getSize());
+        getAllCourseInCompanyResponse.setTotalItems(courses.getTotalElements());
+        getAllCourseInCompanyResponse.setTotalPages(courses.getTotalPages());
+
+        return getAllCourseInCompanyResponse;
+    }
+
 }

@@ -12,6 +12,7 @@ import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.AddInternToCourseRequest;
 import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
+import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
 import swp.internmanagement.internmanagement.service.CourseInternService;
 import swp.internmanagement.internmanagement.service.CourseService;
@@ -85,5 +86,14 @@ public class CoordinatorController {
     @PostMapping("/schedule/create")
     public ResponseEntity<?> addSchedule(@RequestBody AddScheduleRequest addScheduleRequest) {
         return new ResponseEntity<>(interviewScheduleService.addSchedule(addScheduleRequest), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/course/companyId={companyId}")
+    public ResponseEntity<GetAllCourseInCompanyResponse> getCourseByCompany(
+            @PathVariable int companyId,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
+    ) {
+        return ResponseEntity.ok(courseService.getAllCourseInCompanyResponse(companyId, pageNo, pageSize));
     }
 }

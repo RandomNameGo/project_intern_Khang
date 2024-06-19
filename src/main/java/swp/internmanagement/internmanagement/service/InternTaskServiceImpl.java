@@ -2,10 +2,7 @@ package swp.internmanagement.internmanagement.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import swp.internmanagement.internmanagement.entity.CourseIntern;
-import swp.internmanagement.internmanagement.entity.InternTask;
-import swp.internmanagement.internmanagement.entity.InternTaskId;
-import swp.internmanagement.internmanagement.entity.Task;
+import swp.internmanagement.internmanagement.entity.*;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.response.InternTaskResponse;
 import swp.internmanagement.internmanagement.payload.response.ShowInternTaskResponse;
@@ -33,6 +30,12 @@ public class InternTaskServiceImpl implements InternTaskService {
 
     @Override
     public ShowInternTaskResponse getInternTaskByCourseId(int courseId, int internId) {
+        CourseInternId courseInternId = new CourseInternId();
+        courseInternId.setCourseId(courseId);
+        courseInternId.setInternId(internId);
+        if(!courseInternRepository.existsById(courseInternId)) {
+            return null;
+        }
         List<InternTask> internTasks = internTaskRepository.findByCourseId(courseId, internId);
         List<InternTaskResponse> responses = new ArrayList<>();
         for (InternTask internTask : internTasks) {

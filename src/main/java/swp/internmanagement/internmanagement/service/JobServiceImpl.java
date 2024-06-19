@@ -57,4 +57,13 @@ public class JobServiceImpl implements JobService{
         return job.orElse(null);
     }
 
+    @Override
+    public Boolean deleteJob(Integer jobId) {
+        if(!jobRepository.existsById(jobId)) {
+            return false;
+        }
+        jobRepository.deleteById(jobId);
+        return true;
+    }
+
 }
