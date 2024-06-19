@@ -12,6 +12,8 @@ public interface JobService {
 
     Job getJobId(Integer id);
 
+    Boolean deleteJob(Integer jobId);
+
     GetAllJobsResponse getAllJobsByCompanyId(Integer companyId,int pageNo, int pageSize);
 
     boolean updateJob(Integer id, String discription);

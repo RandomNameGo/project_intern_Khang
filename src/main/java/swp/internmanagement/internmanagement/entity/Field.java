@@ -38,7 +38,6 @@ public class Field {
 
     @OneToMany(mappedBy = "field")
     @JsonManagedReference
-    @JsonIgnore
     private List<Job> jobs = new ArrayList<>();
 
 }

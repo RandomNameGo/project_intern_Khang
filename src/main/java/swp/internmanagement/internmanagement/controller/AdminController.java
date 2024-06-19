@@ -8,8 +8,8 @@ import swp.internmanagement.internmanagement.payload.request.CreateCompanyReques
 import swp.internmanagement.internmanagement.payload.request.UpdateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.response.AcceptedJobApplicationResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllRequestResponse;
-import swp.internmanagement.internmanagement.payload.response.GetAllUserByParamResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllUserResponse;
+import swp.internmanagement.internmanagement.service.*;
 import swp.internmanagement.internmanagement.service.CompanyService;
 import swp.internmanagement.internmanagement.service.JobApplicationService;
 import swp.internmanagement.internmanagement.service.RequestService;
@@ -34,6 +34,9 @@ public class AdminController {
 
     @Autowired
     CompanyService companyService;
+
+    @Autowired
+    private JobService jobService;
 
     @GetMapping("/request")
     public ResponseEntity<GetAllRequestResponse> getAllRequestResponse(
@@ -103,6 +106,20 @@ public class AdminController {
     @PutMapping("/company/update/{companyId}")
     public ResponseEntity<?> updateCompany(@PathVariable int companyId ,@RequestBody UpdateCompanyRequest companyRequest) {
         return ResponseEntity.ok(companyService.updateCompany(companyId, companyRequest));
+    }
+
+    @DeleteMapping("/job/delete/{jobId}")
+    public ResponseEntity<?> deleteJob(@PathVariable int jobId) {
+        try {
+            boolean delete = jobService.deleteJob(jobId);
+            if (delete) {
+                return ResponseEntity.ok("Delete job submitted successfully.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to delete job.");
+        }
+        return ResponseEntity.status(500).body("Job is not found.");
     }
     @GetMapping("/AllCompany")
     public ResponseEntity<?> getAllCompany() {

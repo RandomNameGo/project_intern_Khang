@@ -56,6 +56,16 @@ public class JobServiceImpl implements JobService{
         Optional<Job> job = jobRepository.findById(id);
         return job.orElse(null);
     }
+
+    @Override
+    public Boolean deleteJob(Integer jobId) {
+        if(!jobRepository.existsById(jobId)) {
+            return false;
+        }
+        jobRepository.deleteById(jobId);
+        return true;
+    }
+
     @Override
     public GetAllJobsResponse getAllJobsByCompanyId(Integer companyId, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
