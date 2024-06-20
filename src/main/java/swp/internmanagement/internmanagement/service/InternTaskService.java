@@ -10,4 +10,6 @@ public interface InternTaskService {
     void addInternToTask(Task task);
 
     String updateInternTask(int taskId, int internId);
+
+    double calculateTotalInternTaskResult(int internId);
 }

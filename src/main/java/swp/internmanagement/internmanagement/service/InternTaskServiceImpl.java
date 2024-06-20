@@ -41,7 +41,7 @@ public class InternTaskServiceImpl implements InternTaskService {
         for (InternTask internTask : internTasks) {
             InternTaskResponse internTaskResponse = new InternTaskResponse();
             internTaskResponse.setTaskId(internTask.getTask().getId());
-            internTaskResponse.setTaskId(internTask.getTask().getCourse().getId());
+            internTaskResponse.setCourseId(internTask.getTask().getCourse().getId());
             internTaskResponse.setTaskContent(internTask.getTask().getTaskContent());
             internTaskResponse.setStartDate(internTask.getTask().getStartDate());
             internTaskResponse.setEndDate(internTask.getTask().getEndDate());
@@ -76,5 +76,14 @@ public class InternTaskServiceImpl implements InternTaskService {
         internTask.setTaskStatus(Boolean.TRUE);
         internTaskRepository.save(internTask);
         return "You have completed the task";
+    }
+
+    @Override
+    public double calculateTotalInternTaskResult(int internId) {
+        long totalTask = internTaskRepository.countInternTasksByInternId(internId);
+        long totalCompletedTask = internTaskRepository.countInternTasksCompletedByInternId(internId);
+        double totalTaskDouble = (double) totalTask;
+        double totalCompletedTaskDouble = (double) totalCompletedTask;
+        return (totalCompletedTaskDouble/totalTaskDouble)*100;
     }
 }
