@@ -9,6 +9,7 @@ import swp.internmanagement.internmanagement.entity.Course;
 import swp.internmanagement.internmanagement.entity.Task;
 import swp.internmanagement.internmanagement.payload.request.CreateTaskRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseByMentorIdResponse;
+import swp.internmanagement.internmanagement.payload.response.GetAllTaskInCourseResponse;
 import swp.internmanagement.internmanagement.service.CourseService;
 import swp.internmanagement.internmanagement.service.InternTaskService;
 import swp.internmanagement.internmanagement.service.TaskService;
@@ -43,5 +44,10 @@ public class MentorController {
             @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
     ) {
         return ResponseEntity.ok(courseService.getCourseByMentor(mentorId, pageNo, pageSize));
+    }
+
+    @GetMapping("/course/task/{courseId}&{mentorId}")
+    public ResponseEntity<List<Task>> getCourseTask(@PathVariable int courseId, @PathVariable int mentorId){
+        return ResponseEntity.ok(taskService.getTasks(courseId, mentorId));
     }
 }

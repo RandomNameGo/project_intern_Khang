@@ -14,7 +14,7 @@ public interface CourseService {
 
     Course getCourse(int courseId);
 
-    GetCourseNameResponse getCourseName(int courseId);
+    GetCourseNameResponse getCourseName(int courseId, int internId);
 
     String deleteCourse(int courseId);
 

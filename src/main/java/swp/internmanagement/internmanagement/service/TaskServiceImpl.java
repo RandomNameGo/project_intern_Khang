@@ -53,24 +53,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public GetAllTaskInCourseResponse getTasks(int courseId, int pageNo, int pageSize) {
+    public List<Task> getTasks(int courseId, int mentorId) {
         if(!courseRepository.existsById(courseId)){
             return null;
         }
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Task> tasks = taskRepository.findAllInCourse(courseId, pageable);
-        List<Task> taskList = tasks.getContent();
+        Course course = courseRepository.findById(courseId).get();
+        if(course.getMentor().getId() != mentorId){
+            return null;
+        }
 
-
-        GetAllTaskInCourseResponse getAllTaskInCourseResponse = new GetAllTaskInCourseResponse();
-        getAllTaskInCourseResponse.setTasks(taskList);
-        getAllTaskInCourseResponse.setPageNo(tasks.getNumber());
-        getAllTaskInCourseResponse.setPageSize(tasks.getSize());
-        getAllTaskInCourseResponse.setTotalItems(tasks.getTotalElements());
-        getAllTaskInCourseResponse.setTotalPages(tasks.getTotalPages());
-
-        return getAllTaskInCourseResponse;
+        return taskRepository.findAllInCourse(courseId);
     }
 
 

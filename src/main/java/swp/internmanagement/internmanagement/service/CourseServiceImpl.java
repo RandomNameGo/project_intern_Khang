@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.entity.Course;
+import swp.internmanagement.internmanagement.entity.CourseIntern;
+import swp.internmanagement.internmanagement.entity.CourseInternId;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
 import swp.internmanagement.internmanagement.payload.response.CourseResponse;
@@ -15,6 +17,7 @@ import swp.internmanagement.internmanagement.payload.response.GetAllCourseByMent
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
 import swp.internmanagement.internmanagement.repository.CompanyRepository;
+import swp.internmanagement.internmanagement.repository.CourseInternRepository;
 import swp.internmanagement.internmanagement.repository.CourseRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
 
@@ -34,6 +37,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
+    private CourseInternRepository courseInternRepository;
 
     @Override
     public Course addCourse(CreateCourseRequest createCourseRequest, int companyId) {
@@ -58,6 +63,9 @@ public class CourseServiceImpl implements CourseService {
         course.setCourseDescription(createCourseRequest.getCourseDescription());
         course.setStartDate(startDateAfter);
         course.setEndDate(endDateAfter);
+        if(startDateAfter.isEqual(LocalDate.now())) {
+            course.setStatus(1);
+        }
         course.setStatus(0);
         courseRepository.save(course);
         return course;
@@ -69,8 +77,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public GetCourseNameResponse getCourseName(int courseId) {
+    public GetCourseNameResponse getCourseName(int courseId, int internId) {
         if(!courseRepository.existsById(courseId)) {
+            return null;
+        }
+        CourseInternId courseInternId = new CourseInternId();
+        courseInternId.setInternId(internId);
+        courseInternId.setCourseId(courseId);
+        if(!courseInternRepository.existsById(courseInternId)) {
             return null;
         }
         Course course = courseRepository.findById(courseId).get();
