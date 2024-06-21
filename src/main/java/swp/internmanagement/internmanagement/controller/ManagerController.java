@@ -108,6 +108,7 @@ public class ManagerController {
     ) {
         return ResponseEntity.ok(jobService.getAllJobsByCompanyId(companyId, pageNo, pageSize));
     }
+
     @PutMapping("/updateJob")
     public ResponseEntity<?> updateJob(
         @RequestParam("job_id") Integer job_id,

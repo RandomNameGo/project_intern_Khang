@@ -6,6 +6,7 @@ import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.payload.request.CreateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.request.UpdateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.response.CompanyResponse;
+import swp.internmanagement.internmanagement.payload.response.GetAllCompanyResponse;
 
 public interface CompanyService {
 
@@ -16,4 +17,6 @@ public interface CompanyService {
     String updateCompany(int courseId, UpdateCompanyRequest companyRequest);
 
     List<Company> getAllCompany();
+
+    GetAllCompanyResponse getAllCompanyResponse(int pageNo, int pageSize);
 }

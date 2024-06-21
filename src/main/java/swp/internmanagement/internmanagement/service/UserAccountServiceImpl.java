@@ -220,9 +220,11 @@ public class UserAccountServiceImpl implements UserAccountService {
             String userName = extractValue(result, userNamePattern);
             String password = extractValue(result, passwordPattern);
 
-            Optional<UserAccount> user = userAccountRepository.findByUserName(userName);
+            Optional<UserAccount> user = userAccountRepository.findByVerificationCodeAndUserName(codeVerify,
+                    userName);
             if (user.isPresent()) {
-                user.get().setPassword(password);
+                user.get().setStatus(1);
+                user.get().setPassword(encoder.encode(password));
                 user.get().setVerificationCode(null);
                 userAccountRepository.save(user.get());
                 return true;

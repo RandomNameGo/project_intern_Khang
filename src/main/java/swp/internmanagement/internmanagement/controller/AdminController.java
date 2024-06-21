@@ -86,10 +86,10 @@ public class AdminController {
         @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
     ) {
         try {
+            return ResponseEntity.ok(companyService.getAllCompanyResponse(pageNo, pageSize));
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Failed to get company.");
         }
-        return ResponseEntity.status(500).body("Failed to get company.");
     }
     
 

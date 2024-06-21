@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
