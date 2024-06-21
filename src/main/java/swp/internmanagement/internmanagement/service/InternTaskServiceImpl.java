@@ -1,5 +1,6 @@
 package swp.internmanagement.internmanagement.service;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import swp.internmanagement.internmanagement.entity.*;
@@ -41,7 +42,7 @@ public class InternTaskServiceImpl implements InternTaskService {
         for (InternTask internTask : internTasks) {
             InternTaskResponse internTaskResponse = new InternTaskResponse();
             internTaskResponse.setTaskId(internTask.getTask().getId());
-            internTaskResponse.setTaskId(internTask.getTask().getCourse().getId());
+            internTaskResponse.setCourseId(internTask.getTask().getCourse().getId());
             internTaskResponse.setTaskContent(internTask.getTask().getTaskContent());
             internTaskResponse.setStartDate(internTask.getTask().getStartDate());
             internTaskResponse.setEndDate(internTask.getTask().getEndDate());
@@ -76,5 +77,20 @@ public class InternTaskServiceImpl implements InternTaskService {
         internTask.setTaskStatus(Boolean.TRUE);
         internTaskRepository.save(internTask);
         return "You have completed the task";
+    }
+
+    @Override
+    public double calculateTotalInternTaskResult(int internId, int courseId) {
+        long totalTask = internTaskRepository.countInternTasksByInternId(internId, courseId);
+        long totalCompletedTask = internTaskRepository.countInternTasksCompletedByInternId(internId, courseId);
+        double totalTaskDouble = (double) totalTask;
+        double totalCompletedTaskDouble = (double) totalCompletedTask;
+        return (totalCompletedTaskDouble/totalTaskDouble)*100;
+    }
+
+    @Override
+    public InternTask getInternTaskByInternId(int internId, int taskId) {
+        InternTask internTask = internTaskRepository.findByTaskIdAndInternId(taskId, internId);
+        return internTask;
     }
 }

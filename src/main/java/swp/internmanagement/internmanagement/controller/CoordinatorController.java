@@ -92,7 +92,7 @@ public class CoordinatorController {
     public ResponseEntity<GetAllCourseInCompanyResponse> getCourseByCompany(
             @PathVariable int companyId,
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
     ) {
         return ResponseEntity.ok(courseService.getAllCourseInCompanyResponse(companyId, pageNo, pageSize));
     }

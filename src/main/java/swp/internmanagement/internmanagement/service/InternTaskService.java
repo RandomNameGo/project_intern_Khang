@@ -1,6 +1,8 @@
 package swp.internmanagement.internmanagement.service;
 
+import swp.internmanagement.internmanagement.entity.InternTask;
 import swp.internmanagement.internmanagement.entity.Task;
+import swp.internmanagement.internmanagement.payload.response.InternTaskResponse;
 import swp.internmanagement.internmanagement.payload.response.ShowInternTaskResponse;
 
 public interface InternTaskService {
@@ -10,4 +12,8 @@ public interface InternTaskService {
     void addInternToTask(Task task);
 
     String updateInternTask(int taskId, int internId);
+
+    double calculateTotalInternTaskResult(int internId, int courseId);
+
+    InternTask getInternTaskByInternId(int internId, int internTaskId);
 }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -104,7 +105,7 @@ public class ManagerController {
     public ResponseEntity<?> getAllJob(
         @RequestParam("companyid") int companyId,
         @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-        @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
+        @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
     ) {
         return ResponseEntity.ok(jobService.getAllJobsByCompanyId(companyId, pageNo, pageSize));
     }
@@ -127,5 +128,29 @@ public class ManagerController {
             return ResponseEntity.status(500).body("Failed to Update job.");
         }
         return ResponseEntity.status(500).body("Failed to Update job.");
+    }
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteJob(
+        @RequestParam ("job_id") Integer job_id
+    ){
+        try {
+            if(job_id!=null){
+                boolean check=jobService.deleteJob(job_id);
+                if(check){
+                    return ResponseEntity.ok("Delete Successfully");
+                }
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to delete job.");
+        }
+        return ResponseEntity.status(500).body("Failed to delete job.");
+    }
+    @GetMapping("/viewActivity")
+    public ResponseEntity<?> getAllActivity(
+        @RequestParam("companyid") int companyId,
+        @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+        @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        return ResponseEntity.ok(jobService.getAllJobsByCompanyId(companyId, pageNo, pageSize));
     }
 }

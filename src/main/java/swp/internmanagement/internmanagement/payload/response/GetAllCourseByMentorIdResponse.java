@@ -10,8 +10,4 @@ import java.util.List;
 @Setter
 public class GetAllCourseByMentorIdResponse {
     private List<CourseResponse> courses;
-    private int pageNo;
-    private int pageSize;
-    private long totalItems;
-    private int totalPages;
 }

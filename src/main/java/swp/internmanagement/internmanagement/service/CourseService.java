@@ -14,13 +14,15 @@ public interface CourseService {
 
     Course getCourse(int courseId);
 
-    GetCourseNameResponse getCourseName(int courseId);
+    GetCourseNameResponse getCourseName(int courseId, int internId);
 
     String deleteCourse(int courseId);
 
     void updateCourseStatus();
 
-    GetAllCourseByMentorIdResponse getCourseByMentor(int mentorId, int pageNo, int pageSize);
+    GetAllCourseByMentorIdResponse getCourseByMentor(int mentorId);
 
     GetAllCourseInCompanyResponse getAllCourseInCompanyResponse(int companyId, int pageNo, int pageSize);
+
+    GetAllCourseInCompanyResponse getCourseByMentorTable(int mentorId, int pageNo, int pageSize);
 }
