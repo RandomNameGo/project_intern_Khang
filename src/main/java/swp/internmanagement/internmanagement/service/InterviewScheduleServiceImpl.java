@@ -31,6 +31,9 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             String time = addScheduleRequest.getTime();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
             LocalDateTime interviewDate = LocalDateTime.parse(time, dateTimeFormatter);
+            if(interviewDate.isBefore(LocalDateTime.now())) {
+                return "Interview date can not be before current date";
+            }
             Instant interviewInstant = interviewDate.toInstant(ZoneOffset.UTC);
             schedule.setScheduleTime(interviewInstant);
             JobApplication jobApplication = applicationRepository.findById(j).get();

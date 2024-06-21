@@ -31,10 +31,8 @@ public class MentorController {
 
     //create task
     @PostMapping("/addactivities/{courseId}")
-    public ResponseEntity<Task> addActivities(@RequestBody CreateTaskRequest createTaskRequest, @PathVariable int courseId) {
-        Task tsk = taskService.createTask(createTaskRequest, courseId);
-        internTaskService.addInternToTask(tsk);
-        return new ResponseEntity<>(tsk, HttpStatus.CREATED);
+    public ResponseEntity<?> addActivities(@RequestBody CreateTaskRequest createTaskRequest, @PathVariable int courseId) {
+        return new ResponseEntity<>(taskService.createTask(createTaskRequest, courseId), HttpStatus.CREATED);
     }
 
     @GetMapping("/course/{mentorId}")
