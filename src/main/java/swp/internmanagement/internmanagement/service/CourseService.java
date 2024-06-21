@@ -20,7 +20,7 @@ public interface CourseService {
 
     void updateCourseStatus();
 
-    GetAllCourseByMentorIdResponse getCourseByMentor(int mentorId, int pageNo, int pageSize);
+    GetAllCourseByMentorIdResponse getCourseByMentor(int mentorId);
 
     GetAllCourseInCompanyResponse getAllCourseInCompanyResponse(int companyId, int pageNo, int pageSize);
 }

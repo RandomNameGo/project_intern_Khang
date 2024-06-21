@@ -38,12 +38,8 @@ public class MentorController {
     }
 
     @GetMapping("/course/{mentorId}")
-    public ResponseEntity<GetAllCourseByMentorIdResponse> getCourse(
-            @PathVariable int mentorId,
-            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
-    ) {
-        return ResponseEntity.ok(courseService.getCourseByMentor(mentorId, pageNo, pageSize));
+    public ResponseEntity<GetAllCourseByMentorIdResponse> getCourse(@PathVariable int mentorId) {
+        return ResponseEntity.ok(courseService.getCourseByMentor(mentorId));
     }
 
     @GetMapping("/course/task/{courseId}&{mentorId}")

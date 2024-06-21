@@ -115,10 +115,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public GetAllCourseByMentorIdResponse getCourseByMentor(int mentorId, int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Course> courses = courseRepository.findByMentor(mentorId, pageable);
-        List<Course> courseMentorList = courses.getContent();
+    public GetAllCourseByMentorIdResponse getCourseByMentor(int mentorId) {
+        List<Course> courseMentorList = courseRepository.findByMentor(mentorId);
         List<CourseResponse> courseResponseList = new ArrayList<>();
         for(Course course : courseMentorList) {
             CourseResponse courseResponse = new CourseResponse();
@@ -137,10 +135,6 @@ public class CourseServiceImpl implements CourseService {
         }
         GetAllCourseByMentorIdResponse getCourseByMentorIdResponse = new GetAllCourseByMentorIdResponse();
         getCourseByMentorIdResponse.setCourses(courseResponseList);
-        getCourseByMentorIdResponse.setPageNo(courses.getNumber());
-        getCourseByMentorIdResponse.setPageSize(courses.getSize());
-        getCourseByMentorIdResponse.setTotalItems(courses.getTotalElements());
-        getCourseByMentorIdResponse.setTotalPages(courses.getTotalPages());
 
         return getCourseByMentorIdResponse;
 
