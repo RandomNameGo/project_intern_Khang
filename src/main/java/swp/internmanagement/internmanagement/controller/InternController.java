@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import swp.internmanagement.internmanagement.entity.CourseIntern;
+import swp.internmanagement.internmanagement.entity.InternTask;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
 import swp.internmanagement.internmanagement.payload.response.ShowAllFeedbackFromMentorResponse;
 import swp.internmanagement.internmanagement.payload.response.ShowInternTaskResponse;
@@ -60,9 +61,9 @@ public class InternController {
         return ResponseEntity.ok(internTaskService.getInternTaskByCourseId(courseId, internId));
     }
 
-    @GetMapping("/courseName/{courseId}")
-    public ResponseEntity<GetCourseNameResponse> getCourseName(@PathVariable int courseId) {
-        return ResponseEntity.ok(courseService.getCourseName(courseId));
+    @GetMapping("/courseName/{courseId}&{internID}")
+    public ResponseEntity<GetCourseNameResponse> getCourseName(@PathVariable int courseId, @PathVariable int internID) {
+        return ResponseEntity.ok(courseService.getCourseName(courseId, internID));
     }
 
     @GetMapping("/getAllFeedback/{internId}")
@@ -72,6 +73,11 @@ public class InternController {
 
     @PutMapping("/course/task/done/{taskId}&{internId}")
     public ResponseEntity<?> completeTask(@PathVariable int taskId, @PathVariable int internId) {
+        InternTask internTask = new InternTask();
+        internTask = internTaskService.getInternTaskByInternId(internId,taskId);
+        int courseId = internTask.getTask().getCourse().getId();
+        internTaskService.updateInternTask(taskId, internId);
+        courseInternService.updateResult(internId, courseId);
         return new ResponseEntity<>(internTaskService.updateInternTask(taskId, internId), HttpStatus.OK);
     }
 }
