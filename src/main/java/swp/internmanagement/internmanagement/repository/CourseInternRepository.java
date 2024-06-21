@@ -10,7 +10,7 @@ import swp.internmanagement.internmanagement.entity.CourseInternId;
 
 public interface CourseInternRepository extends JpaRepository<CourseIntern, CourseInternId> {
 
-    @Query("select c from CourseIntern c where c.course.status = 1")
+    @Query("select c from CourseIntern c where c.course.status = 1 and c.intern.id = :internId")
     List<CourseIntern> findByInternId(int internId);
 
     List<CourseIntern> findByCourseId(int courseId);
