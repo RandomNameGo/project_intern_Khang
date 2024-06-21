@@ -4,10 +4,7 @@ import java.util.List;
 
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
-import swp.internmanagement.internmanagement.payload.response.GetAllUserByParamResponse;
-import swp.internmanagement.internmanagement.payload.response.GetAllUserByRoleResponse;
-import swp.internmanagement.internmanagement.payload.response.GetAllUserResponse;
-import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
+import swp.internmanagement.internmanagement.payload.response.*;
 
 public interface UserAccountService {
 
@@ -30,4 +27,6 @@ public interface UserAccountService {
     boolean handleChangePasswordUrl(String code);
 
     GetAllUserResponse getAllUser(int pageNo, int pageSize);
+
+    List<UserInfoResponse> getAllMentor(int companyId);
 }

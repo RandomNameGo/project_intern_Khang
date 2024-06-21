@@ -260,6 +260,23 @@ public class UserAccountServiceImpl implements UserAccountService {
         return getAllUserResponse;
     }
 
+    @Override
+    public List<UserInfoResponse> getAllMentor(int companyId) {
+        List<UserAccount> userAccounts = userAccountRepository.findAllMentorByCompanyId(companyId);
+        List<UserInfoResponse> userInfoResponseList = new ArrayList<>();
+        for (UserAccount userAccount : userAccounts) {
+            UserInfoResponse userInfoResponse = new UserInfoResponse();
+            userInfoResponse.setUser_id(userAccount.getId());
+            userInfoResponse.setUsername(userAccount.getUserName());
+            userInfoResponse.setEmail(userAccount.getEmail());
+            userInfoResponse.setFullName(userAccount.getFullName());
+            userInfoResponse.setRole(userAccount.getRole());
+            userInfoResponse.setCompany_id(userAccount.getCompany().getId());
+            userInfoResponseList.add(userInfoResponse);
+        }
+        return userInfoResponseList;
+    }
+
     private static String extractValue(String input, String pattern) {
         Pattern compiledPattern = Pattern.compile(pattern);
         Matcher matcher = compiledPattern.matcher(input);

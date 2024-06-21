@@ -36,4 +36,7 @@ public interface UserRepository extends JpaRepository<UserAccount, Integer> {
     @Query("SELECT u from UserAccount u where u.role != 'ROLE_ADMIN' ")
     Page<UserAccount> findAllUserAccount(Pageable pageable);
 
+    @Query("select u from UserAccount u where u.role = 'ROLE_MENTOR' and u.company.id = :companyId ")
+    List<UserAccount> findAllMentorByCompanyId(int companyId);
+
 }

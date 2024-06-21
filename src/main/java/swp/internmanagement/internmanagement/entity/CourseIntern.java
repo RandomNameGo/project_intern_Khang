@@ -1,5 +1,6 @@
 package swp.internmanagement.internmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class CourseIntern {
     @MapsId("internId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "intern_id", nullable = false)
+    @JsonManagedReference
     private UserAccount intern;
 
     @NotNull
