@@ -1,5 +1,6 @@
 package swp.internmanagement.internmanagement.service;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import swp.internmanagement.internmanagement.entity.*;
@@ -79,11 +80,17 @@ public class InternTaskServiceImpl implements InternTaskService {
     }
 
     @Override
-    public double calculateTotalInternTaskResult(int internId) {
-        long totalTask = internTaskRepository.countInternTasksByInternId(internId);
-        long totalCompletedTask = internTaskRepository.countInternTasksCompletedByInternId(internId);
+    public double calculateTotalInternTaskResult(int internId, int courseId) {
+        long totalTask = internTaskRepository.countInternTasksByInternId(internId, courseId);
+        long totalCompletedTask = internTaskRepository.countInternTasksCompletedByInternId(internId, courseId);
         double totalTaskDouble = (double) totalTask;
         double totalCompletedTaskDouble = (double) totalCompletedTask;
         return (totalCompletedTaskDouble/totalTaskDouble)*100;
+    }
+
+    @Override
+    public InternTask getInternTaskByInternId(int internId, int taskId) {
+        InternTask internTask = internTaskRepository.findByTaskIdAndInternId(taskId, internId);
+        return internTask;
     }
 }
