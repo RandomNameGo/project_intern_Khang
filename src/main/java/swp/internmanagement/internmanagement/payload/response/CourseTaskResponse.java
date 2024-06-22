@@ -1,6 +1,5 @@
 package swp.internmanagement.internmanagement.payload.response;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import lombok.AllArgsConstructor;

@@ -1,6 +1,5 @@
 package swp.internmanagement.internmanagement.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.payload.request.CreateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.request.UpdateCompanyRequest;
-import swp.internmanagement.internmanagement.payload.response.CompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllCompanyResponse;
 import swp.internmanagement.internmanagement.repository.CompanyRepository;
 
@@ -25,12 +23,12 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public boolean checkExistedCompanyAndInsert(CreateCompanyRequest companyRequest) {
         try {
-            if (companyRequest.getCompanyDiscription() != null && companyRequest.getCompanyName() != null
+            if (companyRequest.getCompanyDescription() != null && companyRequest.getCompanyName() != null
                     && companyRequest.getLocation() != null) {
                 Optional<Company> company = companyRepository.findByCompanyName(companyRequest.getCompanyName());
                 if (!company.isPresent()) {
                     Company companyCreate = new Company();
-                    companyCreate.setCompanyDescription(companyRequest.getCompanyDiscription());
+                    companyCreate.setCompanyDescription(companyRequest.getCompanyDescription());
                     companyCreate.setCompanyName(companyRequest.getCompanyName());
                     companyCreate.setLocation(companyRequest.getLocation());
                     companyRepository.save(companyCreate);

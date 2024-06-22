@@ -21,7 +21,6 @@ import swp.internmanagement.internmanagement.service.CourseInternService;
 import swp.internmanagement.internmanagement.service.CourseService;
 import swp.internmanagement.internmanagement.service.InternTaskService;
 import swp.internmanagement.internmanagement.service.MentorFeedbackInternService;
-import swp.internmanagement.internmanagement.service.TaskService;
 
 @RestController
 @RequestMapping("/internbridge/intern")
@@ -30,9 +29,6 @@ public class InternController {
 
     @Autowired
     private CourseInternService courseInternService;
-
-    @Autowired
-    private TaskService taskService;
 
     @Autowired
     private CourseService courseService;

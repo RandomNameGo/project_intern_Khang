@@ -1,9 +1,16 @@
 package swp.internmanagement.internmanagement.service;
 
-import jakarta.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import swp.internmanagement.internmanagement.entity.*;
+
+import swp.internmanagement.internmanagement.entity.CourseIntern;
+import swp.internmanagement.internmanagement.entity.CourseInternId;
+import swp.internmanagement.internmanagement.entity.InternTask;
+import swp.internmanagement.internmanagement.entity.InternTaskId;
+import swp.internmanagement.internmanagement.entity.Task;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.response.InternTaskResponse;
 import swp.internmanagement.internmanagement.payload.response.ShowInternTaskResponse;
@@ -11,9 +18,6 @@ import swp.internmanagement.internmanagement.repository.CourseInternRepository;
 import swp.internmanagement.internmanagement.repository.InternTaskRepository;
 import swp.internmanagement.internmanagement.repository.TaskRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class InternTaskServiceImpl implements InternTaskService {
@@ -93,4 +97,20 @@ public class InternTaskServiceImpl implements InternTaskService {
         InternTask internTask = internTaskRepository.findByTaskIdAndInternId(taskId, internId);
         return internTask;
     }
+
+    @Override
+    public List<InternTask> getInternTaskByCourseId(int courseId) {
+        return internTaskRepository.findInternTasksByCourseId(courseId);
+    }
+
+    @Override
+    public double getTotalInternTaskResult(int internId) {
+        long totalTask = internTaskRepository.countAllInternTasks(internId);
+        long totalCompletedTask = internTaskRepository.countInternTasksCompletedByInternId(internId, 0);
+        double totalTaskDouble = (double) totalTask;
+        double totalCompletedTaskDouble = (double) totalCompletedTask;
+        return (totalCompletedTaskDouble/totalTaskDouble)*100;
+    }
+
+
 }

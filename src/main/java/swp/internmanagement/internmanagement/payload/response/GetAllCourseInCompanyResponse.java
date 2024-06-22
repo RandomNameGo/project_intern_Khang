@@ -1,9 +1,9 @@
 package swp.internmanagement.internmanagement.payload.response;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
-import swp.internmanagement.internmanagement.entity.Course;
-import java.util.List;
 
 
 @Getter

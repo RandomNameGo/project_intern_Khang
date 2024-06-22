@@ -29,4 +29,6 @@ public interface UserAccountService {
     GetAllUserResponse getAllUser(int pageNo, int pageSize);
 
     List<UserInfoResponse> getAllMentor(int companyId);
+
+    GetListAllInternResultResponse getListAllInternResult(int companyId);
 }

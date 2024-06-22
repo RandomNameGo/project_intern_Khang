@@ -39,4 +39,6 @@ public interface UserRepository extends JpaRepository<UserAccount, Integer> {
     @Query("select u from UserAccount u where u.role = 'ROLE_MENTOR' and u.company.id = :companyId ")
     List<UserAccount> findAllMentorByCompanyId(int companyId);
 
+    @Query("select u from UserAccount u where u.role = 'ROLE_INTERN' and u.company.id = :companyId ")
+    List<UserAccount> findAllInternByCompanyId(int companyId);
 }

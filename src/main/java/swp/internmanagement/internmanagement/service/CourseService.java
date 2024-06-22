@@ -7,10 +7,6 @@ import swp.internmanagement.internmanagement.payload.response.GetAllCourseByMent
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-
 public interface CourseService {
 
     Course addCourse(CreateCourseRequest createCourseRequest, int companyId);
