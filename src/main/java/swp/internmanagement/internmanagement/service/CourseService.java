@@ -2,11 +2,14 @@ package swp.internmanagement.internmanagement.service;
 
 import swp.internmanagement.internmanagement.entity.Course;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
+import swp.internmanagement.internmanagement.payload.response.GetAllActivitiesInAllCourseResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseByMentorIdResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
 
 public interface CourseService {
 
@@ -25,4 +28,6 @@ public interface CourseService {
     GetAllCourseInCompanyResponse getAllCourseInCompanyResponse(int companyId, int pageNo, int pageSize);
 
     GetAllCourseInCompanyResponse getCourseByMentorTable(int mentorId, int pageNo, int pageSize);
+
+    GetAllActivitiesInAllCourseResponse getAllTaskInAllCourse(Integer user_id, Integer company_id, int pageNo, int pageSize);
 }

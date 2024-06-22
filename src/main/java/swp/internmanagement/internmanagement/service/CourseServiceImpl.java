@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.entity.Course;
@@ -13,6 +14,8 @@ import swp.internmanagement.internmanagement.entity.CourseInternId;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
 import swp.internmanagement.internmanagement.payload.response.CourseResponse;
+import swp.internmanagement.internmanagement.payload.response.CourseTaskResponse;
+import swp.internmanagement.internmanagement.payload.response.GetAllActivitiesInAllCourseResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseByMentorIdResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
@@ -25,6 +28,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -201,4 +205,41 @@ public class CourseServiceImpl implements CourseService {
 
         return getAllCourseInCompanyResponse;
     }
+    @Override
+    public GetAllActivitiesInAllCourseResponse getAllTaskInAllCourse(Integer user_id, Integer company_id, int pageNo, int pageSize) {
+        try {
+            if (user_id == null || company_id == null) {
+                throw new IllegalArgumentException("User ID and Company ID must not be null");
+            }
+            
+            Pageable pageable = PageRequest.of(pageNo, pageSize);
+            Page<Course> courses = courseRepository.findByMentorIdAndCompanyId(user_id, company_id, pageable);
+            List<Course> courseList = courses.getContent();
+            List<CourseTaskResponse> courseTaskList = new ArrayList<>();
+            
+            for (Course course : courseList) {
+                CourseTaskResponse courseTaskResponse = new CourseTaskResponse();
+                courseTaskResponse.setCourseId(course.getId());
+                courseTaskResponse.setCourseName(course.getCourseDescription()); 
+                courseTaskResponse.setCompanyName(course.getCompany().getCompanyName());
+                courseTaskResponse.setCompanyId(course.getCompany().getId());
+                courseTaskResponse.setMentorName(course.getMentor().getFullName()); 
+                courseTaskResponse.setTaskList(course.getTasks());
+                courseTaskList.add(courseTaskResponse);
+            }
+            
+            GetAllActivitiesInAllCourseResponse getAllActivitiesInAllCourseResponse = new GetAllActivitiesInAllCourseResponse();
+            getAllActivitiesInAllCourseResponse.setCourseList(courseTaskList);
+            getAllActivitiesInAllCourseResponse.setPageNo(courses.getNumber());
+            getAllActivitiesInAllCourseResponse.setPageSize(courses.getSize());
+            getAllActivitiesInAllCourseResponse.setTotalItems(courses.getTotalElements());
+            getAllActivitiesInAllCourseResponse.setTotalPages(courses.getTotalPages());
+            
+            return getAllActivitiesInAllCourseResponse;
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching courses", e);
+        }
+    }
+    
+
 }
