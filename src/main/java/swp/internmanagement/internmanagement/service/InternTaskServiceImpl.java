@@ -93,4 +93,9 @@ public class InternTaskServiceImpl implements InternTaskService {
         InternTask internTask = internTaskRepository.findByTaskIdAndInternId(taskId, internId);
         return internTask;
     }
+
+    @Override
+    public List<InternTask> getInternTaskByCourseId(int courseId) {
+        return internTaskRepository.findInternTasksByCourseId(courseId);
+    }
 }

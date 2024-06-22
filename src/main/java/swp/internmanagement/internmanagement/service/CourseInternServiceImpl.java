@@ -12,6 +12,7 @@ import swp.internmanagement.internmanagement.repository.CourseInternRepository;
 import swp.internmanagement.internmanagement.repository.CourseRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -38,6 +39,12 @@ public class CourseInternServiceImpl implements CourseInternService {
             return "Course not found";
         }
         Course course = courseRepository.findById(courseId).get();
+
+        LocalDate localDate = LocalDate.now();
+        if(course.getStartDate().isBefore(localDate)){
+            return "Course already started";
+        }
+
         CourseInternId courseInternId = new CourseInternId();
         courseIntern.setCourse(course);
         courseInternId.setCourseId(courseId);

@@ -3,6 +3,7 @@ package swp.internmanagement.internmanagement.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import swp.internmanagement.internmanagement.entity.Course;
+import swp.internmanagement.internmanagement.entity.InternTask;
 import swp.internmanagement.internmanagement.entity.Task;
 import swp.internmanagement.internmanagement.payload.request.CreateTaskRequest;
 import swp.internmanagement.internmanagement.repository.CourseRepository;
@@ -23,6 +24,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
     private InternTaskService internTaskService;
+
+    @Autowired
+    private CourseInternService courseInternService;
 
     @Override
     public String createTask(CreateTaskRequest createTaskRequest, int courseId) throws Exception {
@@ -62,6 +66,10 @@ public class TaskServiceImpl implements TaskService {
     task.setEndDate(endDateAfterConvert);
     taskRepository.save(task);
     internTaskService.addInternToTask(task);
+    List<InternTask> internTasks = internTaskService.getInternTaskByCourseId(task.getCourse().getId());
+    for (InternTask internTask : internTasks) {
+        courseInternService.updateResult(internTask.getIntern().getId(), internTask.getTask().getCourse().getId());
+    }
     return "Created task successfully";
     }
 
