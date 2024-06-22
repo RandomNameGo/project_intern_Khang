@@ -15,6 +15,9 @@ import swp.internmanagement.internmanagement.service.InternTaskService;
 import swp.internmanagement.internmanagement.service.TaskService;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/internbridge/mentor")
@@ -81,11 +84,12 @@ public class MentorController {
         return ResponseEntity.status(500).body("task is not found.");
     }
     @PutMapping("task/update/{taskId}")
-    public ResponseEntity<?> updateTask(@RequestBody CreateTaskRequest createTaskRequest,@PathVariable Integer id){
+    public ResponseEntity<?> updateTask(@RequestBody CreateTaskRequest createTaskRequest,@PathVariable Integer taskId){
         try {
-            return new ResponseEntity<>(taskService.updateTask(createTaskRequest, id), HttpStatus.OK);
+            return new ResponseEntity<>(taskService.updateTask(createTaskRequest, taskId), HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
+    
 }
