@@ -20,4 +20,6 @@ public interface InternTaskService {
     InternTask getInternTaskByInternId(int internId, int internTaskId);
 
     List<InternTask> getInternTaskByCourseId(int courseId);
+
+    double getTotalInternTaskResult(int internId);
 }

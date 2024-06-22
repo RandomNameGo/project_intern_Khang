@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateCompanyRequest {
     private String companyName;
-    private String companyDiscription;
+    private String companyDescription;
     private String location;
 }

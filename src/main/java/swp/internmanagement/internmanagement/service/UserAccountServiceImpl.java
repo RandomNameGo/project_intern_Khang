@@ -18,6 +18,7 @@ import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
 import swp.internmanagement.internmanagement.payload.response.*;
+import swp.internmanagement.internmanagement.repository.InternTaskRepository;
 import swp.internmanagement.internmanagement.repository.JobApplicationRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
 import swp.internmanagement.internmanagement.security.jwt.JwtUtils;
@@ -39,6 +40,10 @@ public class UserAccountServiceImpl implements UserAccountService {
     private JobApplicationRepository jobApplicationRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private InternTaskRepository internTaskRepository;
+    @Autowired
+    private InternTaskService internTaskService;
 
     public String generateUserName(String fullName, String role, int user_id) {
         String[] splitFullNames = fullName.split("\\s+");
@@ -277,6 +282,29 @@ public class UserAccountServiceImpl implements UserAccountService {
             userInfoResponseList.add(userInfoResponse);
         }
         return userInfoResponseList;
+    }
+
+    @Override
+    public GetListAllInternResultResponse getListAllInternResult(int companyId) {
+        List<UserAccount> userAccounts = userAccountRepository.findAllInternByCompanyId(companyId);
+        List<GetInternResultFromCourseResponse> getInternResultFromCourseResponses = new ArrayList<>();
+        for (UserAccount userAccount : userAccounts) {
+            GetInternResultFromCourseResponse getInternResultFromCourseResponse = new GetInternResultFromCourseResponse();
+
+            long totalTask = internTaskRepository.countAllInternTasks(userAccount.getId());
+            long totalCompletedTask = internTaskRepository.countAllInternTasksCompletedByIntern(userAccount.getId());
+            double result = internTaskService.getTotalInternTaskResult(userAccount.getId());
+
+            getInternResultFromCourseResponse.setInternId(userAccount.getId());
+            getInternResultFromCourseResponse.setInternName(userAccount.getFullName());
+            getInternResultFromCourseResponse.setTotalTask(totalTask);
+            getInternResultFromCourseResponse.setCompletedTasks(totalCompletedTask);
+            getInternResultFromCourseResponse.setResult(result);
+            getInternResultFromCourseResponses.add(getInternResultFromCourseResponse);
+        }
+        GetListAllInternResultResponse getListAllInternResultResponse = new GetListAllInternResultResponse();
+        getListAllInternResultResponse.setGetInternResultFromCourseResponses(getInternResultFromCourseResponses);
+        return getListAllInternResultResponse;
     }
 
     private static String extractValue(String input, String pattern) {

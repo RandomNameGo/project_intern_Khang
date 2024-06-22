@@ -10,6 +10,7 @@ import swp.internmanagement.internmanagement.payload.request.CreateTaskRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseByMentorIdResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllTaskInCourseResponse;
+import swp.internmanagement.internmanagement.service.CourseInternService;
 import swp.internmanagement.internmanagement.service.CourseService;
 import swp.internmanagement.internmanagement.service.InternTaskService;
 import swp.internmanagement.internmanagement.service.TaskService;
@@ -28,6 +29,9 @@ public class MentorController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private CourseInternService courseInternService;
 
     // create task
     @PostMapping("/addactivities/{courseId}")
@@ -81,9 +85,17 @@ public class MentorController {
         return ResponseEntity.status(500).body("task is not found.");
     }
     @PutMapping("task/update/{taskId}")
-    public ResponseEntity<?> updateTask(@RequestBody CreateTaskRequest createTaskRequest,@PathVariable Integer id){
+    public ResponseEntity<?> updateTask(@RequestBody CreateTaskRequest createTaskRequest,@PathVariable Integer taskId){
         try {
-            return new ResponseEntity<>(taskService.updateTask(createTaskRequest, id), HttpStatus.OK);
+            return new ResponseEntity<>(taskService.updateTask(createTaskRequest, taskId), HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+    @GetMapping("course/internResult/{courseId}&{mentorId}")
+    public ResponseEntity<?> getInternResult(@PathVariable int courseId, @PathVariable int mentorId) {
+        try {
+            return ResponseEntity.ok(courseInternService.getListInternResultFromCourse(courseId, mentorId));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(e.getMessage());
         }

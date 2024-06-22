@@ -15,6 +15,7 @@ import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.UserInfoResponse;
+import swp.internmanagement.internmanagement.repository.UserRepository;
 import swp.internmanagement.internmanagement.service.CourseInternService;
 import swp.internmanagement.internmanagement.service.CourseService;
 import swp.internmanagement.internmanagement.service.InterviewScheduleService;
@@ -69,7 +70,7 @@ public class CoordinatorController {
 
     //add intern to course
     @PostMapping("addIntern/{courseId}")
-    public ResponseEntity<String> addIntern(@RequestBody AddInternToCourseRequest addInternToCourseRequest, @PathVariable int courseId) {
+    public ResponseEntity<String> addIntern(@RequestBody List<AddInternToCourseRequest> addInternToCourseRequest, @PathVariable int courseId) {
         return  new ResponseEntity<>(courseInternService.addInternToCourse(addInternToCourseRequest, courseId), HttpStatus.CREATED);
     }
 
@@ -86,7 +87,11 @@ public class CoordinatorController {
 
     @PostMapping("/schedule/create")
     public ResponseEntity<?> addSchedule(@RequestBody AddScheduleRequest addScheduleRequest) {
-        return new ResponseEntity<>(interviewScheduleService.addSchedule(addScheduleRequest), HttpStatus.CREATED);
+        try{
+            return new ResponseEntity<>(interviewScheduleService.addSchedule(addScheduleRequest), HttpStatus.CREATED);
+        }catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/course/companyId={companyId}")
@@ -101,5 +106,10 @@ public class CoordinatorController {
     @GetMapping("/company/mentor/{companyId}")
     public ResponseEntity<List<UserInfoResponse>> getMentorsInSameCompany(@PathVariable int companyId) {
         return ResponseEntity.ok(userAccountService.getAllMentor(companyId));
+    }
+
+    @GetMapping("company/intern/result/{companyId}")
+    public ResponseEntity<?> internResult(@PathVariable int companyId) {
+        return ResponseEntity.ok(userAccountService.getListAllInternResult(companyId));
     }
 }

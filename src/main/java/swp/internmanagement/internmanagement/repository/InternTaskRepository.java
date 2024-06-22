@@ -22,4 +22,10 @@ public interface InternTaskRepository extends JpaRepository<InternTask, InternTa
 
      @Query("select t from InternTask t where t.task.course.id = :courseId")
      List<InternTask> findInternTasksByCourseId(int courseId);
+
+     @Query("select count(t.task.id) from InternTask t where t.intern.id = :internId")
+     long countAllInternTasks(int internId);
+
+     @Query("select count(t.task.id) from InternTask t where t.intern.id = :internId and t.taskStatus = true")
+     long countAllInternTasksCompletedByIntern(int internId);
 }
