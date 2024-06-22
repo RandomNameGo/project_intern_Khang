@@ -69,8 +69,10 @@ public class CourseServiceImpl implements CourseService {
         course.setEndDate(endDateAfter);
         if(startDateAfter.isEqual(LocalDate.now())) {
             course.setStatus(1);
+        }else{
+            course.setStatus(0);
         }
-        course.setStatus(0);
+       
         courseRepository.save(course);
         return course;
     }

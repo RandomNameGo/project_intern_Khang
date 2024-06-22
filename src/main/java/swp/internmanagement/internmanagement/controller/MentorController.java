@@ -33,7 +33,11 @@ public class MentorController {
     @PostMapping("/addactivities/{courseId}")
     public ResponseEntity<?> addActivities(@RequestBody CreateTaskRequest createTaskRequest,
             @PathVariable int courseId) {
-        return new ResponseEntity<>(taskService.createTask(createTaskRequest, courseId), HttpStatus.CREATED);
+        try {
+            return new ResponseEntity<>(taskService.createTask(createTaskRequest, courseId), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 
     @GetMapping("/course/{mentorId}")
@@ -62,5 +66,26 @@ public class MentorController {
         @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
     ){
         return ResponseEntity.ok(courseService.getAllTaskInAllCourse(user_id,company_id,pageNo,pageSize));
+    }
+    @DeleteMapping("/task/delete/{taskId}")
+    public ResponseEntity<?> deleteJob(@PathVariable int taskId) {
+        try {
+            boolean delete = taskService.deleteTask(taskId);
+            if (delete) {
+                return ResponseEntity.ok("Delete task successfully.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to delete task.");
+        }
+        return ResponseEntity.status(500).body("task is not found.");
+    }
+    @PutMapping("task/update/{taskId}")
+    public ResponseEntity<?> updateTask(@RequestBody CreateTaskRequest createTaskRequest,@PathVariable Integer id){
+        try {
+            return new ResponseEntity<>(taskService.updateTask(createTaskRequest, id), HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 }

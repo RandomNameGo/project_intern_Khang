@@ -1,5 +1,9 @@
 package swp.internmanagement.internmanagement.entity;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -27,5 +31,4 @@ public class InternTask {
     @NotNull
     @Column(name = "task_status", nullable = false)
     private Boolean taskStatus = false;
-
 }

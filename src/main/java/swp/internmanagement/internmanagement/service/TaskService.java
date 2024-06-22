@@ -7,7 +7,11 @@ import swp.internmanagement.internmanagement.payload.response.GetAllTaskInCourse
 import java.util.List;
 
 public interface TaskService {
-    String createTask(CreateTaskRequest createTaskRequest, int courseId);
+    String createTask(CreateTaskRequest createTaskRequest, int courseId) throws Exception;
 
     List<Task> getTasks(int courseId, int mentorId);
+
+    boolean deleteTask(int taskId);
+
+    String updateTask(CreateTaskRequest createTaskRequest, Integer id) throws Exception;
 }
