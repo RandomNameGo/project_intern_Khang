@@ -29,7 +29,7 @@ import swp.internmanagement.internmanagement.service.JobService;
 
 @RestController
 @RequestMapping("/internbridge/manager")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000" , allowCredentials = "true",allowedHeaders = "*")
 public class ManagerController {
 
     @Autowired

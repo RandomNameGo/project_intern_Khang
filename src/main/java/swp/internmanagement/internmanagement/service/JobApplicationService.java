@@ -22,4 +22,6 @@ public interface JobApplicationService {
     AcceptedJobApplicationResponse getAllAcceptedJobApplication(int pageNo, int pageSize);
 
     boolean postJobApplication (PostJobApplicationRequest postJobApplicationRequest);
+
+    AcceptedJobApplicationResponse getAllAcceptedJobApplicationById(Integer companyId, int pageNo, int pageSize);
 }

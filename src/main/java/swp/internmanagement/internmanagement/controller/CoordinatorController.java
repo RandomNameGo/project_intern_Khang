@@ -20,12 +20,14 @@ import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.AddInternToCourseRequest;
 import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
+import swp.internmanagement.internmanagement.payload.response.AcceptedJobApplicationResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.UserInfoResponse;
 import swp.internmanagement.internmanagement.service.CourseInternService;
 import swp.internmanagement.internmanagement.service.CourseService;
 import swp.internmanagement.internmanagement.service.InterviewScheduleService;
+import swp.internmanagement.internmanagement.service.JobApplicationService;
 import swp.internmanagement.internmanagement.service.UserAccountService;
 
 @RestController
@@ -41,6 +43,8 @@ public class CoordinatorController {
     @Autowired
     private CourseInternService courseInternService;
 
+    @Autowired
+    private JobApplicationService jobApplicationService;
 
     @Autowired
     private InterviewScheduleService interviewScheduleService;
@@ -119,4 +123,12 @@ public class CoordinatorController {
     public ResponseEntity<?> internResult(@PathVariable int companyId) {
         return ResponseEntity.ok(userAccountService.getListAllInternResult(companyId));
     }
+    @GetMapping("/jobApplication")
+    public ResponseEntity<AcceptedJobApplicationResponse> getAllAcceptedJobApplication(
+            @RequestParam("companyId") Integer companyId,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize) {
+        return ResponseEntity.ok(jobApplicationService.getAllAcceptedJobApplicationById(companyId,pageNo, pageSize));
+    }
+
 }

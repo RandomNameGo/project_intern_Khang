@@ -164,4 +164,29 @@ public class JobApplicationServiceImpl implements JobApplicationService {
             return false;
         }
     }
+    @Override
+    public AcceptedJobApplicationResponse getAllAcceptedJobApplicationById(Integer companyId, int pageNo,
+            int pageSize) {
+                Pageable pageable = PageRequest.of(pageNo, pageSize);
+                Page<JobApplication> jobApplicationPage = jobApplicationRepository.findByJob_Company_IdAndStatus(companyId, 1, pageable);
+                
+                List<JobApplicationDTO> jobApplicationDTOs = jobApplicationPage.getContent().stream()
+                        .map(ja -> new JobApplicationDTO(
+                                ja.getId(),
+                                ja.getFullName(),
+                                ja.getEmail(),
+                                ja.getJob().getCompany().getId(),
+                                ja.getJob().getCompany().getCompanyName()
+                        ))
+                        .collect(Collectors.toList());
+        
+                AcceptedJobApplicationResponse response = new AcceptedJobApplicationResponse();
+                response.setJobApplications(jobApplicationDTOs);
+                response.setPageSize(jobApplicationPage.getSize());
+                response.setPageNo(jobApplicationPage.getNumber());
+                response.setTotalItems(jobApplicationPage.getTotalElements());
+                response.setTotalPages(jobApplicationPage.getTotalPages());
+                
+                return response;
+    }
 }
