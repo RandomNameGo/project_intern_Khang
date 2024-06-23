@@ -22,9 +22,11 @@ import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.payload.request.PostJobApplicationRequest;
 import swp.internmanagement.internmanagement.payload.request.UpdateInternDetailRequest;
 import swp.internmanagement.internmanagement.payload.response.JobApplicationResponse;
+import swp.internmanagement.internmanagement.repository.UserRepository;
 import swp.internmanagement.internmanagement.service.InternDetailService;
 import swp.internmanagement.internmanagement.service.JobApplicationService;
 import swp.internmanagement.internmanagement.service.JobService;
+import swp.internmanagement.internmanagement.service.UserAccountService;
 
 
 @RestController
@@ -40,6 +42,9 @@ public class ManagerController {
 
     @Autowired
     private JobService jobService;
+
+    @Autowired
+    private UserAccountService userAccountService;
 
     @PostMapping("/postjob")
     public ResponseEntity<?>  PostRecruitment(
@@ -95,6 +100,15 @@ public class ManagerController {
         }
     }
 
+    @GetMapping("/user/intern/{companyId}&{managerId}")
+    public ResponseEntity<?> getAllIntern(@PathVariable Integer companyId, @PathVariable Integer managerId){
+        try{
+            userAccountService.checkValidId(companyId, managerId);
+            return ResponseEntity.ok(userAccountService.getAllIntern(companyId));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
     
     @PutMapping("/intern/internDetail/update/{interId}")
     public ResponseEntity<?> updateInternDetail(@RequestBody UpdateInternDetailRequest updateInternDetailRequest, @PathVariable Integer interId){
@@ -153,4 +167,5 @@ public class ManagerController {
     ) {
         return ResponseEntity.ok(jobService.getAllJobsByCompanyId(companyId, pageNo, pageSize));
     }
+
 }

@@ -240,6 +240,16 @@ public class CourseServiceImpl implements CourseService {
             throw new RuntimeException("Error fetching courses", e);
         }
     }
-    
+
+    @Override
+    public GetCourseNameResponse getCourseNameByMentorId(int courseId ,int mentorId) {
+        Course course = courseRepository.getByMentorIdAndCourseId(mentorId, courseId);
+        if(course == null) {
+            throw new RuntimeException("You are not enough courses");
+        }
+        GetCourseNameResponse getCourseNameResponse = new GetCourseNameResponse();
+        getCourseNameResponse.setCourseName(course.getCourseDescription());
+        return getCourseNameResponse;
+    }
 
 }

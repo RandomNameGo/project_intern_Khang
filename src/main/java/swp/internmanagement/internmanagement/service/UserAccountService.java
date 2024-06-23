@@ -30,5 +30,9 @@ public interface UserAccountService {
 
     List<UserInfoResponse> getAllMentor(int companyId);
 
+    List<UserInfoResponse> getAllIntern(int companyId);
+
     GetListAllInternResultResponse getListAllInternResult(int companyId);
+
+    void checkValidId(int companyId, int userId);
 }

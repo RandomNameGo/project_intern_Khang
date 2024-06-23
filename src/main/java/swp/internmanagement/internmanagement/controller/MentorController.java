@@ -1,28 +1,19 @@
 package swp.internmanagement.internmanagement.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import swp.internmanagement.internmanagement.entity.Task;
 import swp.internmanagement.internmanagement.payload.request.CreateTaskRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseByMentorIdResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.service.CourseInternService;
 import swp.internmanagement.internmanagement.service.CourseService;
+import swp.internmanagement.internmanagement.service.InternTaskService;
 import swp.internmanagement.internmanagement.service.TaskService;
 
+import java.util.List;
 
 @RestController
 @RequestMapping("/internbridge/mentor")
@@ -30,6 +21,9 @@ public class MentorController {
 
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private InternTaskService internTaskService;
 
     @Autowired
     private CourseService courseService;
@@ -75,6 +69,7 @@ public class MentorController {
     ){
         return ResponseEntity.ok(courseService.getAllTaskInAllCourse(user_id,company_id,pageNo,pageSize));
     }
+
     @DeleteMapping("/task/delete/{taskId}")
     public ResponseEntity<?> deleteJob(@PathVariable int taskId) {
         try {
@@ -88,6 +83,7 @@ public class MentorController {
         }
         return ResponseEntity.status(500).body("task is not found.");
     }
+
     @PutMapping("task/update/{taskId}")
     public ResponseEntity<?> updateTask(@RequestBody CreateTaskRequest createTaskRequest,@PathVariable Integer taskId){
         try {
@@ -96,6 +92,7 @@ public class MentorController {
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
+
     @GetMapping("course/internResult/{courseId}&{mentorId}")
     public ResponseEntity<?> getInternResult(@PathVariable int courseId, @PathVariable int mentorId) {
         try {
@@ -104,5 +101,9 @@ public class MentorController {
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
-    
+
+    @GetMapping("course/name/{mentorId}&{courseId}")
+    public ResponseEntity<?> getCourseName(@PathVariable int mentorId, @PathVariable int courseId) {
+        return ResponseEntity.ok(courseService.getCourseNameByMentorId(mentorId, courseId));
+    }
 }
