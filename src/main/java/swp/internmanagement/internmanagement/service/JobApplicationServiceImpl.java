@@ -168,7 +168,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     public AcceptedJobApplicationResponse getAllAcceptedJobApplicationById(Integer companyId, int pageNo,
             int pageSize) {
                 Pageable pageable = PageRequest.of(pageNo, pageSize);
-                Page<JobApplication> jobApplicationPage = jobApplicationRepository.findByJob_Company_IdAndStatus(companyId, 1, pageable);
+                Page<JobApplication> jobApplicationPage = jobApplicationRepository.findByJobCompanyIdAndStatusAndSchedulesIsNull(companyId, 1, pageable);
                 
                 List<JobApplicationDTO> jobApplicationDTOs = jobApplicationPage.getContent().stream()
                         .map(ja -> new JobApplicationDTO(

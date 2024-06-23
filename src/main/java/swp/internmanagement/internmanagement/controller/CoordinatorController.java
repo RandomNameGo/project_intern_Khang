@@ -123,7 +123,7 @@ public class CoordinatorController {
     public ResponseEntity<?> internResult(@PathVariable int companyId) {
         return ResponseEntity.ok(userAccountService.getListAllInternResult(companyId));
     }
-    @GetMapping("/jobApplication")
+    @PostMapping("/jobApplication")
     public ResponseEntity<AcceptedJobApplicationResponse> getAllAcceptedJobApplication(
             @RequestParam("companyId") Integer companyId,
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
