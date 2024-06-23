@@ -285,6 +285,23 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
+    public List<UserInfoResponse> getAllIntern(int companyId) {
+        List<UserAccount> userAccounts = userAccountRepository.findAllInternByCompanyId(companyId);
+        List<UserInfoResponse> userInfoResponseList = new ArrayList<>();
+        for (UserAccount userAccount : userAccounts) {
+            UserInfoResponse userInfoResponse = new UserInfoResponse();
+            userInfoResponse.setUser_id(userAccount.getId());
+            userInfoResponse.setUsername(userAccount.getUserName());
+            userInfoResponse.setEmail(userAccount.getEmail());
+            userInfoResponse.setFullName(userAccount.getFullName());
+            userInfoResponse.setRole(userAccount.getRole());
+            userInfoResponse.setCompany_id(userAccount.getCompany().getId());
+            userInfoResponseList.add(userInfoResponse);
+        }
+        return userInfoResponseList;
+    }
+
+    @Override
     public GetListAllInternResultResponse getListAllInternResult(int companyId) {
         List<UserAccount> userAccounts = userAccountRepository.findAllInternByCompanyId(companyId);
         List<GetInternResultFromCourseResponse> getInternResultFromCourseResponses = new ArrayList<>();
@@ -307,6 +324,14 @@ public class UserAccountServiceImpl implements UserAccountService {
         return getListAllInternResultResponse;
     }
 
+    @Override
+    public void checkValidId(int companyId, int userId) {
+        UserAccount userAccount = userAccountRepository.findById(userId).get();
+        if (userAccount.getCompany().getId() != companyId) {
+            throw new RuntimeException("You are not allowed to access this company");
+        }
+    }
+
     private static String extractValue(String input, String pattern) {
         Pattern compiledPattern = Pattern.compile(pattern);
         Matcher matcher = compiledPattern.matcher(input);
@@ -315,5 +340,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         }
         return null;
     }
+
+
 
 }
