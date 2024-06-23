@@ -28,4 +28,5 @@ public interface CourseService {
     GetAllActivitiesInAllCourseResponse getAllTaskInAllCourse(Integer user_id, Integer company_id, int pageNo, int pageSize);
 
     GetCourseNameResponse getCourseNameByMentorId(int courseId, int mentorId);
+
 }

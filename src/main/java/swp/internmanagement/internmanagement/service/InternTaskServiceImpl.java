@@ -102,11 +102,11 @@ public class InternTaskServiceImpl implements InternTaskService {
     public List<InternTask> getInternTaskByCourseId(int courseId) {
         return internTaskRepository.findInternTasksByCourseId(courseId);
     }
-
+    
     @Override
     public double getTotalInternTaskResult(int internId) {
         long totalTask = internTaskRepository.countAllInternTasks(internId);
-        long totalCompletedTask = internTaskRepository.countInternTasksCompletedByInternId(internId, 0);
+        long totalCompletedTask = internTaskRepository.countAllInternTasksCompletedByIntern(internId);
         double totalTaskDouble = (double) totalTask;
         double totalCompletedTaskDouble = (double) totalCompletedTask;
         return (totalCompletedTaskDouble/totalTaskDouble)*100;

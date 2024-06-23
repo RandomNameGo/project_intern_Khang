@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import swp.internmanagement.internmanagement.entity.Company;
+import swp.internmanagement.internmanagement.entity.InternDetail;
 import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
@@ -129,6 +130,7 @@ public class UserAccountServiceImpl implements UserAccountService {
                 int id = userAccountRepository.findLastUserId() + 1;
                 String userName = generateUserName(signRequest.getFullName(), signRequest.getRole(), id);
                 UserAccount user = new UserAccount();
+                InternDetail internDetail=new InternDetail();
                 JobApplication jobApplication = new JobApplication();
                 Company company = new Company();
                 jobApplication.setId(signRequest.getJobApplicationId());
@@ -146,6 +148,10 @@ public class UserAccountServiceImpl implements UserAccountService {
                 user.setDateOfBirth(dateOfBirth);
                 user.setCompany(company);
                 user.setStatus(0);
+                internDetail.setUser(user);
+                internDetail.setEducationBackground("Don't have");
+                internDetail.setWorkHistory("don't have");
+                user.setInternDetails(internDetail);
                 emailService.sendEmail(signRequest.getEmail(), "Verify your email", templateModel);
                 userAccountRepository.save(user);
                 jobApplicationRepository.delete(jobApplication);

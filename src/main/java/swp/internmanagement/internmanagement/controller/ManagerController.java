@@ -22,7 +22,6 @@ import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.payload.request.PostJobApplicationRequest;
 import swp.internmanagement.internmanagement.payload.request.UpdateInternDetailRequest;
 import swp.internmanagement.internmanagement.payload.response.JobApplicationResponse;
-import swp.internmanagement.internmanagement.repository.UserRepository;
 import swp.internmanagement.internmanagement.service.InternDetailService;
 import swp.internmanagement.internmanagement.service.JobApplicationService;
 import swp.internmanagement.internmanagement.service.JobService;
