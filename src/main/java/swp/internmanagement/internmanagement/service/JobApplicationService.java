@@ -1,5 +1,6 @@
 package swp.internmanagement.internmanagement.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import swp.internmanagement.internmanagement.entity.JobApplication;
@@ -24,4 +25,6 @@ public interface JobApplicationService {
     boolean postJobApplication (PostJobApplicationRequest postJobApplicationRequest);
 
     AcceptedJobApplicationResponse getAllAcceptedJobApplicationById(Integer companyId, int pageNo, int pageSize);
+
+
 }
