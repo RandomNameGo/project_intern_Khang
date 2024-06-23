@@ -20,8 +20,15 @@ import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.AddInternToCourseRequest;
 import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
-import swp.internmanagement.internmanagement.payload.response.*;
-import swp.internmanagement.internmanagement.service.*;
+import swp.internmanagement.internmanagement.payload.response.AcceptedJobApplicationResponse;
+import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
+import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
+import swp.internmanagement.internmanagement.payload.response.UserInfoResponse;
+import swp.internmanagement.internmanagement.service.CourseInternService;
+import swp.internmanagement.internmanagement.service.CourseService;
+import swp.internmanagement.internmanagement.service.InterviewScheduleService;
+import swp.internmanagement.internmanagement.service.JobApplicationService;
+import swp.internmanagement.internmanagement.service.UserAccountService;
 
 @RestController
 @RequestMapping("/internbridge/coordinator")
@@ -53,17 +60,18 @@ public class CoordinatorController {
 
     //filter bt role
     //enter parameter role to filter
-    @GetMapping("/search/filter/{companyId}")
-    public ResponseEntity<GetAllUserByRoleResponse> getUsersByRole(
-            @PathVariable int companyId,
-            @RequestParam String role,
-            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
-        return ResponseEntity.ok(userAccountService.getAllUserByRole(companyId, role, pageNo, pageSize));
-    }
-//    public ResponseEntity<List<UserAccount>> getAllUserByRole(@PathVariable int companyId, @RequestParam String role) {
-//        return ResponseEntity.ok(userAccountService.getAllUserAccountByRole(companyId, role));
+
+//    public ResponseEntity<GetAllUserByRoleResponse> getAllMentors(
+//            @PathVariable int companyId,
+//            @RequestParam String role,
+//            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+//            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
+//        return ResponseEntity.ok(userAccountService.getAllUserByRole(companyId, role, pageNo, pageSize));
 //    }
+    @GetMapping("/search/filter/{companyId}")
+    public ResponseEntity<List<UserAccount>> getAllUserByRole(@PathVariable int companyId, @RequestParam String role) {
+        return ResponseEntity.ok(userAccountService.getAllUserAccountByRole(companyId, role));
+    }
 
     //create a course
     @PostMapping("createCourse/{companyId}")

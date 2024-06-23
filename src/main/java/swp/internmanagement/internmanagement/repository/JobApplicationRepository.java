@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import swp.internmanagement.internmanagement.entity.JobApplication;
 
-import java.util.List;
-
 @Repository
 public interface JobApplicationRepository extends JpaRepository <JobApplication,Integer>{
     @Query("select ja from JobApplication ja where ja.status = 1")
