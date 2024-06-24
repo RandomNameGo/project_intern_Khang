@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import swp.internmanagement.internmanagement.entity.Task;
 import swp.internmanagement.internmanagement.payload.request.CreateTaskRequest;
+import swp.internmanagement.internmanagement.payload.request.FeedBackRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseByMentorIdResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.service.CourseInternService;
 import swp.internmanagement.internmanagement.service.CourseService;
+import swp.internmanagement.internmanagement.service.MentorFeedbackInternService;
 import swp.internmanagement.internmanagement.service.TaskService;
 
 @RestController
@@ -35,6 +37,9 @@ public class MentorController {
 
     @Autowired
     private CourseInternService courseInternService;
+
+    @Autowired
+    private MentorFeedbackInternService mentorFeedbackInternService;
 
     // create task
     @PostMapping("/addactivities/{courseId}")
@@ -110,5 +115,16 @@ public class MentorController {
     @GetMapping("course/name/{mentorId}&{courseId}")
     public ResponseEntity<?> getCourseName(@PathVariable int mentorId, @PathVariable int courseId) {
         return ResponseEntity.ok(courseService.getCourseNameByMentorId(mentorId, courseId));
+    }
+
+
+
+    @PostMapping("sendFeedback/{mentorId}&{internId}")
+    public ResponseEntity<?> sendFeedback(@RequestBody FeedBackRequest feedBackRequest, @PathVariable int mentorId, @PathVariable int internId) {
+        try {
+            return new ResponseEntity<>(mentorFeedbackInternService.sendFeedbackIntern(feedBackRequest, mentorId, internId), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 }

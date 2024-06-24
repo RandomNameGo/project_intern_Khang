@@ -7,6 +7,6 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ShowAllFeedbackFromMentorResponse {
+public class ShowAllFeedbackResponse {
     private List<FeedbackResponse> feedbackResponses;
 }

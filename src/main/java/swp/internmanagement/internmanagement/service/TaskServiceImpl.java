@@ -28,13 +28,21 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private CourseInternService courseInternService;
 
+    private final DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+
+
     @Override
     public String createTask(CreateTaskRequest createTaskRequest, int courseId) throws Exception {
     Task task = new Task();
     if (!courseRepository.existsById(courseId)) {
         return null;
     }
-    DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+
+    Course course = courseRepository.findById(courseId).get();
+    if(course.getStatus() != 1) {
+        throw new RuntimeException("Course has not started yet");
+    }
+
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate startDate = LocalDate.parse(createTaskRequest.getStartDate(), inputFormatter);
     LocalDate endDate = LocalDate.parse(createTaskRequest.getEndDate(), inputFormatter);
@@ -43,20 +51,23 @@ public class TaskServiceImpl implements TaskService {
     LocalDate startDateAfterConvert = LocalDate.parse(formattedStartDate, formatter);
     LocalDate endDateAfterConvert = LocalDate.parse(formattedEndDate, formatter);
     if (startDateAfterConvert.isAfter(endDateAfterConvert)) {
-        throw new Exception("Start date can't be after end date "+createTaskRequest.getStartDate());
+        throw new Exception("Start date can't be after end date");
     }
     if (startDateAfterConvert.isBefore(LocalDate.now())) {
-        throw new Exception("Start date can't be before current date "+createTaskRequest.getStartDate());
+        throw new Exception("Start date can't be before current date");
     }
     if (endDateAfterConvert.isBefore(LocalDate.now())) {
-        throw new Exception("End date can't be before current date "+createTaskRequest.getEndDate());
+        throw new Exception("End date can't be before current date");
     }
-    Course course = courseRepository.findById(courseId).orElseThrow(() -> new Exception("Course not found"));
+    course = courseRepository.findById(courseId).orElseThrow(() -> new Exception("Course not found"));
     if (startDateAfterConvert.isBefore(course.getStartDate())) {
-        throw new Exception("Start date can't be before course start date "+course.getStartDate());
+        throw new Exception("Start date can't be before course start date");
     }
     if (endDateAfterConvert.isAfter(course.getEndDate())) {
-        throw new Exception("End date can't be after course end date is " +course.getEndDate());
+        throw new Exception("End date can't be after course end date");
+    }
+    if (startDateAfterConvert.isEqual(endDateAfterConvert)) {
+        throw new Exception("Task must be at least one day");
     }
     task.setCourse(course);
     task.setTaskContent(createTaskRequest.getTaskContent());
@@ -95,7 +106,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public String updateTask(CreateTaskRequest createTaskRequest, Integer id) throws Exception {
         Task task = taskRepository.findById(id).orElseThrow(() -> new Exception("Task not found"));
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        if (!courseRepository.existsById(id)) {
+            return null;
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate startDate = LocalDate.parse(createTaskRequest.getStartDate(), inputFormatter);
         LocalDate endDate = LocalDate.parse(createTaskRequest.getEndDate(), inputFormatter);
@@ -104,13 +117,20 @@ public class TaskServiceImpl implements TaskService {
         LocalDate startDateAfterConvert = LocalDate.parse(formattedStartDate, formatter);
         LocalDate endDateAfterConvert = LocalDate.parse(formattedEndDate, formatter);
         if (startDateAfterConvert.isAfter(endDateAfterConvert)) {
-            throw new Exception("Start date can't be after end date" );
+            throw new Exception("Start date can't be after end date");
         }
         if (startDateAfterConvert.isBefore(LocalDate.now())) {
-            throw new Exception("Start date can't be before current date ");
+            throw new Exception("Start date can't be before current date");
         }
         if (endDateAfterConvert.isBefore(LocalDate.now())) {
-            throw new Exception("End date can't be before current date ");
+            throw new Exception("End date can't be before current date");
+        }
+        Course course = courseRepository.findById(id).orElseThrow(() -> new Exception("Course not found"));
+        if (startDateAfterConvert.isBefore(course.getStartDate())) {
+            throw new Exception("Start date can't be before course start date");
+        }
+        if (endDateAfterConvert.isAfter(course.getEndDate())) {
+            throw new Exception("End date can't be after course end date");
         }
         task.setTaskContent(createTaskRequest.getTaskContent());
         task.setStartDate(startDateAfterConvert);

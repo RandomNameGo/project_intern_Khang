@@ -15,12 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import swp.internmanagement.internmanagement.entity.CourseIntern;
 import swp.internmanagement.internmanagement.entity.InternTask;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
-import swp.internmanagement.internmanagement.payload.response.ShowAllFeedbackFromMentorResponse;
+import swp.internmanagement.internmanagement.payload.response.ShowAllFeedbackResponse;
 import swp.internmanagement.internmanagement.payload.response.ShowInternTaskResponse;
-import swp.internmanagement.internmanagement.service.CourseInternService;
-import swp.internmanagement.internmanagement.service.CourseService;
-import swp.internmanagement.internmanagement.service.InternTaskService;
-import swp.internmanagement.internmanagement.service.MentorFeedbackInternService;
+import swp.internmanagement.internmanagement.service.*;
 
 @RestController
 @RequestMapping("/internbridge/intern")
@@ -38,6 +35,9 @@ public class InternController {
 
     @Autowired
     private InternTaskService internTaskService;
+
+    @Autowired
+    private CoordinatorFeedbackToInternService coordinatorFeedbackToInternService;
 
     //Show all course intern attended
     @GetMapping("/allCourse/{internId}")
@@ -63,8 +63,17 @@ public class InternController {
     }
 
     @GetMapping("/getAllFeedback/{internId}")
-    public ResponseEntity<ShowAllFeedbackFromMentorResponse> getAllFeedback(@PathVariable int internId) {
+    public ResponseEntity<?> getAllFeedback(@PathVariable int internId) {
         return ResponseEntity.ok(mentorFeedbackInternService.showAllFeedbackFromMentorResponse(internId));
+    }
+
+    @GetMapping("/getAllFeedback/coordinator/{internId}")
+    public ResponseEntity<?> getAllFeedbackCoordinator(@PathVariable int internId) {
+        try{
+            return ResponseEntity.ok(coordinatorFeedbackToInternService.getFeedback(internId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 
     @PutMapping("/course/task/done/{taskId}&{internId}")
