@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FeedbackResponse {
-    private String mentorName;
+    private String senderName;
     private String content;
 }

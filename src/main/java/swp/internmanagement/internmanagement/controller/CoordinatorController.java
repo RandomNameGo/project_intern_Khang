@@ -14,18 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import swp.internmanagement.internmanagement.entity.Course;
-import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.AddInternToCourseRequest;
 import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
+import swp.internmanagement.internmanagement.payload.request.FeedBackRequest;
 import swp.internmanagement.internmanagement.payload.response.*;
-import swp.internmanagement.internmanagement.service.CourseInternService;
-import swp.internmanagement.internmanagement.service.CourseService;
-import swp.internmanagement.internmanagement.service.InterviewScheduleService;
-import swp.internmanagement.internmanagement.service.JobApplicationService;
-import swp.internmanagement.internmanagement.service.UserAccountService;
+import swp.internmanagement.internmanagement.service.*;
 
 @RestController
 @RequestMapping("/internbridge/coordinator")
@@ -45,6 +40,9 @@ public class CoordinatorController {
 
     @Autowired
     private InterviewScheduleService interviewScheduleService;
+
+    @Autowired
+    private CoordinatorFeedbackToInternService coordinatorFeedbackToInternService;
 
     //show mentor and intern in the same company
     @GetMapping("search/{companyId}")
@@ -73,8 +71,12 @@ public class CoordinatorController {
 
     //create a course
     @PostMapping("createCourse/{companyId}")
-    public ResponseEntity<Course> createCourse(@RequestBody CreateCourseRequest createCourseRequest, @PathVariable int companyId) {
-        return new ResponseEntity<>(courseService.addCourse(createCourseRequest, companyId), HttpStatus.CREATED);
+    public ResponseEntity<?> createCourse(@RequestBody CreateCourseRequest createCourseRequest, @PathVariable int companyId) {
+        try{
+            return new ResponseEntity<>(courseService.addCourse(createCourseRequest, companyId), HttpStatus.CREATED);
+        }catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     //add intern to course
@@ -133,4 +135,12 @@ public class CoordinatorController {
         return ResponseEntity.ok(jobApplicationService.getAllAcceptedJobApplicationById(companyId,pageNo, pageSize));
     }
 
+    @PostMapping("/intern/sendFeedback/{coordinatorId}&{internId}")
+    public ResponseEntity<?> sendFeedbackToIntern(@RequestBody FeedBackRequest feedBackRequest, @PathVariable int coordinatorId, @PathVariable int internId) {
+        try{
+            return new ResponseEntity<>(coordinatorFeedbackToInternService.sendFeedback(feedBackRequest, coordinatorId, internId), HttpStatus.CREATED);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

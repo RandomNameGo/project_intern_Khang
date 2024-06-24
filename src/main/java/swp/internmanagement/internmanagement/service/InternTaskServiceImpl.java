@@ -112,5 +112,4 @@ public class InternTaskServiceImpl implements InternTaskService {
         return (totalCompletedTaskDouble/totalTaskDouble)*100;
     }
 
-
 }

@@ -18,7 +18,7 @@ public class InternDetailServiceImpl implements InternDetailService {
 
     @Override
     public String updateInternDetail(UpdateInternDetailRequest updateInternDetailRequest, int internId) {
-        if(!userRepository.existsById(internId)) {
+        if(!userRepository.existsById(internId)) {   //throw exception here
             return "Intern not found";
         }
         InternDetail internDetail = internDetailRepository.findById(internId).get();

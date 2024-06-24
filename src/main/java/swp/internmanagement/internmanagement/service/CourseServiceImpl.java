@@ -40,6 +40,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Autowired
     private CompanyRepository companyRepository;
+
     @Autowired
     private CourseInternRepository courseInternRepository;
 
@@ -61,6 +62,16 @@ public class CourseServiceImpl implements CourseService {
         LocalDate startDateAfter = LocalDate.parse(formattedStartDate, formatter);
         LocalDate endDateAfter = LocalDate.parse(formattedEndDate, formatter);
 
+        if(startDateAfter.isAfter(endDateAfter)) {
+            throw new RuntimeException("Start date can not after end date");
+        }
+        if(startDateAfter.isAfter(endDateAfter.minusDays(7))) {
+            throw new RuntimeException("course must be at least 7 days");
+        }
+        if(startDateAfter.isBefore(LocalDate.now())) {
+            throw new RuntimeException("start date can not be before current date");
+        }
+
         UserAccount mentorAccount = userRepository.findById(mentorId).get();
         Company company = companyRepository.findById(companyId).get();
         Course course = new Course();
@@ -74,7 +85,6 @@ public class CourseServiceImpl implements CourseService {
         }else{
             course.setStatus(0);
         }
-       
         courseRepository.save(course);
         return course;
     }
@@ -260,5 +270,4 @@ public class CourseServiceImpl implements CourseService {
         getCourseNameResponse.setCourseName(course.getCourseDescription());
         return getCourseNameResponse;
     }
-
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import swp.internmanagement.internmanagement.entity.Course;
 import swp.internmanagement.internmanagement.entity.CourseIntern;
 import swp.internmanagement.internmanagement.entity.CourseInternId;
+import swp.internmanagement.internmanagement.entity.Task;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.AddInternToCourseRequest;
 import swp.internmanagement.internmanagement.payload.response.GetInternResultFromCourseResponse;
@@ -45,11 +46,12 @@ public class CourseInternServiceImpl implements CourseInternService {
             throw new RuntimeException("Course not found");
         }
         Course course = courseRepository.findById(courseId).get();
-
+        List<Task> tasks = course.getTasks();
         LocalDate localDate = LocalDate.now();
         if(course.getStartDate().isBefore(localDate)){
             throw new RuntimeException( "Course already started");
         }
+
         for (AddInternToCourseRequest addInternToCourseRequest : request) {
             CourseIntern courseInterns=courseInternRepository.findByInternIdAndCourseId(addInternToCourseRequest.getInternId(), courseId);
             if(courseInterns!=null){
@@ -66,6 +68,9 @@ public class CourseInternServiceImpl implements CourseInternService {
             courseIntern.setId(courseInternId);
             courseIntern.setResult(0.0);
             courseInternRepository.save(courseIntern);
+            for (Task task : tasks) {
+                internTaskService.addInternToTask(task);
+            }
         }
         return "Added successfully";
     }
