@@ -1,7 +1,12 @@
 package swp.internmanagement.internmanagement.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import swp.internmanagement.internmanagement.entity.Course;
 import swp.internmanagement.internmanagement.entity.CourseIntern;
 import swp.internmanagement.internmanagement.entity.CourseInternId;
@@ -13,13 +18,6 @@ import swp.internmanagement.internmanagement.repository.CourseInternRepository;
 import swp.internmanagement.internmanagement.repository.CourseRepository;
 import swp.internmanagement.internmanagement.repository.InternTaskRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class CourseInternServiceImpl implements CourseInternService {

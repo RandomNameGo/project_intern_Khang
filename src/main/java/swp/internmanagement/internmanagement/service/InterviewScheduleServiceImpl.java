@@ -1,22 +1,6 @@
 package swp.internmanagement.internmanagement.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-
-import jakarta.mail.internet.MimeMessage;
-import swp.internmanagement.internmanagement.entity.JobApplication;
-import swp.internmanagement.internmanagement.entity.Schedule;
-import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
-import swp.internmanagement.internmanagement.payload.request.ApplicationIdRequest;
-import swp.internmanagement.internmanagement.repository.JobApplicationRepository;
-import swp.internmanagement.internmanagement.repository.ScheduleRepository;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -25,6 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import swp.internmanagement.internmanagement.entity.JobApplication;
+import swp.internmanagement.internmanagement.entity.Schedule;
+import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
+import swp.internmanagement.internmanagement.payload.request.ApplicationIdRequest;
+import swp.internmanagement.internmanagement.repository.JobApplicationRepository;
+import swp.internmanagement.internmanagement.repository.ScheduleRepository;
 
 @Service
 public class InterviewScheduleServiceImpl implements InterviewScheduleService {
@@ -36,10 +30,6 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     private JobApplicationRepository applicationRepository;
     @Autowired
     private EmailService emailService;
-        @Autowired
-    private TemplateEngine templateEngine;
-      @Autowired
-    private JavaMailSender javaMailSender;
     @Override
     public String addSchedule(AddScheduleRequest addScheduleRequest) {
         List<ApplicationIdRequest> applicationId = addScheduleRequest.getApplicationId();
