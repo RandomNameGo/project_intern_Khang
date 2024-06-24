@@ -42,8 +42,6 @@ public class TaskServiceImpl implements TaskService {
     String formattedEndDate = endDate.format(formatter);
     LocalDate startDateAfterConvert = LocalDate.parse(formattedStartDate, formatter);
     LocalDate endDateAfterConvert = LocalDate.parse(formattedEndDate, formatter);
-
-    // Validation
     if (startDateAfterConvert.isAfter(endDateAfterConvert)) {
         throw new Exception("Start date can't be after end date "+createTaskRequest.getStartDate());
     }
