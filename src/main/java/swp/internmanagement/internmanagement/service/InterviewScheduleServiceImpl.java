@@ -2,7 +2,14 @@ package swp.internmanagement.internmanagement.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import jakarta.mail.internet.MimeMessage;
 import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.entity.Schedule;
 import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
@@ -14,7 +21,10 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class InterviewScheduleServiceImpl implements InterviewScheduleService {
@@ -24,11 +34,21 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
 
     @Autowired
     private JobApplicationRepository applicationRepository;
-
+    @Autowired
+    private EmailService emailService;
+        @Autowired
+    private TemplateEngine templateEngine;
+      @Autowired
+    private JavaMailSender javaMailSender;
     @Override
     public String addSchedule(AddScheduleRequest addScheduleRequest) {
         List<ApplicationIdRequest> applicationId = addScheduleRequest.getApplicationId();
+        Map<String, Object> templateModel = new HashMap<>();
+
+        templateModel.put("verificationCode", "Click it to to change your password");
         for (ApplicationIdRequest a : applicationId) {
+            Optional<JobApplication> job=applicationRepository.findById(a.getApplicationId());
+            String email =job.get().getEmail();
             Schedule schedule = new Schedule();
             String time = addScheduleRequest.getTime();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
@@ -41,8 +61,11 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             JobApplication jobApplication = applicationRepository.findById(a.getApplicationId()).get();
             schedule.setApplication(jobApplication);
             schedule.setLocation(addScheduleRequest.getLocation());
+            templateModel.put("date", "Date InterView: " + interviewDate);
+            emailService.sendEmailSchedule(email, "Verify your email", templateModel);
             scheduleRepository.save(schedule);
         }
         return "Added Success";
     }
+
 }

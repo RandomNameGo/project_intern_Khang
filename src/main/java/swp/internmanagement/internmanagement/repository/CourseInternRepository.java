@@ -14,4 +14,7 @@ public interface CourseInternRepository extends JpaRepository<CourseIntern, Cour
     List<CourseIntern> findByInternId(int internId);
 
     List<CourseIntern> findByCourseId(int courseId);
+
+    @Query("select c from CourseIntern c where c.intern.id = :internId and c.course.id = :courseId")
+    CourseIntern findByInternIdAndCourseId(int internId, int courseId);
 }

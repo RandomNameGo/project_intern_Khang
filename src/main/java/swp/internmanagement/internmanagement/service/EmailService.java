@@ -64,5 +64,26 @@ public class EmailService {
             e.printStackTrace();
         }
     }
+    public void sendEmailSchedule(String to, String subject, Map<String, Object> templateModel) {
+        try {
+            Context context = new Context();
+            context.setVariables(templateModel);
+
+            String htmlContent = templateEngine.process("schedule", context);
+
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true);
+
+            helper.addInline("logoImage", new ClassPathResource("static/images/logo.png"));
+            helper.addInline("CongratuationGif", new ClassPathResource("static/images/Congratuation.gif"));
+            javaMailSender.send(message);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

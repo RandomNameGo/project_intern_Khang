@@ -51,7 +51,7 @@ public class CoordinatorController {
     public ResponseEntity<GetUserInSameCompanyResponse> search(
             @PathVariable int companyId,
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize) {
         return ResponseEntity.ok(userAccountService.getUserInSameCompany(companyId, pageNo, pageSize));
     }
 
@@ -80,7 +80,11 @@ public class CoordinatorController {
     //add intern to course
     @PostMapping("addIntern/{courseId}")
     public ResponseEntity<String> addIntern(@RequestBody List<AddInternToCourseRequest> addInternToCourseRequest, @PathVariable int courseId) {
-        return  new ResponseEntity<>(courseInternService.addInternToCourse(addInternToCourseRequest, courseId), HttpStatus.CREATED);
+        try {
+            return  new ResponseEntity<>(courseInternService.addInternToCourse(addInternToCourseRequest, courseId), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     //show course detail

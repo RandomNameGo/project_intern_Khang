@@ -16,7 +16,10 @@ import swp.internmanagement.internmanagement.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CourseInternServiceImpl implements CourseInternService {
@@ -41,15 +44,20 @@ public class CourseInternServiceImpl implements CourseInternService {
     public String addInternToCourse(List<AddInternToCourseRequest> request, int courseId) {
         CourseIntern courseIntern = new CourseIntern();
         if(!courseRepository.existsById(courseId)){
-            return "Course not found";
+            throw new RuntimeException("Course not found");
         }
         Course course = courseRepository.findById(courseId).get();
 
         LocalDate localDate = LocalDate.now();
         if(course.getStartDate().isBefore(localDate)){
-            return "Course already started";
+            throw new RuntimeException( "Course already started");
         }
-
+        for (AddInternToCourseRequest addInternToCourseRequest : request) {
+            CourseIntern courseInterns=courseInternRepository.findByInternIdAndCourseId(addInternToCourseRequest.getInternId(), courseId);
+            if(courseInterns!=null){
+                throw new RuntimeException( "There are some intern had been in that course");
+            }
+        }
         CourseInternId courseInternId = new CourseInternId();
         courseIntern.setCourse(course);
         courseInternId.setCourseId(courseId);
