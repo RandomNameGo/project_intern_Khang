@@ -19,7 +19,7 @@ import swp.internmanagement.internmanagement.service.TaskService;
 
 @RestController
 @RequestMapping("/internbridge/mentor")
-@CrossOrigin(origins = "http://localhost:3000" , allowCredentials = "true",allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class MentorController {
 
     @Autowired
