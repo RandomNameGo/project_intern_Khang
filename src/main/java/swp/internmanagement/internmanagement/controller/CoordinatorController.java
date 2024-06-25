@@ -1,6 +1,7 @@
 package swp.internmanagement.internmanagement.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -141,6 +142,24 @@ public class CoordinatorController {
             return new ResponseEntity<>(coordinatorFeedbackToInternService.sendFeedback(feedBackRequest, coordinatorId, internId), HttpStatus.CREATED);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/course/allIntern/{courseId}&{coordinatorId}")
+    public ResponseEntity<?> getAllInternInCourse(@PathVariable int courseId, @PathVariable int coordinatorId) {
+        try{
+            return ResponseEntity.ok(courseInternService.getAllInternInCourseByCoordinator(courseId, coordinatorId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/feedback/course/{companyId}")
+    public ResponseEntity<?> getAllFeedbackCourse(@PathVariable int companyId) {
+        try {
+            return ResponseEntity.of(Optional.ofNullable(courseService.getAllEndCourses(companyId)));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
         }
     }
 }

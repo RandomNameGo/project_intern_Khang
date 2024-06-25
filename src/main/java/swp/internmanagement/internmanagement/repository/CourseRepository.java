@@ -22,4 +22,7 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
 
     @Query("select c from Course c where c.id = :courseId and c.mentor.id = :mentorId")
     Course getByMentorIdAndCourseId(Integer courseId, Integer mentorId);
+
+    @Query("select c from Course c where c.company.id = :companyId and c.status is null")
+    List<Course> findEndCourse(int companyId);
 }

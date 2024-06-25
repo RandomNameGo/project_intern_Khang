@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -134,8 +135,9 @@ public class CourseServiceImpl implements CourseService {
             }
             courseRepository.save(course);
         }
-
     }
+
+
 
     @Override
     public GetAllCourseByMentorIdResponse getCourseByMentor(int mentorId) {
@@ -269,5 +271,10 @@ public class CourseServiceImpl implements CourseService {
         GetCourseNameResponse getCourseNameResponse = new GetCourseNameResponse();
         getCourseNameResponse.setCourseName(course.getCourseDescription());
         return getCourseNameResponse;
+    }
+
+    @Override
+    public List<Course> getAllEndCourses(int companyId) {
+        return courseRepository.findEndCourse(companyId);
     }
 }

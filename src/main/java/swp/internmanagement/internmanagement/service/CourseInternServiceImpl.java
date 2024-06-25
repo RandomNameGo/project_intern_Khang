@@ -3,6 +3,7 @@ package swp.internmanagement.internmanagement.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,8 +14,10 @@ import swp.internmanagement.internmanagement.entity.CourseInternId;
 import swp.internmanagement.internmanagement.entity.Task;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.AddInternToCourseRequest;
+import swp.internmanagement.internmanagement.payload.response.GetAllInternInCourseResponse;
 import swp.internmanagement.internmanagement.payload.response.GetInternResultFromCourseResponse;
 import swp.internmanagement.internmanagement.payload.response.GetListInternResultFromCourseResponse;
+import swp.internmanagement.internmanagement.payload.response.InternResponse;
 import swp.internmanagement.internmanagement.repository.CourseInternRepository;
 import swp.internmanagement.internmanagement.repository.CourseRepository;
 import swp.internmanagement.internmanagement.repository.InternTaskRepository;
@@ -97,6 +100,10 @@ public class CourseInternServiceImpl implements CourseInternService {
     @Override
     public GetListInternResultFromCourseResponse getListInternResultFromCourse(int courseId, int mentorId) {
 
+        if(!courseRepository.existsById(courseId)){
+            throw new RuntimeException("Course not found");
+        }
+
         Course course = courseRepository.findById(courseId).get();
         if(course.getMentor().getId() != mentorId){
             throw new RuntimeException("you are not allowed to access this course");
@@ -118,5 +125,57 @@ public class CourseInternServiceImpl implements CourseInternService {
         getListInternResultFromCourseResponse.setGetListInternResultFromCourse(result);
 
         return getListInternResultFromCourseResponse;
+    }
+
+    @Override
+    public GetAllInternInCourseResponse getAllInternInCourse(int courseId, int mentorId) {
+        if(!courseRepository.existsById(courseId)){
+            throw new RuntimeException("Course not found");
+        }
+        Course course = courseRepository.findById(courseId).get();
+        if(course.getMentor().getId() != mentorId){
+            throw new RuntimeException("you are not allowed to access this course");
+        }
+        List<CourseIntern> courseInterns = courseInternRepository.findByCourseId(courseId);
+        List<InternResponse> internResponseList = new ArrayList<>();
+        for (CourseIntern courseIntern : courseInterns) {
+            InternResponse internResponse = new InternResponse();
+            internResponse.setInternId(courseIntern.getIntern().getId());
+            internResponse.setInternName(courseIntern.getIntern().getFullName());
+            internResponse.setEmail(courseIntern.getIntern().getEmail());
+            internResponseList.add(internResponse);
+        }
+
+        GetAllInternInCourseResponse getAllInternInCourseResponse = new GetAllInternInCourseResponse();
+        getAllInternInCourseResponse.setInternResponseList(internResponseList);
+
+        return getAllInternInCourseResponse;
+    }
+
+    @Override
+    public GetAllInternInCourseResponse getAllInternInCourseByCoordinator(int courseId, int coordinatorId) {
+        if(!courseRepository.existsById(courseId)){
+            throw new RuntimeException("Course not found");
+        }
+        Course course = courseRepository.findById(courseId).get();
+        UserAccount coordinator = userRepository.findById(coordinatorId).get();
+        if(!Objects.equals(course.getCompany().getId(), coordinator.getCompany().getId())){
+            throw new RuntimeException("you are not allowed to access this course");
+        }
+
+        List<CourseIntern> courseInterns = courseInternRepository.findByCourseId(courseId);
+        List<InternResponse> internResponseList = new ArrayList<>();
+        for (CourseIntern courseIntern : courseInterns) {
+            InternResponse internResponse = new InternResponse();
+            internResponse.setInternId(courseIntern.getIntern().getId());
+            internResponse.setInternName(courseIntern.getIntern().getFullName());
+            internResponse.setEmail(courseIntern.getIntern().getEmail());
+            internResponseList.add(internResponse);
+        }
+
+        GetAllInternInCourseResponse getAllInternInCourseResponse = new GetAllInternInCourseResponse();
+        getAllInternInCourseResponse.setInternResponseList(internResponseList);
+
+        return getAllInternInCourseResponse;
     }
 }

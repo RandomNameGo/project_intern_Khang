@@ -118,11 +118,19 @@ public class MentorController {
     }
 
 
-
     @PostMapping("sendFeedback/{mentorId}&{internId}")
     public ResponseEntity<?> sendFeedback(@RequestBody FeedBackRequest feedBackRequest, @PathVariable int mentorId, @PathVariable int internId) {
         try {
             return new ResponseEntity<>(mentorFeedbackInternService.sendFeedbackIntern(feedBackRequest, mentorId, internId), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("course/allIntern/{courseId}&{mentorId}")
+    public ResponseEntity<?> getAllInternInCourse(@PathVariable int courseId, @PathVariable int mentorId) {
+        try{
+            return ResponseEntity.ok(courseInternService.getAllInternInCourse(courseId, mentorId));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(e.getMessage());
         }
