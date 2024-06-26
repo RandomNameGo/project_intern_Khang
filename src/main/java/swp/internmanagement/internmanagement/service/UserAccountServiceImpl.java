@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,15 +14,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import swp.internmanagement.internmanagement.entity.Company;
-import swp.internmanagement.internmanagement.entity.InternDetail;
-import swp.internmanagement.internmanagement.entity.JobApplication;
+import org.springframework.transaction.annotation.Transactional;
+import swp.internmanagement.internmanagement.entity.*;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
 import swp.internmanagement.internmanagement.payload.response.*;
-import swp.internmanagement.internmanagement.repository.InternTaskRepository;
-import swp.internmanagement.internmanagement.repository.JobApplicationRepository;
-import swp.internmanagement.internmanagement.repository.UserRepository;
+import swp.internmanagement.internmanagement.repository.*;
 import swp.internmanagement.internmanagement.security.jwt.JwtUtils;
 
 @Service
@@ -45,6 +43,14 @@ public class UserAccountServiceImpl implements UserAccountService {
     private InternTaskRepository internTaskRepository;
     @Autowired
     private InternTaskService internTaskService;
+    @Autowired
+    private CourseInternRepository courseInternRepository;
+    @Autowired
+    private CoordinatorFeedbackInternRepository coordinatorFeedbackInternRepository;
+    @Autowired
+    private MentorFeedbackInternRepository mentorFeedbackInternRepository;
+    @Autowired
+    private CourseRepository courseRepository;
 
     public String generateUserName(String fullName, String role, int user_id) {
         String[] splitFullNames = fullName.split("\\s+");
@@ -114,13 +120,39 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public String deleteUserAccount(int userId) {
         if (!userAccountRepository.existsById(userId)) {
-            return "User not found";
+            throw new RuntimeException("User not found");
         }
-        // Optional<UserAccount> user = userAccountRepository.findById(userId);
-        // UserAccount newUser = user.get();
-        // newUser.setStatus(0);
-        // userRepository.save(newUser);
-        userAccountRepository.deleteById(userId);
+//        // Optional<UserAccount> user = userAccountRepository.findById(userId);
+//        // UserAccount newUser = user.get();
+//        // newUser.setStatus(0);
+//        // userRepository.save(newUser);
+//        UserAccount userAccount = userAccountRepository.findById(userId).get();
+//        if(userAccount.getRole().equals("ROLE_INTERN")) {
+//            List<CourseIntern> courseInternList = courseInternRepository.findByInternId(userId);
+//            courseInternRepository.deleteAll(courseInternList);
+//            List<InternTask> internTasks = internTaskRepository.findInternTasksByInternId(userId);
+//            internTaskRepository.deleteAll(internTasks);
+//            List<CoordinatorFeedbackIntern> coordinatorFeedbackInterns = coordinatorFeedbackInternRepository.findByInternId(userId);
+//            coordinatorFeedbackInternRepository.deleteAll(coordinatorFeedbackInterns);
+//            userAccountRepository.deleteById(userId);
+//            List<MentorFeedbackIntern> mentorFeedbackInterns = mentorFeedbackInternRepository.findByInternId(userId);
+//            mentorFeedbackInternRepository.deleteAll(mentorFeedbackInterns);
+//        }
+//        if(userAccount.getRole().equals("ROLE_MENTOR")) {
+//            List<MentorFeedbackIntern> mentorFeedbackInterns = mentorFeedbackInternRepository.findByMentorId(userId);
+//            mentorFeedbackInternRepository.deleteAll(mentorFeedbackInterns);
+//            List<Course> courses = courseRepository.findByMentor(userId);
+//            for(Course course : courses) {
+//                course.setMentor(null);
+//                courseRepository.save(course);
+//            }
+//        }
+//        if(userAccount.getRole().equals("ROLE_COORDINATOR")) {
+//            List<CoordinatorFeedbackIntern> coordinatorFeedbackInterns = coordinatorFeedbackInternRepository.findByCoordinatorId(userId);
+//            coordinatorFeedbackInternRepository.deleteAll(coordinatorFeedbackInterns);
+//        }
+        UserAccount userAccount = userAccountRepository.findById(userId).get();
+        userAccount.setStatus(null);
         return "Deleted successfully";
     }
 
@@ -350,7 +382,5 @@ public class UserAccountServiceImpl implements UserAccountService {
         }
         return null;
     }
-
-
 
 }

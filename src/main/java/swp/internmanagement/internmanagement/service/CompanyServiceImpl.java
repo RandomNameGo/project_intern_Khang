@@ -10,15 +10,27 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import swp.internmanagement.internmanagement.entity.Company;
+import swp.internmanagement.internmanagement.entity.Course;
+import swp.internmanagement.internmanagement.entity.Job;
+import swp.internmanagement.internmanagement.entity.Task;
 import swp.internmanagement.internmanagement.payload.request.CreateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.request.UpdateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllCompanyResponse;
 import swp.internmanagement.internmanagement.repository.CompanyRepository;
+import swp.internmanagement.internmanagement.repository.CourseRepository;
+import swp.internmanagement.internmanagement.repository.JobRepository;
+import swp.internmanagement.internmanagement.repository.TaskRepository;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
+    private CourseRepository courseRepository;
+    @Autowired
+    private TaskRepository taskRepository;
+    @Autowired
+    private JobRepository jobRepository;
 
     @Override
     public boolean checkExistedCompanyAndInsert(CreateCompanyRequest companyRequest) {
@@ -45,8 +57,16 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public String deleteCompany(int companyId) {
         if (!companyRepository.existsById(companyId)) {
-            return "Company not found";
+            throw new RuntimeException("Company not found");
         }
+        List<Course> courses = courseRepository.findByCompanyId(companyId);
+        for (Course course : courses) {
+            List<Task> task = taskRepository.findAllInCourse(course.getId());
+            taskRepository.deleteAll(task);
+        }
+        courseRepository.deleteAll(courses);
+        List<Job> jobs = jobRepository.findListByCompanyId(companyId);
+        jobRepository.deleteAll(jobs);
         companyRepository.deleteById(companyId);
         return "Deleted Company";
     }

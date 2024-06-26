@@ -83,19 +83,19 @@ public class UserAccount {
     @Column(name = "status", nullable = false)
     private Integer status;
 
-    @OneToMany(mappedBy = "intern")
+    @OneToMany(mappedBy = "intern", orphanRemoval = true ,cascade = CascadeType.ALL)
     @JsonIgnore
     private List<MentorFeedbackIntern> mentorFeedbackInterns = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",  orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Request> requests = new ArrayList<>();
 
-    @OneToMany(mappedBy = "mentor")
+    @OneToMany(mappedBy = "mentor", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Course> courses = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user",  orphanRemoval = true ,cascade = CascadeType.ALL )
     @JsonManagedReference
     private InternDetail internDetails;
 

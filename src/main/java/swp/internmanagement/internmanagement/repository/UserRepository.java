@@ -18,27 +18,27 @@ public interface UserRepository extends JpaRepository<UserAccount, Integer> {
     Boolean existsByEmail(String email);
     @Query(value = "SELECT TOP 1 user_id FROM User_account ORDER BY user_id DESC", nativeQuery = true)
     int findLastUserId();
-    @Query("SELECT u from UserAccount u where u.role != 'ROLE_ADMIN' ")
+    @Query("SELECT u from UserAccount u where u.role != 'ROLE_ADMIN' and u.status is not null")
     Page<UserAccount> findUserAccountByParam(Pageable pageable);
 
     //Coordinator search intern and mentor in same company
-    @Query("select u from UserAccount u where u.role = 'ROLE_MENTOR' or u.role = 'ROLE_INTERN' and u.company.id = ?1")
+    @Query("select u from UserAccount u where u.role = 'ROLE_MENTOR' or u.role = 'ROLE_INTERN' and u.company.id = ?1 and u.status is not null")
     Page<UserAccount> findAllUsersInCompany(int companyId, Pageable pageable);
 
-    @Query("select u from UserAccount u where u.company.id = ?1 and u.role = ?2")
+    @Query("select u from UserAccount u where u.company.id = ?1 and u.role = ?2 and u.status is not null")
     Page<UserAccount> findAllMemberInCompany(int companyId, String role, Pageable pageable);
 
     Optional<UserAccount> findByVerificationCodeAndUserName(String verificationCode, String userName);
 
-    @Query("select u from UserAccount u where u.company.id = ?1 and u.role = ?2")
+    @Query("select u from UserAccount u where u.company.id = ?1 and u.role = ?2 and u.status is not null")
     List<UserAccount> findAllUserByRole(int companyId, String role);
 
-    @Query("SELECT u from UserAccount u where u.role != 'ROLE_ADMIN' AND u.status = 1")
+    @Query("SELECT u from UserAccount u where u.role != 'ROLE_ADMIN' AND u.status = 1 and u.status is not null")
     Page<UserAccount> findAllUserAccount(Pageable pageable);
 
-    @Query("select u from UserAccount u where u.role = 'ROLE_MENTOR' and u.company.id = :companyId ")
+    @Query("select u from UserAccount u where u.role = 'ROLE_MENTOR' and u.company.id = :companyId and u.status is not null")
     List<UserAccount> findAllMentorByCompanyId(int companyId);
 
-    @Query("select u from UserAccount u where u.role = 'ROLE_INTERN' and u.company.id = :companyId ")
+    @Query("select u from UserAccount u where u.role = 'ROLE_INTERN' and u.company.id = :companyId and u.status is not null")
     List<UserAccount> findAllInternByCompanyId(int companyId);
 }
