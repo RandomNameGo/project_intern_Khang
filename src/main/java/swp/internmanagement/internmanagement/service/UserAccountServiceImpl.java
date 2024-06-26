@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.entity.InternDetail;
 import swp.internmanagement.internmanagement.entity.JobApplication;
@@ -111,6 +112,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         return getAllMentorResponse;
     }
 
+    @Transactional
     @Override
     public String deleteUserAccount(int userId) {
         if (!userAccountRepository.existsById(userId)) {

@@ -101,7 +101,11 @@ public class AdminController {
 
     @DeleteMapping("/userAccount/delete/id={userId}")
     public ResponseEntity<?> deleteUserAccount(@PathVariable int userId) {
-        return ResponseEntity.ok(userAccountService.deleteUserAccount(userId));
+        try {
+            return ResponseEntity.ok(userAccountService.deleteUserAccount(userId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/company/delete/{companyId}")
