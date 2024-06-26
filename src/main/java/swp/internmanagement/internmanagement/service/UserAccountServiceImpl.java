@@ -116,6 +116,10 @@ public class UserAccountServiceImpl implements UserAccountService {
         if (!userAccountRepository.existsById(userId)) {
             return "User not found";
         }
+        // Optional<UserAccount> user = userAccountRepository.findById(userId);
+        // UserAccount newUser = user.get();
+        // newUser.setStatus(0);
+        // userRepository.save(newUser);
         userAccountRepository.deleteById(userId);
         return "Deleted successfully";
     }

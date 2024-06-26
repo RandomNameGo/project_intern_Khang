@@ -9,7 +9,7 @@ import swp.internmanagement.internmanagement.payload.response.GetCourseNameRespo
 
 public interface CourseService {
 
-    Course addCourse(CreateCourseRequest createCourseRequest, int companyId);
+    String addCourse(CreateCourseRequest createCourseRequest, int companyId);
 
     Course getCourse(int courseId);
 

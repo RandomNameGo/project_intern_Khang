@@ -48,7 +48,7 @@ public class CourseServiceImpl implements CourseService {
     private TaskRepository taskRepository;
 
     @Override
-    public Course addCourse(CreateCourseRequest createCourseRequest, int companyId) {
+    public String addCourse(CreateCourseRequest createCourseRequest, int companyId) {
         int mentorId = createCourseRequest.getMentorId();
 
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
@@ -86,7 +86,7 @@ public class CourseServiceImpl implements CourseService {
             course.setStatus(0);
         }
         courseRepository.save(course);
-        return course;
+        return "Add course successfully !!";
     }
 
     @Override
@@ -121,12 +121,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 13 1 * * ?")
     public void updateCourseStatus() {
         LocalDate today = LocalDate.now();
         List<Course> courses = courseRepository.findAll();
         for(Course course : courses) {
-            if(course.getEndDate().isAfter(today)) {
+            if(course.getEndDate().isBefore(today)) {
                 course.setStatus(null);
             }
             if(course.getStartDate().equals(today)) {

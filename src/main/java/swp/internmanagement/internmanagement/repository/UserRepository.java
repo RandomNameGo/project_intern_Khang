@@ -33,7 +33,7 @@ public interface UserRepository extends JpaRepository<UserAccount, Integer> {
     @Query("select u from UserAccount u where u.company.id = ?1 and u.role = ?2")
     List<UserAccount> findAllUserByRole(int companyId, String role);
 
-    @Query("SELECT u from UserAccount u where u.role != 'ROLE_ADMIN' ")
+    @Query("SELECT u from UserAccount u where u.role != 'ROLE_ADMIN' AND u.status = 1")
     Page<UserAccount> findAllUserAccount(Pageable pageable);
 
     @Query("select u from UserAccount u where u.role = 'ROLE_MENTOR' and u.company.id = :companyId ")
