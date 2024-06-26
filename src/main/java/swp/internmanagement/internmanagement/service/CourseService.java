@@ -7,6 +7,8 @@ import swp.internmanagement.internmanagement.payload.response.GetAllCourseByMent
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
 
+import java.util.List;
+
 public interface CourseService {
 
     String addCourse(CreateCourseRequest createCourseRequest, int companyId);
@@ -29,4 +31,5 @@ public interface CourseService {
 
     GetCourseNameResponse getCourseNameByMentorId(int courseId, int mentorId);
 
+    List<Course> getAllEndCourses(int companyId);
 }
