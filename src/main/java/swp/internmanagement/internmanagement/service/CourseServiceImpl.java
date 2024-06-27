@@ -114,9 +114,9 @@ public class CourseServiceImpl implements CourseService {
             throw new RuntimeException("Course not found");
         }
         List<Task> tasks = taskRepository.findAllInCourse(courseId);
-        taskRepository.deleteAll(tasks);
         List<InternTask> internTasks = internTaskRepository.findInternTasksByCourseId(courseId);
         internTaskRepository.deleteAll(internTasks);
+        taskRepository.deleteAll(tasks);
         List<CourseIntern> courseInterns = courseInternRepository.findByCourseId(courseId);
         courseInternRepository.deleteAll(courseInterns);
         courseRepository.deleteById(courseId);
