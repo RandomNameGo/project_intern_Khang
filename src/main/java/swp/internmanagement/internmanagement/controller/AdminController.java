@@ -99,7 +99,7 @@ public class AdminController {
     }
     
 
-    @DeleteMapping("/userAccount/delete/id={userId}")
+    @PutMapping("/userAccount/delete/id={userId}")
     public ResponseEntity<?> deleteUserAccount(@PathVariable int userId) {
         try {
             return ResponseEntity.ok(userAccountService.deleteUserAccount(userId));

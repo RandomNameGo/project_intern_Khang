@@ -10,4 +10,5 @@ public interface CoordinatorFeedbackInternRepository extends JpaRepository<Coord
 
     List<CoordinatorFeedbackIntern> findByInternId(int internId);
 
+    List<CoordinatorFeedbackIntern> findByCoordinatorId(int internId);
 }

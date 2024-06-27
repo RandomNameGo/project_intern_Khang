@@ -35,4 +35,5 @@ public interface UserAccountService {
     GetListAllInternResultResponse getListAllInternResult(int companyId);
 
     void checkValidId(int companyId, int userId);
+
 }

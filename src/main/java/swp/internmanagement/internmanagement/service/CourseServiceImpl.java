@@ -13,9 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import swp.internmanagement.internmanagement.entity.Company;
-import swp.internmanagement.internmanagement.entity.Course;
-import swp.internmanagement.internmanagement.entity.CourseInternId;
+import swp.internmanagement.internmanagement.entity.*;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
 import swp.internmanagement.internmanagement.payload.response.CourseResponse;
@@ -24,11 +22,7 @@ import swp.internmanagement.internmanagement.payload.response.GetAllActivitiesIn
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseByMentorIdResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
-import swp.internmanagement.internmanagement.repository.CompanyRepository;
-import swp.internmanagement.internmanagement.repository.CourseInternRepository;
-import swp.internmanagement.internmanagement.repository.CourseRepository;
-import swp.internmanagement.internmanagement.repository.TaskRepository;
-import swp.internmanagement.internmanagement.repository.UserRepository;
+import swp.internmanagement.internmanagement.repository.*;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -47,6 +41,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Autowired 
     private TaskRepository taskRepository;
+    @Autowired
+    private InternTaskRepository internTaskRepository;
 
     @Override
     public String addCourse(CreateCourseRequest createCourseRequest, int companyId) {
@@ -115,8 +111,14 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public String deleteCourse(int courseId) {
         if(!courseRepository.existsById(courseId)) {
-            return "Course not found";
+            throw new RuntimeException("Course not found");
         }
+        List<Task> tasks = taskRepository.findAllInCourse(courseId);
+        taskRepository.deleteAll(tasks);
+        List<InternTask> internTasks = internTaskRepository.findInternTasksByCourseId(courseId);
+        internTaskRepository.deleteAll(internTasks);
+        List<CourseIntern> courseInterns = courseInternRepository.findByCourseId(courseId);
+        courseInternRepository.deleteAll(courseInterns);
         courseRepository.deleteById(courseId);
         return "Deleted course";
     }
@@ -136,7 +138,6 @@ public class CourseServiceImpl implements CourseService {
             courseRepository.save(course);
         }
     }
-
 
 
     @Override

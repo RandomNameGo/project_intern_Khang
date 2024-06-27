@@ -79,23 +79,22 @@ public class UserAccount {
     @Column(name = "verification_code", length = 50)
     private String verificationCode;
 
-    @NotNull
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = true)
     private Integer status;
 
-    @OneToMany(mappedBy = "intern", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "intern", orphanRemoval = true ,cascade = CascadeType.ALL)
     @JsonIgnore
     private List<MentorFeedbackIntern> mentorFeedbackInterns = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user",  orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Request> requests = new ArrayList<>();
 
-    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "mentor", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Course> courses = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user",  orphanRemoval = true ,cascade = CascadeType.ALL )
     @JsonManagedReference
     private InternDetail internDetails;
 

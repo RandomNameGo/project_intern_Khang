@@ -9,4 +9,6 @@ import swp.internmanagement.internmanagement.entity.MentorFeedbackIntern;
 public interface MentorFeedbackInternRepository extends JpaRepository<MentorFeedbackIntern, Integer> {
 
     List<MentorFeedbackIntern> findByInternId(int internId);
+
+    List<MentorFeedbackIntern> findByMentorId(int internId);
 }

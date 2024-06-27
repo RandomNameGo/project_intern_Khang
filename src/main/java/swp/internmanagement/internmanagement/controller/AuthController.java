@@ -2,6 +2,7 @@ package swp.internmanagement.internmanagement.controller;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.LoginRequest;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
 import swp.internmanagement.internmanagement.payload.response.MessageResponse;
@@ -64,6 +66,13 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity <?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
         try{
+            Optional<UserAccount> user =userRepository.findByUserName(loginRequest.getUsername());
+            if(user.isPresent()){
+                UserAccount userCheck=user.get();
+                if(userCheck.getStatus().equals(0) || userCheck.getStatus().equals(null)){
+                    throw new Exception("Error");
+                }
+            }
             Authentication authentication=authenticationManager
             .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
