@@ -154,10 +154,10 @@ public class CoordinatorController {
         }
     }
 
-    @GetMapping("/feedback/course/{companyId}")
-    public ResponseEntity<?> getAllFeedbackCourse(@PathVariable int companyId) {
+    @GetMapping("/feedback/course/{coordinatorId}")
+    public ResponseEntity<?> getAllFeedbackCourse(@PathVariable int coordinatorId) {
         try {
-            return ResponseEntity.of(Optional.ofNullable(courseService.getAllEndCourses(companyId)));
+            return ResponseEntity.of(Optional.ofNullable(courseService.getAllEndCourses(coordinatorId)));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(e.getMessage());
         }
