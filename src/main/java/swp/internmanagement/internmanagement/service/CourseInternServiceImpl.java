@@ -163,7 +163,7 @@ public class CourseInternServiceImpl implements CourseInternService {
             throw new RuntimeException("you are not allowed to access this course");
         }
 
-        List<CourseIntern> courseInterns = courseInternRepository.findByCourseId(courseId);
+        List<CourseIntern> courseInterns = courseInternRepository.findByEndCourseId(courseId);
         List<InternResponse> internResponseList = new ArrayList<>();
         for (CourseIntern courseIntern : courseInterns) {
             InternResponse internResponse = new InternResponse();
