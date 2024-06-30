@@ -97,6 +97,4 @@ public class UserAccount {
     @OneToOne(mappedBy = "user",  orphanRemoval = true ,cascade = CascadeType.ALL )
     @JsonManagedReference
     private InternDetail internDetails;
-
-    
 }

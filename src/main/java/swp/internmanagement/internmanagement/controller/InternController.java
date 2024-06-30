@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import swp.internmanagement.internmanagement.entity.CourseIntern;
+import swp.internmanagement.internmanagement.entity.InternDetail;
 import swp.internmanagement.internmanagement.entity.InternTask;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
 import swp.internmanagement.internmanagement.payload.response.ShowAllFeedbackResponse;
@@ -38,6 +39,9 @@ public class InternController {
 
     @Autowired
     private CoordinatorFeedbackToInternService coordinatorFeedbackToInternService;
+
+    @Autowired
+    private InternDetailService internDetailService;
 
     //Show all course intern attended
     @GetMapping("/allCourse/{internId}")
@@ -84,5 +88,14 @@ public class InternController {
         internTaskService.updateInternTask(taskId, internId);
         courseInternService.updateResult(internId, courseId);
         return new ResponseEntity<>(internTaskService.updateInternTask(taskId, internId), HttpStatus.OK);
+    }
+
+    @GetMapping("/detail/{internId}")
+    public ResponseEntity<?> getDetail(@PathVariable int internId) {
+        try {
+            return ResponseEntity.ok(internDetailService.getInternDetail(internId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 }
