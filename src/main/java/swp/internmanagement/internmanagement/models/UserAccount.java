@@ -79,7 +79,7 @@ public class UserAccount {
     @Column(name = "verification_code", length = 50)
     private String verificationCode;
 
-    @Column(name = "status", nullable = true)
+    @Column(name = "status")
     private Integer status;
 
     @OneToMany(mappedBy = "intern", orphanRemoval = true ,cascade = CascadeType.ALL)
@@ -97,6 +97,4 @@ public class UserAccount {
     @OneToOne(mappedBy = "user",  orphanRemoval = true ,cascade = CascadeType.ALL )
     @JsonManagedReference
     private InternDetail internDetails;
-
-    
 }

@@ -3,6 +3,7 @@ package swp.internmanagement.internmanagement.service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -46,9 +47,21 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             String time = addScheduleRequest.getTime();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
             LocalDateTime interviewDate = LocalDateTime.parse(time, dateTimeFormatter);
+            LocalTime workTime = LocalTime.of(9,0);
+            LocalTime workTime2 = LocalTime.of(11,30);
+            LocalTime workTime3 = LocalTime.of(13,0);
+            LocalTime workTime4 = LocalTime.of(17,30);
+
             if(interviewDate.isBefore(LocalDateTime.now())) {
               throw new RuntimeException ("The interview date is in the past");
             }
+
+            if(interviewDate.toLocalTime().isBefore(workTime) ||
+                    (interviewDate.toLocalTime().isAfter(workTime2)&&interviewDate.toLocalTime().isBefore(workTime3)) ||
+                    interviewDate.toLocalTime().isAfter(workTime4)) {
+                throw new RuntimeException ("The interview time must be in work time");
+            }
+
             Instant interviewInstant = interviewDate.toInstant(ZoneOffset.UTC);
             schedule.setScheduleTime(interviewInstant);
             JobApplication jobApplication = applicationRepository.findById(a.getApplicationId()).get();

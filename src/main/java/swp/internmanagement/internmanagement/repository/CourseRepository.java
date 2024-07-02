@@ -16,6 +16,7 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     @Query("select c from Course c where c.company.id = :companyId")
     Page<Course> findByCompany(int companyId, Pageable pageable);
 
+    @Query("select c from Course c where c.mentor.id = :mentorId and c.status is not null")
     Page<Course> findByMentorId(Integer mentorId, Pageable pageable);
 
     Page<Course> findByMentorIdAndCompanyId(Integer mentorId, Integer companyId,Pageable pageable);

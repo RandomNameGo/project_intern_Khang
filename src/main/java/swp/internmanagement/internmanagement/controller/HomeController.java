@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.entity.Field;
 import swp.internmanagement.internmanagement.entity.Job;
 import swp.internmanagement.internmanagement.entity.Request;
@@ -25,16 +26,13 @@ import swp.internmanagement.internmanagement.entity.Request;
 import swp.internmanagement.internmanagement.payload.request.HelpRequest;
 import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
 import swp.internmanagement.internmanagement.payload.request.LoginRequest;
+import swp.internmanagement.internmanagement.payload.response.CompanyNameResponse;
 import swp.internmanagement.internmanagement.payload.request.SendHelpRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllFieldsResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllJobRes;
 import swp.internmanagement.internmanagement.payload.response.GetAllJobsResponse;
 import swp.internmanagement.internmanagement.payload.response.SearchJobsResponse;
-import swp.internmanagement.internmanagement.service.FieldService;
-import swp.internmanagement.internmanagement.service.JobApplicationService;
-import swp.internmanagement.internmanagement.service.JobService;
-import swp.internmanagement.internmanagement.service.RequestService;
-import swp.internmanagement.internmanagement.service.UserAccountService;
+import swp.internmanagement.internmanagement.service.*;
 
 @RestController
 @RequestMapping("/internbridge")
@@ -52,6 +50,9 @@ public class HomeController {
 
     @Autowired
     private FieldService fieldService;
+
+    @Autowired
+    private CompanyService companyService;
 
     @GetMapping("/jobs")
     public ResponseEntity<GetAllJobRes> getAllJobs(
@@ -171,6 +172,11 @@ public class HomeController {
             return ResponseEntity.status(500).body("Error to activate");
         }
         return ResponseEntity.status(500).body("Error to activate");
+    }
+
+    @GetMapping("/companyName/{companyId}")
+    public ResponseEntity<CompanyNameResponse> getCompany(@PathVariable Integer companyId) {
+        return ResponseEntity.ok(companyService.getCompanyName(companyId));
     }
     @PutMapping("/verifyEmail")
     public ResponseEntity<?> verifyEmailJob(@RequestParam("code") String code) {

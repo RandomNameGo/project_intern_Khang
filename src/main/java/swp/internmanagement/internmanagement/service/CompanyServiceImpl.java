@@ -15,6 +15,7 @@ import swp.internmanagement.internmanagement.entity.Job;
 import swp.internmanagement.internmanagement.entity.Task;
 import swp.internmanagement.internmanagement.payload.request.CreateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.request.UpdateCompanyRequest;
+import swp.internmanagement.internmanagement.payload.response.CompanyNameResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllCompanyResponse;
 import swp.internmanagement.internmanagement.repository.CompanyRepository;
 import swp.internmanagement.internmanagement.repository.CourseRepository;
@@ -116,5 +117,13 @@ public class CompanyServiceImpl implements CompanyService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public CompanyNameResponse getCompanyName(int companyId) {
+        Company company = companyRepository.findById(companyId).get();
+        CompanyNameResponse companyNameResponse = new CompanyNameResponse();
+        companyNameResponse.setCompanyName(company.getCompanyName());
+        return companyNameResponse;
     }
 }

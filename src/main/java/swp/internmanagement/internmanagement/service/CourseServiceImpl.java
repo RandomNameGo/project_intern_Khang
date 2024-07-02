@@ -274,7 +274,9 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> getAllEndCourses(int companyId) {
+    public List<Course> getAllEndCourses(int coordinatorId) {
+        UserAccount coordinator = userRepository.findById(coordinatorId).get();
+        int companyId = coordinator.getCompany().getId();
         return courseRepository.findEndCourse(companyId);
     }
 }

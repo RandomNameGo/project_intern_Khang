@@ -146,6 +146,7 @@ public class ManagerController {
         }
         return ResponseEntity.status(500).body("Failed to Update job.");
     }
+
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteJob(
         @RequestParam ("job_id") Integer job_id
@@ -162,6 +163,7 @@ public class ManagerController {
         }
         return ResponseEntity.status(500).body("Failed to delete job.");
     }
+
     @GetMapping("/viewActivity")
     public ResponseEntity<?> getAllActivity(
         @RequestParam("companyid") int companyId,
@@ -179,4 +181,15 @@ public class ManagerController {
     }
     
 
+    @GetMapping("/intern/internDetail/{companyId}")
+    public ResponseEntity<?> getAllInternDetail(
+            @PathVariable Integer companyId,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize){
+        try{
+            return ResponseEntity.ok(internDetailService.listInternDetail(companyId, pageNo, pageSize));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to list intern detail.");
+        }
+    }
 }
