@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
@@ -85,5 +86,24 @@ public class EmailService {
             e.printStackTrace();
         }
     }
+     public void sendVerificationEmail(String to, String subject, Map<String, Object> templateModel) throws MessagingException {
+        Context context = new Context();
+        context.setVariables(templateModel);
 
+        String htmlContent = templateEngine.process("verfiyJobEmail", context);
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(htmlContent, true);
+
+        helper.addInline("logo", new ClassPathResource("static/images/logo.png"));
+        helper.addInline("facebook", new ClassPathResource("static/images/Facebook_Logo.png"));
+        helper.addInline("twitter", new ClassPathResource("static/images/twitter.png"));
+        // helper.addInline("linkedin", new ClassPathResource("static/linkedin.png"));
+        // helper.addInline("instagram", new ClassPathResource("static/instagram.png"));
+
+        javaMailSender.send(message);
+    }
 }

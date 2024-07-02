@@ -15,7 +15,7 @@ public interface JobApplicationService {
 
     JobApplicationResponse getAllJobApplication(int pageNo, int pageSize, int id);
 
-    String updateJobApplication(Integer id, int status);
+    String updateJobApplication(Integer id, int status) throws Exception;
 
     AcceptedJobApplicationResponse getAcceptedJobApplication(int pageNo, int pageSize);
     
@@ -24,4 +24,6 @@ public interface JobApplicationService {
     boolean postJobApplication (PostJobApplicationRequest postJobApplicationRequest);
 
     AcceptedJobApplicationResponse getAllAcceptedJobApplicationById(Integer companyId, int pageNo, int pageSize);
+
+    boolean handleVerifyEmailJob(String code);
 }

@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -124,7 +123,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    @Scheduled(cron = "0 13 1 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void updateCourseStatus() {
         LocalDate today = LocalDate.now();
         List<Course> courses = courseRepository.findAll();

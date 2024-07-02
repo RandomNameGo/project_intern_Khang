@@ -6,10 +6,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import swp.internmanagement.internmanagement.entity.Job;
+import swp.internmanagement.internmanagement.payload.response.CompanyRes;
+import swp.internmanagement.internmanagement.payload.response.GetAllJobRes;
 import swp.internmanagement.internmanagement.payload.response.GetAllJobsResponse;
 import swp.internmanagement.internmanagement.payload.response.SearchJobsResponse;
+import swp.internmanagement.internmanagement.payload.response.jobRes;
 import swp.internmanagement.internmanagement.repository.JobRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,14 +23,28 @@ public class JobServiceImpl implements JobService{
     @Autowired
     private JobRepository jobRepository;
 
+
     @Override
-    public GetAllJobsResponse getAllJobs(int pageNo, int pageSize) {
+    public GetAllJobRes getAllJobs(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         Page<Job> jobs = jobRepository.findAll(pageable);
         List<Job> listOfJobs = jobs.getContent();
-
-        GetAllJobsResponse getAllJobsResponse = new GetAllJobsResponse();
-        getAllJobsResponse.setJobs(listOfJobs);
+        List<jobRes> list = new ArrayList<>();
+        for (Job job : listOfJobs) {
+            jobRes jobRes = new jobRes();
+            CompanyRes companyRes = new CompanyRes();
+            companyRes.setCompanyDescription(job.getCompany().getCompanyDescription());
+            companyRes.setCompanyName(job.getCompany().getCompanyName());
+            companyRes.setId(job.getCompany().getId());
+            companyRes.setLocation(job.getCompany().getLocation());
+            jobRes.setCompany(companyRes);
+            jobRes.setId(job.getId());
+            jobRes.setJobDescription(job.getJobDescription());
+            jobRes.setJobName(job.getJobName());
+            list.add(jobRes);
+        }
+        GetAllJobRes getAllJobsResponse = new GetAllJobRes();
+        getAllJobsResponse.setJobs(list);
         getAllJobsResponse.setPageNo(jobs.getNumber());
         getAllJobsResponse.setPageSize(jobs.getSize());
         getAllJobsResponse.setTotalItems(jobs.getTotalElements());

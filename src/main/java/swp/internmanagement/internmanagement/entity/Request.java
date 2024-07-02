@@ -3,6 +3,7 @@ package swp.internmanagement.internmanagement.entity;
 import org.hibernate.annotations.Nationalized;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,10 +36,9 @@ public class Request {
     @Column(name = "request_id", nullable = false)
     private Integer id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
+    @JsonManagedReference
     private UserAccount user;
 
     @Size(max = 50)

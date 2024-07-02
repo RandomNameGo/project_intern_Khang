@@ -15,6 +15,7 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
 
     @Query("select j from Job j where j.id = :id")
     Page<Job> findById(Integer id, Pageable pageable);
+    @Query("SELECT j from Job j where j.company.id =:companyId ORDER BY j.id DESC")
     Page<Job> findByCompanyId(Integer companyId, Pageable pageable);
     Page<Job> findByJobApplicationsIsNotNull(Pageable pageable);
 

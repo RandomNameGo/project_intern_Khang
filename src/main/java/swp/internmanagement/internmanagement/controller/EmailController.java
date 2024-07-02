@@ -25,8 +25,9 @@ public class EmailController {
         Map<String, Object> templateModel = new HashMap<>();
         templateModel.put("verificationCode", "Click button below to activate your account");
         templateModel.put("verificationUrl", "https://example.com/verify?code=" + "a");
+        
         try {
-            emailService.sendEmailForgotPassword("hungpltse172380@fpt.edu.vn", "Verify your email", templateModel);
+            emailService.sendEmailForgotPassword("hungasjnakjdfnkjsdnf0@fpt.edu.vn", "Verify your email", templateModel);
             return "Email sent successfully";
         } catch (Exception e) {
             e.printStackTrace();

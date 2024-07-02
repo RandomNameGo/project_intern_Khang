@@ -23,6 +23,7 @@ import swp.internmanagement.internmanagement.payload.request.PostJobApplicationR
 import swp.internmanagement.internmanagement.payload.request.UpdateInternDetailRequest;
 import swp.internmanagement.internmanagement.payload.response.JobApplicationResponse;
 import swp.internmanagement.internmanagement.service.InternDetailService;
+import swp.internmanagement.internmanagement.service.InterviewScheduleService;
 import swp.internmanagement.internmanagement.service.JobApplicationService;
 import swp.internmanagement.internmanagement.service.JobService;
 import swp.internmanagement.internmanagement.service.UserAccountService;
@@ -44,6 +45,9 @@ public class ManagerController {
 
     @Autowired
     private UserAccountService userAccountService;
+
+    @Autowired
+    private InterviewScheduleService interviewScheduleService;
 
     @PostMapping("/postjob")
     public ResponseEntity<?>  PostRecruitment(
@@ -81,21 +85,21 @@ public class ManagerController {
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<JobApplicationResponse> getJobApplication
     (
-        @RequestParam("companyid") int companyId,
+        @RequestParam("companyid") int companyid,
         @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
         @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
     ){
         
-        return ResponseEntity.ok(jobApplicationService.getAllJobApplication(pageNo, pageSize, companyId));
+        return ResponseEntity.ok(jobApplicationService.getAllJobApplication(pageNo, pageSize, companyid));
     }
 
     @PutMapping("/jobApplication/id={id}&status={status}")
-    public String update(@PathVariable Integer id, @PathVariable Integer status){
+    public ResponseEntity<?> update(@PathVariable Integer id, @PathVariable Integer status){
         try {
-            return jobApplicationService.updateJobApplication(id,status);
+            return ResponseEntity.ok(jobApplicationService.updateJobApplication(id,status));
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+                return ResponseEntity.status(500).body(e.getMessage());
         }
     }
 
@@ -166,5 +170,13 @@ public class ManagerController {
     ) {
         return ResponseEntity.ok(jobService.getAllJobsByCompanyId(companyId, pageNo, pageSize));
     }
+    @GetMapping("/viewSchedule")
+    public ResponseEntity<?> getSchedule(
+        @RequestParam("companyid") Integer companyId
+    ) {
+        
+        return ResponseEntity.ok(interviewScheduleService.getrAllScheduleOfManager(companyId));
+    }
+    
 
 }

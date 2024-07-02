@@ -1,8 +1,16 @@
 package swp.internmanagement.internmanagement.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,10 +18,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.entity.Field;
 import swp.internmanagement.internmanagement.entity.Job;
 import swp.internmanagement.internmanagement.entity.JobApplication;
+import swp.internmanagement.internmanagement.entity.JobTempo;
+import swp.internmanagement.internmanagement.entity.Schedule;
 import swp.internmanagement.internmanagement.models.JobApplicationDTO;
 import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
 import swp.internmanagement.internmanagement.payload.request.PostJobApplicationRequest;
@@ -21,6 +32,8 @@ import swp.internmanagement.internmanagement.payload.response.AcceptedJobApplica
 import swp.internmanagement.internmanagement.payload.response.JobApplicationResponse;
 import swp.internmanagement.internmanagement.repository.JobApplicationRepository;
 import swp.internmanagement.internmanagement.repository.JobRepository;
+import swp.internmanagement.internmanagement.repository.ScheduleRepository;
+import swp.internmanagement.internmanagement.security.jwt.JwtUtils;
 
 @Service
 public class JobApplicationServiceImpl implements JobApplicationService {
@@ -28,19 +41,39 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private JobApplicationRepository jobApplicationRepository;
     @Autowired
     private JobRepository jobRepository;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
+    @Autowired
+    JwtUtils jwtUtils;
 
     @Override
     public boolean addJobApplication(JobApplicationRequest jobApplicationRequest) {
+        Map<String,Object> templateModel = new HashMap<>();
         try {
             JobApplication jobApplication = new JobApplication();
             Job job = new Job();
+            UUID verifyCode = UUID.randomUUID();
             job.setId(jobApplicationRequest.getJobId());
             jobApplication.setJob(job);
-            jobApplication.setEmail(jobApplicationRequest.getEmail());
+            templateModel.put("firstName", jobApplicationRequest.getFullName());
+            jobApplication.setEmail(jobApplicationRequest.getEmail()+"ANDuniqueCode="+verifyCode.toString());
             jobApplication.setFullName(jobApplicationRequest.getFullName());
             jobApplication.setCV(jobApplicationRequest.getCV().getBytes());
-            jobApplication.setStatus(null);
+            jobApplication.setStatus(0);
             jobApplicationRepository.save(jobApplication);
+            Integer jobApplicationId = jobApplication.getId();
+            String code = "jobId=" + jobApplicationRequest.getJobId() +
+            "&email=" + jobApplication.getEmail() +
+            "&fullName=" + jobApplication.getFullName() +
+            "&expire=" + LocalDateTime.now().plusMinutes(5)+
+            "&jobApplicationId="+jobApplicationId;
+            System.out.println("code: "+code);
+            String token = jwtUtils.generateTokenFromUsername(code);
+            templateModel.put("verificationLink", "http://localhost:3000/verifyEmail?code="+token);
+            emailService.sendVerificationEmail(jobApplicationRequest.getEmail(), "Email Verification", templateModel);
+            System.out.println("Job Application ID: " + jobApplicationId);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,52 +89,114 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     @Override
     public JobApplicationResponse getAllJobApplication(int pageNo, int pageSize, int id) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Company company = new Company();
-        company.setId(id);
-        Page<Job> jobResponse = jobRepository.findByCompanyId(company.getId(), pageable);
-        List<Job> listJob = jobResponse.getContent();
-        List<Job> jobsWithApplications = listJob.stream()
-        .filter(job -> job.getJobApplications() != null && !job.getJobApplications().isEmpty())
-        .map(job -> {
-            job.setJobApplications(
-                    job.getJobApplications().stream()
-                            .filter(jobApplication -> jobApplication.getStatus() == null || jobApplication.getStatus() == 1)
-                            .collect(Collectors.toList()));
-            return job;
-        })
-        .filter(job -> !job.getJobApplications().isEmpty())
-        .collect(Collectors.toList());
-        long totalJobApplications = jobsWithApplications.stream()
-                .mapToLong(job -> job.getJobApplications().size())
-                .sum();
-        int totalPages = (int) Math.ceil((double) totalJobApplications / pageSize);
-        JobApplicationResponse response = new JobApplicationResponse();
-        response.setJobList(jobsWithApplications);
-        response.setPageSize(jobResponse.getSize());
-        response.setPageNo(jobResponse.getNumber());
-        response.setTotalItems(totalJobApplications);
-        response.setTotalPages(totalPages);
-        return response;
+        Page<JobApplication> jobResponse = jobApplicationRepository.findAllJob(id, 1, pageable);
+        List<JobApplication> jobList = jobResponse.getContent();
+
+        List<JobTempo> jobListRes = new ArrayList<>();
+        
+        for (JobApplication jobApp : jobList) {
+            Job job = jobApp.getJob();
+            JobTempo jobTempo= new JobTempo(job.getId(), job.getField(), job.getCompany(), job.getJobApplications(), job.getJobName(), job.getJobDescription());
+            JobTempo existingJob = null;
+            for (JobTempo j : jobListRes) {
+                if (j.getId().equals(job.getId())) {
+                    existingJob = j;
+                    break;
+                }
+            }
+            if (existingJob == null) {
+                jobTempo.setJobApplications(new ArrayList<>());
+                jobTempo.getJobApplications().add(jobApp);
+                jobListRes.add(jobTempo);
+            } else {
+                existingJob.getJobApplications().add(jobApp);
+            }
+        }
+
+        JobApplicationResponse jobApplicationResponse = new JobApplicationResponse();
+        jobApplicationResponse.setJobList(jobListRes);
+        jobApplicationResponse.setPageNo(jobResponse.getNumber());
+        jobApplicationResponse.setPageSize(jobResponse.getSize());
+        jobApplicationResponse.setTotalItems(jobResponse.getTotalElements());
+        jobApplicationResponse.setTotalPages(jobResponse.getTotalPages());
+
+        return jobApplicationResponse;
     }
 
     @Override
-    public String updateJobApplication(Integer id, int status) {
+    @Transactional
+    public String updateJobApplication(Integer id, int status) throws Exception {
         Optional<JobApplication> jobApplicationOptional = jobApplicationRepository.findById(id);
         String message = "";
-        try {
-            if (status == 1 || status == 0) {
-                JobApplication jApplication = jobApplicationOptional.get();
+            JobApplication jApplication = jobApplicationOptional.get();
+            if(status == 10){
+                throw new Exception("You can't update status to pending!");
+            }
+            message = checkStatus(jApplication,status);
+            if(!message.isEmpty() || !message.isBlank()){
                 jApplication.setStatus(status);
                 jobApplicationRepository.save(jApplication);
-                message = "Sucess";
-            } else {
-                throw new Exception("");
+                if(status ==3){
+                    System.out.println("Vao roi");
+                    Schedule schedule = scheduleRepository.findByJobApplicationId(jApplication.getId());
+                    System.out.println("id schedule: "+schedule.getId());
+                    scheduleRepository.deleteByJobApplicationId(schedule.getApplication().getId());
+                }
+                return message;
+
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            message = "Error";
+            if (status == 1 || status == 0) {
+                if(status ==1){
+                    message = "Accept CV successfully";
+                }
+                if(status ==0){
+                    message = "Reject CV successfully";
+                }
+                jApplication.setStatus(status);
+                jobApplicationRepository.save(jApplication);
+                return message;
+            } 
+            return message;
+    }
+    public String checkStatus(JobApplication jobApplication, Integer status) throws Exception{
+        Integer statusInJob = jobApplication.getStatus();
+        String message = "";
+        if(status.equals(statusInJob)){
+            message ="Update successfully";
+            return message;
+        }
+        if(statusInJob == 4){
+            throw new Exception("You can't update status with CV passed!");
+        }
+        if(statusInJob == 3){
+            if(status != 0){
+                throw new Exception("Please contact to Internship Coordinator to set interview schedule!");
+            }
+            message = "Reject CV successfully";
+            return message;
+        }
+        if(statusInJob == 2 || statusInJob ==4){
+            if(status == 1){
+               throw new Exception("You can't not update status to Passed!");
+            }
+            if(status == 3){
+                message ="Update absent status successfully!";
+                // Schedule schedule = scheduleRepository.findByJobApplicationId(jobApplication.getId());
+                // System.out.println(schedule.getApplication().getId());
+                // scheduleRepository.deleteById(schedule.getId());
+                return message;
+            }
+
+            if(status == 4){
+                message = "Update Passed status successfully!";
+                return message;
+            }
+        }
+        if(statusInJob==1){
+            throw new Exception("Can't not update status");
         }
         return message;
+    
     }
 
     @Override
@@ -188,5 +283,45 @@ public class JobApplicationServiceImpl implements JobApplicationService {
                 response.setTotalPages(jobApplicationPage.getTotalPages());
                 
                 return response;
+    }
+    @Override
+    public boolean handleVerifyEmailJob(String code) {
+            try {
+            String result = jwtUtils.getUserNameFromJwtToken(code);
+            String jobId = "jobId=([^&]+)";
+            String email = "email=([^&]+)";
+            String fullName = "fullName=([^&]+)";
+            String jobApplicationId ="jobApplicationId=([^&]+)";
+            String time = "expire=([^&]+)";
+
+            LocalDateTime timeAfter=LocalDateTime.parse(extractValue(result, time));
+            String emailAfter = extractValue(result, email);
+            Integer jobApplicationIdAfter=Integer.parseInt(extractValue(result, jobApplicationId));
+            if(timeAfter.isBefore(LocalDateTime.now())){
+                throw new Exception("Out of time");
+            }
+            JobApplication jobApplication = jobApplicationRepository.findById(jobApplicationIdAfter).get();
+            if(jobApplication.getEmail().equals(emailAfter)){
+                String emailtemp = emailAfter.split("AND")[0];
+                String uniqueCode = emailAfter.split("uniqueCode=")[1];
+                jobApplication.setEmail(emailtemp);
+                jobApplication.setStatus(null);
+                jobApplicationRepository.save(jobApplication);
+            }else{
+                throw new Exception();
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+        private static String extractValue(String input, String pattern) {
+        Pattern compiledPattern = Pattern.compile(pattern);
+        Matcher matcher = compiledPattern.matcher(input);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
     }
 }

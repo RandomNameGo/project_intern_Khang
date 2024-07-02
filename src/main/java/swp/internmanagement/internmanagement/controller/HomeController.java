@@ -25,7 +25,9 @@ import swp.internmanagement.internmanagement.entity.Request;
 import swp.internmanagement.internmanagement.payload.request.HelpRequest;
 import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
 import swp.internmanagement.internmanagement.payload.request.LoginRequest;
+import swp.internmanagement.internmanagement.payload.request.SendHelpRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllFieldsResponse;
+import swp.internmanagement.internmanagement.payload.response.GetAllJobRes;
 import swp.internmanagement.internmanagement.payload.response.GetAllJobsResponse;
 import swp.internmanagement.internmanagement.payload.response.SearchJobsResponse;
 import swp.internmanagement.internmanagement.service.FieldService;
@@ -52,7 +54,7 @@ public class HomeController {
     private FieldService fieldService;
 
     @GetMapping("/jobs")
-    public ResponseEntity<GetAllJobsResponse> getAllJobs(
+    public ResponseEntity<GetAllJobRes> getAllJobs(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
         return ResponseEntity.ok(jobService.getAllJobs(pageNo, pageSize));
@@ -94,8 +96,8 @@ public class HomeController {
     }
 
     @PostMapping("/sendRequest")
-    public ResponseEntity<Request> sendRequest(@RequestBody HelpRequest helpRequest) {
-        return new ResponseEntity<>(requestService.saveRequest(helpRequest), HttpStatus.CREATED);
+    public ResponseEntity<?> sendRequest(@RequestBody SendHelpRequest sendHelpRequest) {
+        return new ResponseEntity<>(requestService.saveHelpRequest(sendHelpRequest), HttpStatus.CREATED);
     }
 
     @Autowired
@@ -160,6 +162,21 @@ public class HomeController {
         try {
             if (code != null) {
                 boolean check = userAccountService.handleChangePasswordUrl(code);
+                if (check) {
+                    return ResponseEntity.ok("Success to sending");
+                }
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error to activate");
+        }
+        return ResponseEntity.status(500).body("Error to activate");
+    }
+    @PutMapping("/verifyEmail")
+    public ResponseEntity<?> verifyEmailJob(@RequestParam("code") String code) {
+        try {
+            if (code != null) {
+                boolean check = jobApplicationService.handleVerifyEmailJob(code);
                 if (check) {
                     return ResponseEntity.ok("Success to sending");
                 }

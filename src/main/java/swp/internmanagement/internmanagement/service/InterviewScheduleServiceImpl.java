@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.entity.Schedule;
 import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
 import swp.internmanagement.internmanagement.payload.request.ApplicationIdRequest;
+import swp.internmanagement.internmanagement.payload.response.GetAllScheduleOfManager;
 import swp.internmanagement.internmanagement.repository.JobApplicationRepository;
 import swp.internmanagement.internmanagement.repository.ScheduleRepository;
 
@@ -39,6 +41,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         for (ApplicationIdRequest a : applicationId) {
             Optional<JobApplication> job=applicationRepository.findById(a.getApplicationId());
             String email =job.get().getEmail();
+            System.out.println("Email: "+email);
             Schedule schedule = new Schedule();
             String time = addScheduleRequest.getTime();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
@@ -57,5 +60,18 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         }
         return "Added Success";
     }
-
+    @Override
+    public List<GetAllScheduleOfManager> getrAllScheduleOfManager(Integer companyId) {
+        List<Schedule> listSchedule = scheduleRepository.findScheduleByCompanyId(companyId);
+        List<GetAllScheduleOfManager> list =new ArrayList<>();
+        for (Schedule schedule : listSchedule) {
+            GetAllScheduleOfManager scheduleOfManager = new GetAllScheduleOfManager();
+            scheduleOfManager.setDescription("a");
+            scheduleOfManager.setEnd(schedule.getScheduleTime().toString());
+            scheduleOfManager.setStart(schedule.getScheduleTime().toString());
+            scheduleOfManager.setTitle("InterView");
+            list.add(scheduleOfManager);
+        }
+        return list;
+    }
 }

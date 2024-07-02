@@ -1,6 +1,5 @@
 package swp.internmanagement.internmanagement.service;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +11,10 @@ import org.springframework.stereotype.Service;
 import swp.internmanagement.internmanagement.entity.Request;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.HelpRequest;
+import swp.internmanagement.internmanagement.payload.request.SendHelpRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllRequestResponse;
 import swp.internmanagement.internmanagement.repository.RequestRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
-
 
 @Service
 public class RequestServiceImpl implements RequestService {
@@ -54,5 +53,32 @@ public class RequestServiceImpl implements RequestService {
         return response;
     }
 
+    public String editFormat(String title, String content){
+        String tilteInDb = "<strong>"+title+"</strong><br/>";
+        String contentInDb = "<p>"+content+"</p>";
+        String result = tilteInDb+contentInDb;
+        return result;
+    }
 
+    @Override
+    public SendHelpRequest saveHelpRequest(SendHelpRequest sendHelpRequest) {
+        Request help = new Request();
+        if(sendHelpRequest.getHelpType().equals("Other")){
+            UserAccount user =new UserAccount();
+            user.setId(sendHelpRequest.getSenderId());
+            String contentReq = editFormat("Description", sendHelpRequest.getDescription());
+            help.setRequestContent(contentReq);
+            help.setUser(user);
+            help.setRequestType(sendHelpRequest.getHelpType());
+            requestRepository.save(help);
+        }else if(sendHelpRequest.getHelpType().equals("Create Company")){
+            String contentReq = editFormat("Company name", sendHelpRequest.getCompanyName())
+                                +editFormat("Company email", sendHelpRequest.getCompanyEmail())
+                                +editFormat("Company description", sendHelpRequest.getCompanyDescription());
+            help.setRequestContent(contentReq);
+            help.setRequestType(sendHelpRequest.getHelpType());
+            requestRepository.save(help);
+        }
+        return sendHelpRequest;
+    }
 }

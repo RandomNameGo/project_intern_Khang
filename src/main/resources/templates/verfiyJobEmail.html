@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Email verification</title>
+</head>
+<body>
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; text-align: center;">
+        <div style="background-color: #f44336; padding: 10px;">
+            <img src="cid:logo" alt="Logo" style="width: 50px;">
+        </div>
+        <h2>Email verification</h2>
+        <p>Hi <span th:text="${firstName}">User</span>,</p>
+        <p>You're almost set to start enjoying <span th:text="${companyName}">our services</span>. Simply click the link below to verify your email address and get started. The link expires in 48 hours.</p>
+        <a th:href="@{${verificationLink}}" style="display: inline-block; padding: 10px 20px; color: white; background-color: #f44336; text-decoration: none; border-radius: 5px;">Verify my email address</a>
+        <div style="margin-top: 20px;">
+            <p>800 Broadway Suit 1500 New York, NY 000423, USA</p>
+            <p><a href="#" style="margin-right: 10px;">Privacy Policy</a><a href="#">Contact Details</a></p>
+            <div>
+                <a href="#"><img src="cid:facebook" alt="Facebook" style="width: 20px; margin: 0 5px;"></a>
+                <a href="#"><img src="cid:twitter" alt="Twitter" style="width: 20px; margin: 0 5px;"></a>
+                <a href="#"><img src="cid:linkedin" alt="LinkedIn" style="width: 20px; margin: 0 5px;"></a>
+                <a href="#"><img src="cid:instagram" alt="Instagram" style="width: 20px; margin: 0 5px;"></a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
