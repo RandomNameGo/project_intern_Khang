@@ -1,7 +1,12 @@
 package swp.internmanagement.internmanagement.service;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,15 +17,25 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
 import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.entity.InternDetail;
 import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.SignupRequest;
-import swp.internmanagement.internmanagement.payload.response.*;
-import swp.internmanagement.internmanagement.repository.*;
+import swp.internmanagement.internmanagement.payload.response.GetAllUserByParamResponse;
+import swp.internmanagement.internmanagement.payload.response.GetAllUserByRoleResponse;
+import swp.internmanagement.internmanagement.payload.response.GetAllUserResponse;
+import swp.internmanagement.internmanagement.payload.response.GetInternResultFromCourseResponse;
+import swp.internmanagement.internmanagement.payload.response.GetListAllInternResultResponse;
+import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
+import swp.internmanagement.internmanagement.payload.response.SearchUsersFunctionByMentorResponse;
+import swp.internmanagement.internmanagement.payload.response.UserInSystemResponse;
+import swp.internmanagement.internmanagement.payload.response.UserInfoResponse;
+import swp.internmanagement.internmanagement.repository.InternTaskRepository;
+import swp.internmanagement.internmanagement.repository.JobApplicationRepository;
+import swp.internmanagement.internmanagement.repository.UserRepository;
 import swp.internmanagement.internmanagement.security.jwt.JwtUtils;
 
 @Service
@@ -44,14 +59,6 @@ public class UserAccountServiceImpl implements UserAccountService {
     private InternTaskRepository internTaskRepository;
     @Autowired
     private InternTaskService internTaskService;
-    @Autowired
-    private CourseInternRepository courseInternRepository;
-    @Autowired
-    private CoordinatorFeedbackInternRepository coordinatorFeedbackInternRepository;
-    @Autowired
-    private MentorFeedbackInternRepository mentorFeedbackInternRepository;
-    @Autowired
-    private CourseRepository courseRepository;
 
     public String generateUserName(String fullName, String role, int user_id) {
         String[] splitFullNames = fullName.split("\\s+");

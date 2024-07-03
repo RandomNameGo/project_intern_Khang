@@ -2,7 +2,6 @@ package swp.internmanagement.internmanagement.entity;
 
 import org.hibernate.annotations.Nationalized;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;

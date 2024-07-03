@@ -2,7 +2,6 @@ package swp.internmanagement.internmanagement.payload.response;
 
 import lombok.Getter;
 import lombok.Setter;
-import swp.internmanagement.internmanagement.entity.Company;
 
 @Getter
 @Setter

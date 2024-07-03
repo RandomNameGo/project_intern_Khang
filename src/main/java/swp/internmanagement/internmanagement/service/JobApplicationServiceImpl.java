@@ -2,15 +2,14 @@ package swp.internmanagement.internmanagement.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -299,9 +298,9 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     public boolean handleVerifyEmailJob(String code) {
             try {
             String result = jwtUtils.getUserNameFromJwtToken(code);
-            String jobId = "jobId=([^&]+)";
+            // String jobId = "jobId=([^&]+)";
             String email = "email=([^&]+)";
-            String fullName = "fullName=([^&]+)";
+            // String fullName = "fullName=([^&]+)";
             String jobApplicationId ="jobApplicationId=([^&]+)";
             String time = "expire=([^&]+)";
 
@@ -314,7 +313,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
             JobApplication jobApplication = jobApplicationRepository.findById(jobApplicationIdAfter).get();
             if(jobApplication.getEmail().equals(emailAfter)){
                 String emailtemp = emailAfter.split("AND")[0];
-                String uniqueCode = emailAfter.split("uniqueCode=")[1];
+                // String uniqueCode = emailAfter.split("uniqueCode=")[1];
                 jobApplication.setEmail(emailtemp);
                 jobApplication.setStatus(null);
                 jobApplicationRepository.save(jobApplication);
