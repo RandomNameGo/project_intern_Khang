@@ -32,4 +32,6 @@ public interface CourseService {
     GetCourseNameResponse getCourseNameByMentorId(int courseId, int mentorId);
 
     List<Course> getAllEndCourses(int companyId);
+
+    Boolean verifyCourse(int courseId, int mentorId);
 }

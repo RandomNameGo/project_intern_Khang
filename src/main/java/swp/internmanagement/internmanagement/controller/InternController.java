@@ -101,4 +101,9 @@ public class InternController {
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
+
+    @GetMapping("course/verify/{internId}&{courseId}")
+    public ResponseEntity<?> verifyCourse(@PathVariable int internId, @PathVariable int courseId) {
+        return ResponseEntity.ok(courseInternService.verifyCourseIntern(internId, courseId));
+    }
 }

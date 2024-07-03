@@ -178,4 +178,12 @@ public class CourseInternServiceImpl implements CourseInternService {
 
         return getAllInternInCourseResponse;
     }
+
+    @Override
+    public Boolean verifyCourseIntern(int internId, int courseId) {
+        CourseInternId courseInternId = new CourseInternId();
+        courseInternId.setCourseId(courseId);
+        courseInternId.setInternId(internId);
+        return courseInternRepository.existsById(courseInternId);
+    }
 }

@@ -20,4 +20,6 @@ public interface CourseInternService {
     GetAllInternInCourseResponse getAllInternInCourse(int courseId, int mentorId);
 
     GetAllInternInCourseResponse getAllInternInCourseByCoordinator(int courseId, int coordinatorId);
+
+    Boolean verifyCourseIntern(int internId, int courseId);
 }

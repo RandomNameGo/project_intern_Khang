@@ -5,7 +5,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
-import swp.internmanagement.internmanagement.entity.*;
 import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.entity.InternDetail;
 import swp.internmanagement.internmanagement.entity.JobApplication;
@@ -384,6 +382,59 @@ public class UserAccountServiceImpl implements UserAccountService {
         if (userAccount.getCompany().getId() != companyId) {
             throw new RuntimeException("You are not allowed to access this company");
         }
+    }
+
+    @Override
+    public SearchUsersFunctionByMentorResponse searchByManager(int companyId, int userId, String role, int pageNo, int pageSize) {
+        int pageNumber = 0;
+        int Size = 0;
+        long totalItems = 0;
+        int totalPages = 0;
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        List<UserInfoResponse> userInfoResponseList = new ArrayList<>();
+        if(role == null){
+            Page<UserAccount> userAccountPage = userAccountRepository.findAllByCompanyId(companyId, userId, pageable);
+            List<UserAccount> userAccounts = userAccountPage.getContent();
+            for (UserAccount userAccount : userAccounts) {
+                UserInfoResponse userInfoResponse = new UserInfoResponse();
+                userInfoResponse.setUser_id(userAccount.getId());
+                userInfoResponse.setUsername(userAccount.getUserName());
+                userInfoResponse.setEmail(userAccount.getEmail());
+                userInfoResponse.setFullName(userAccount.getFullName());
+                userInfoResponse.setRole(userAccount.getRole());
+                userInfoResponse.setCompany_id(userAccount.getCompany().getId());
+                userInfoResponseList.add(userInfoResponse);
+                pageNumber = userAccountPage.getNumber();
+                Size = userAccountPage.getSize();
+                totalItems = userAccountPage.getTotalElements();
+                totalPages = userAccountPage.getTotalPages();
+            }
+        } else{
+            Page<UserAccount> userAccountPage = userAccountRepository.findAllByRoleInCompany(companyId, userId, role, pageable);
+            List<UserAccount> userAccounts = userAccountPage.getContent();
+            for (UserAccount userAccount : userAccounts) {
+                UserInfoResponse userInfoResponse = new UserInfoResponse();
+                userInfoResponse.setUser_id(userAccount.getId());
+                userInfoResponse.setUsername(userAccount.getUserName());
+                userInfoResponse.setEmail(userAccount.getEmail());
+                userInfoResponse.setFullName(userAccount.getFullName());
+                userInfoResponse.setRole(userAccount.getRole());
+                userInfoResponse.setCompany_id(userAccount.getCompany().getId());
+                userInfoResponseList.add(userInfoResponse);
+                pageNumber = userAccountPage.getNumber();
+                Size = userAccountPage.getSize();
+                totalItems = userAccountPage.getTotalElements();
+                totalPages = userAccountPage.getTotalPages();
+            }
+        }
+
+        SearchUsersFunctionByMentorResponse searchUsersFunctionByMentor = new SearchUsersFunctionByMentorResponse();
+        searchUsersFunctionByMentor.setUserInfoResponses(userInfoResponseList);
+        searchUsersFunctionByMentor.setPageNo(pageNumber);
+        searchUsersFunctionByMentor.setPageSize(Size);
+        searchUsersFunctionByMentor.setTotalItems(totalItems);
+        searchUsersFunctionByMentor.setTotalPages(totalPages);
+        return searchUsersFunctionByMentor;
     }
 
     private static String extractValue(String input, String pattern) {

@@ -128,4 +128,13 @@ public class MentorController {
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
+
+    @GetMapping("course/verify/{courseId}&{mentorId}")
+    public ResponseEntity<?> getVerifyInCourse(@PathVariable int courseId, @PathVariable int mentorId) {
+        try{
+            return ResponseEntity.ok(courseService.verifyCourse(courseId, mentorId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
 }

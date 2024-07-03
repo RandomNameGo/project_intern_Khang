@@ -23,22 +23,28 @@ public interface UserRepository extends JpaRepository<UserAccount, Integer> {
 
     //Coordinator search intern and mentor in same company
     @Query("select u from UserAccount u where u.role = 'ROLE_MENTOR' or u.role = 'ROLE_INTERN' and u.company.id = ?1 and u.status is not null")
-    Page<UserAccount> findAllUsersInCompany(int companyId, Pageable pageable);
+    Page<UserAccount> findAllUsersInCompany(Integer companyId, Pageable pageable);
 
     @Query("select u from UserAccount u where u.company.id = ?1 and u.role = ?2 and u.status is not null")
-    Page<UserAccount> findAllMemberInCompany(int companyId, String role, Pageable pageable);
+    Page<UserAccount> findAllMemberInCompany(Integer companyId, String role, Pageable pageable);
 
     Optional<UserAccount> findByVerificationCodeAndUserName(String verificationCode, String userName);
 
     @Query("select u from UserAccount u where u.company.id = ?1 and u.role = ?2 and u.status is not null")
-    List<UserAccount> findAllUserByRole(int companyId, String role);
+    List<UserAccount> findAllUserByRole(Integer companyId, String role);
 
     @Query("SELECT u from UserAccount u where u.role != 'ROLE_ADMIN' AND u.status = 1 and u.status is not null")
     Page<UserAccount> findAllUserAccount(Pageable pageable);
 
     @Query("select u from UserAccount u where u.role = 'ROLE_MENTOR' and u.company.id = :companyId and u.status is not null")
-    List<UserAccount> findAllMentorByCompanyId(int companyId);
+    List<UserAccount> findAllMentorByCompanyId(Integer companyId);
 
     @Query("select u from UserAccount u where u.role = 'ROLE_INTERN' and u.company.id = :companyId and u.status is not null")
-    List<UserAccount> findAllInternByCompanyId(int companyId);
+    List<UserAccount> findAllInternByCompanyId(Integer companyId);
+
+    @Query("select u from UserAccount u where u.company.id = :companyId and u.id != :userId and u.status is not null")
+    Page<UserAccount> findAllByCompanyId(Integer companyId, Integer userId, Pageable pageable);
+
+    @Query("select u from UserAccount u where u.company.id = :companyId and u.role = :role and u.id != :userId and u.status is not null")
+    Page<UserAccount> findAllByRoleInCompany(Integer companyId, Integer userId, String role, Pageable pageable);
 }
