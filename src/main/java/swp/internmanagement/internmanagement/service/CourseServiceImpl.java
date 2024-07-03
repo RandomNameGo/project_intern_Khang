@@ -269,6 +269,9 @@ public class CourseServiceImpl implements CourseService {
             return getCourseNameResponse;
         }
         Course course = courseRepository.getByMentorIdAndCourseId(mentorId, courseId);
+        if(course == null){
+            return getCourseNameResponse;
+        }
         getCourseNameResponse.setCourseName(course.getCourseDescription());
         return getCourseNameResponse;
     }
