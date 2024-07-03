@@ -264,10 +264,10 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public GetCourseNameResponse getCourseNameByMentorId(int courseId ,int mentorId) {
-        Course course = courseRepository.getByMentorIdAndCourseId(mentorId, courseId);
-        if(course == null) {
-            throw new RuntimeException("You are not enough courses");
+        if(!courseRepository.existsById(courseId)){
+            throw new RuntimeException("Course does not exist");
         }
+        Course course = courseRepository.getByMentorIdAndCourseId(mentorId, courseId);
         GetCourseNameResponse getCourseNameResponse = new GetCourseNameResponse();
         getCourseNameResponse.setCourseName(course.getCourseDescription());
         return getCourseNameResponse;
@@ -278,5 +278,14 @@ public class CourseServiceImpl implements CourseService {
         UserAccount coordinator = userRepository.findById(coordinatorId).get();
         int companyId = coordinator.getCompany().getId();
         return courseRepository.findEndCourse(companyId);
+    }
+
+    @Override
+    public Boolean verifyCourse(int courseId, int mentorId) {
+        if(!courseRepository.existsById(courseId)){
+            throw new RuntimeException("Course does not exist");
+        }
+        Course course = courseRepository.getByMentorIdAndCourseId(mentorId, courseId);
+        return course.getMentor().getId() == mentorId;
     }
 }
