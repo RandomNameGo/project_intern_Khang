@@ -264,11 +264,11 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public GetCourseNameResponse getCourseNameByMentorId(int courseId ,int mentorId) {
+        GetCourseNameResponse getCourseNameResponse = new GetCourseNameResponse();
         if(!courseRepository.existsById(courseId)){
-            throw new RuntimeException("Course does not exist");
+            return getCourseNameResponse;
         }
         Course course = courseRepository.getByMentorIdAndCourseId(mentorId, courseId);
-        GetCourseNameResponse getCourseNameResponse = new GetCourseNameResponse();
         getCourseNameResponse.setCourseName(course.getCourseDescription());
         return getCourseNameResponse;
     }
