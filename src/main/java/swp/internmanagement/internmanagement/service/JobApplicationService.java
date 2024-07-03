@@ -15,7 +15,7 @@ public interface JobApplicationService {
 
     JobApplicationResponse getAllJobApplication(int pageNo, int pageSize, int id);
 
-    String updateJobApplication(Integer id, int status) throws Exception;
+    String updateJobApplication(Integer id, int status, Integer userId) throws Exception;
 
     AcceptedJobApplicationResponse getAcceptedJobApplication(int pageNo, int pageSize);
     

@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.payload.request.PostJobApplicationRequest;
 import swp.internmanagement.internmanagement.payload.request.UpdateInternDetailRequest;
 import swp.internmanagement.internmanagement.payload.response.JobApplicationResponse;
+import swp.internmanagement.internmanagement.service.EmailService;
 import swp.internmanagement.internmanagement.service.InternDetailService;
 import swp.internmanagement.internmanagement.service.InterviewScheduleService;
 import swp.internmanagement.internmanagement.service.JobApplicationService;
@@ -45,7 +47,8 @@ public class ManagerController {
 
     @Autowired
     private UserAccountService userAccountService;
-
+    @Autowired
+    private EmailService emailService;
     @Autowired
     private InterviewScheduleService interviewScheduleService;
 
@@ -93,10 +96,10 @@ public class ManagerController {
         return ResponseEntity.ok(jobApplicationService.getAllJobApplication(pageNo, pageSize, companyid));
     }
 
-    @PutMapping("/jobApplication/id={id}&status={status}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @PathVariable Integer status){
+    @PutMapping("/jobApplication/id={id}&status={status}&userId={userId}")
+    public ResponseEntity<?> update(@PathVariable Integer id, @PathVariable Integer status,@PathVariable Integer userId){
         try {
-            return ResponseEntity.ok(jobApplicationService.updateJobApplication(id,status));
+            return ResponseEntity.ok(jobApplicationService.updateJobApplication(id,status,userId));
         } catch (Exception e) {
             e.printStackTrace();
                 return ResponseEntity.status(500).body(e.getMessage());
@@ -190,6 +193,21 @@ public class ManagerController {
             return ResponseEntity.ok(internDetailService.listInternDetail(companyId, pageNo, pageSize));
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Failed to list intern detail.");
+        }
+    }
+    @PostMapping("/sendCetificate")
+    public ResponseEntity<?> sendCertificate(
+        @RequestParam("pdf") MultipartFile pdFile,
+        @RequestParam("email") String email
+    ){
+        try {
+            byte[] pdfData = pdFile.getBytes();
+            emailService.sendCertificate(email,pdfData);
+            System.out.println("success");
+            return ResponseEntity.ok("Sucess");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(e.getMessage());
         }
     }
 }

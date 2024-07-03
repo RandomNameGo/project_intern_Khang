@@ -23,11 +23,14 @@ public class EmailController {
     @GetMapping("/email")
     public String sendVerificationEmail() {
         Map<String, Object> templateModel = new HashMap<>();
-        templateModel.put("verificationCode", "Click button below to activate your account");
-        templateModel.put("verificationUrl", "https://example.com/verify?code=" + "a");
-        
+        templateModel.put("applicantName", "John");
+        templateModel.put("positionName", "IT");
+        templateModel.put("senderName", "Duy Anh");
+        templateModel.put("companyName", "fpt");
+        templateModel.put("senderPosition", "manager");
+        templateModel.put("contactInformation", "19123");        
         try {
-            emailService.sendEmailForgotPassword("hungasjnakjdfnkjsdnf0@fpt.edu.vn", "Verify your email", templateModel);
+            emailService.sendEmailReject("anhtdse184413@fpt.edu.vn", "Reject", templateModel);
             return "Email sent successfully";
         } catch (Exception e) {
             e.printStackTrace();

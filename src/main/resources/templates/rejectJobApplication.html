@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Application Response</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        p{
+            color: black;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+        }
+        .info{
+            font-style: italic;
+            font-weight: bold;
+        }
+        .info-end{
+            font-style: italic;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Application Response</h2>
+        </div>
+        <div class="content">
+            <p>Dear <span th:text="${applicantName}" class="info">[Applicant's Name]</span>,</p>
+
+            <p>Thank you for your interest in the <span th:text="${positionName}" class="info">[Position Name]</span> position at <span th:text="${companyName}" class="info">[Company Name]</span>.</p>
+
+            <p>We were impressed with your background and skills. However, after careful consideration, we regret to inform you that we have decided to move forward with other candidates whose qualifications more closely match our current needs.</p>
+
+            <p>We will keep your resume on file for future openings that better align with your experience and skills.</p>
+
+            <p>We appreciate your time and interest in our company and wish you the best of luck in your job search. We hope to have the opportunity to work with you in the future.</p>
+
+            <p>Best regards,</p>
+
+            <p><span th:text="${senderName}" class="info-end">[Your Name]</span><br>
+            Position: <span th:text="${senderPosition}"class="info-end">[Your Position]</span><br>
+            Company: <span th:text="${companyName}" class="info-end">[Company Name]</span><br>
+            Contact: <span th:text="${contactInformation}" class="info-end">[Contact Information]</span></p>
+        </div>
+        <div class="footer">
+            <p>&copy; <span th:text="${currentYear}">2024</span> <span th:text="${companyName}" class="highlight">[Company Name]</span>. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -26,6 +26,7 @@ import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.entity.JobTempo;
 import swp.internmanagement.internmanagement.entity.Schedule;
 import swp.internmanagement.internmanagement.models.JobApplicationDTO;
+import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
 import swp.internmanagement.internmanagement.payload.request.PostJobApplicationRequest;
 import swp.internmanagement.internmanagement.payload.response.AcceptedJobApplicationResponse;
@@ -33,6 +34,7 @@ import swp.internmanagement.internmanagement.payload.response.JobApplicationResp
 import swp.internmanagement.internmanagement.repository.JobApplicationRepository;
 import swp.internmanagement.internmanagement.repository.JobRepository;
 import swp.internmanagement.internmanagement.repository.ScheduleRepository;
+import swp.internmanagement.internmanagement.repository.UserRepository;
 import swp.internmanagement.internmanagement.security.jwt.JwtUtils;
 
 @Service
@@ -45,6 +47,8 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private EmailService emailService;
     @Autowired
     private ScheduleRepository scheduleRepository;
+    @Autowired 
+    private UserRepository userRepository;
     @Autowired
     JwtUtils jwtUtils;
 
@@ -125,8 +129,9 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
     @Override
     @Transactional
-    public String updateJobApplication(Integer id, int status) throws Exception {
+    public String updateJobApplication(Integer id, int status, Integer userId) throws Exception {
         Optional<JobApplication> jobApplicationOptional = jobApplicationRepository.findById(id);
+        UserAccount user =userRepository.findById(userId).get();
         String message = "";
             JobApplication jApplication = jobApplicationOptional.get();
             if(status == 10){
@@ -137,9 +142,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
                 jApplication.setStatus(status);
                 jobApplicationRepository.save(jApplication);
                 if(status ==3){
-                    System.out.println("Vao roi");
                     Schedule schedule = scheduleRepository.findByJobApplicationId(jApplication.getId());
-                    System.out.println("id schedule: "+schedule.getId());
                     scheduleRepository.deleteByJobApplicationId(schedule.getApplication().getId());
                 }
                 return message;
@@ -150,6 +153,14 @@ public class JobApplicationServiceImpl implements JobApplicationService {
                     message = "Accept CV successfully";
                 }
                 if(status ==0){
+                    Map<String, Object> templateModel = new HashMap<>();
+                    templateModel.put("applicantName", jApplication.getFullName());
+                    templateModel.put("senderName", user.getFullName());
+                    templateModel.put("positionName", jApplication.getJob().getJobName());
+                    templateModel.put("companyName", jApplication.getJob().getCompany().getCompanyName());
+                    templateModel.put("senderPosition", "manager");
+                    templateModel.put("contactInformation", jApplication.getJob().getCompany().getLocation()); 
+                    emailService.sendEmailReject("anhtdse184413@fpt.edu.vn", "Reject", templateModel);  
                     message = "Reject CV successfully";
                 }
                 jApplication.setStatus(status);

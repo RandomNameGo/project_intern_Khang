@@ -51,7 +51,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             LocalTime workTime2 = LocalTime.of(11,30);
             LocalTime workTime3 = LocalTime.of(13,0);
             LocalTime workTime4 = LocalTime.of(17,30);
-
+            JobApplication jobApp=job.get();
             if(interviewDate.isBefore(LocalDateTime.now())) {
               throw new RuntimeException ("The interview date is in the past");
             }
@@ -68,7 +68,9 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             schedule.setApplication(jobApplication);
             schedule.setLocation(addScheduleRequest.getLocation());
             templateModel.put("date", "Date InterView: " + interviewDate);
-            emailService.sendEmailSchedule(email, "Verify your email", templateModel);
+            emailService.sendEmailSchedule(email, "Interview Schedule", templateModel);
+            jobApp.setStatus(2);
+            applicationRepository.save(jobApp);
             scheduleRepository.save(schedule);
         }
         return "Added Success";
@@ -76,15 +78,28 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     @Override
     public List<GetAllScheduleOfManager> getrAllScheduleOfManager(Integer companyId) {
         List<Schedule> listSchedule = scheduleRepository.findScheduleByCompanyId(companyId);
-        List<GetAllScheduleOfManager> list =new ArrayList<>();
+        Map<LocalDateTime, GetAllScheduleOfManager> scheduleMap = new HashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        DateTimeFormatter isoFormatter = DateTimeFormatter.ISO_DATE_TIME;
+        int count =0;
         for (Schedule schedule : listSchedule) {
-            GetAllScheduleOfManager scheduleOfManager = new GetAllScheduleOfManager();
-            scheduleOfManager.setDescription("a");
-            scheduleOfManager.setEnd(schedule.getScheduleTime().toString());
-            scheduleOfManager.setStart(schedule.getScheduleTime().toString());
-            scheduleOfManager.setTitle("InterView");
-            list.add(scheduleOfManager);
+            LocalDateTime dateStart = LocalDateTime.parse(schedule.getScheduleTime().toString(), isoFormatter);
+            LocalDateTime dateEnd = dateStart.plusHours(2);
+            count++;
+            if (!scheduleMap.containsKey(dateStart)) {
+                GetAllScheduleOfManager scheduleOfManager = new GetAllScheduleOfManager();
+                scheduleOfManager.setStart(dateStart.format(formatter).toString());
+                scheduleOfManager.setEnd(dateEnd.format(formatter).toString());
+                scheduleOfManager.setTitle("InterView");
+                scheduleOfManager.setDescription("");
+                scheduleMap.put(dateStart, scheduleOfManager);
+            }
+    
+            GetAllScheduleOfManager existingSchedule = scheduleMap.get(dateStart);
+            String newDescription = existingSchedule.getDescription() + "<p> Intern "+count+":" + schedule.getApplication().getFullName() + "</p>";
+            existingSchedule.setDescription(newDescription);
         }
-        return list;
+    
+        return new ArrayList<>(scheduleMap.values());
     }
 }
