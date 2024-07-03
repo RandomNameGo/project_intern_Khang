@@ -283,7 +283,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Boolean verifyCourse(int courseId, int mentorId) {
         if(!courseRepository.existsById(courseId)){
-            throw new RuntimeException("Course does not exist");
+            return false;
         }
         Course course = courseRepository.getByMentorIdAndCourseId(mentorId, courseId);
         return course.getMentor().getId() == mentorId;
