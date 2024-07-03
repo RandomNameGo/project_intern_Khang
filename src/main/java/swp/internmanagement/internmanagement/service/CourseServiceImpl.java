@@ -288,7 +288,7 @@ public class CourseServiceImpl implements CourseService {
         if(!courseRepository.existsById(courseId)){
             return false;
         }
-        Course course = courseRepository.getByMentorIdAndCourseId(mentorId, courseId);
+        Course course = courseRepository.findById(courseId).get();
         return course.getMentor().getId() == mentorId;
     }
 }
