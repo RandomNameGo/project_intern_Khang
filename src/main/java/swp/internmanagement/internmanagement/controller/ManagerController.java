@@ -192,4 +192,20 @@ public class ManagerController {
             return ResponseEntity.status(500).body("Failed to list intern detail.");
         }
     }
+
+
+    //search
+    //send managerId and companyId
+    //role is optional
+    @GetMapping("/search/{managerId}&{companyId}")
+    public ResponseEntity<?> search(@PathVariable Integer companyId, @PathVariable Integer managerId,
+                                    @RequestParam(required = false) String role,
+                                    @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                    @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize){
+        try {
+            return ResponseEntity.ok(userAccountService.searchByManager(companyId, managerId, role, pageNo, pageSize));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to list intern detail.");
+        }
+    }
 }
