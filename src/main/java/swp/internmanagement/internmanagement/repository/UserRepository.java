@@ -47,4 +47,7 @@ public interface UserRepository extends JpaRepository<UserAccount, Integer> {
 
     @Query("select u from UserAccount u where u.company.id = :companyId and u.role = :role and u.id != :userId and u.status is not null")
     Page<UserAccount> findAllByRoleInCompany(Integer companyId, Integer userId, String role, Pageable pageable);
+
+    @Query("select count(u.id) from UserAccount u where u.company.id = :companyId and u.role = 'ROLE_INTERN' and u.status is not null")
+    long countInternByCompanyId(Integer companyId);
 }

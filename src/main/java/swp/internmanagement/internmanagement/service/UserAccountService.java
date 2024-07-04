@@ -37,4 +37,6 @@ public interface UserAccountService {
     void checkValidId(int companyId, int userId);
 
     SearchUsersFunctionByMentorResponse searchByManager(int companyId, int userId, String role, int pageNo, int pageSize);
+
+    ListInternResultResponse getListInternResult(int companyId, int managerId);
 }
