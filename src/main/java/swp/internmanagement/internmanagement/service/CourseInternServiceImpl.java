@@ -8,20 +8,11 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import swp.internmanagement.internmanagement.entity.Course;
-import swp.internmanagement.internmanagement.entity.CourseIntern;
-import swp.internmanagement.internmanagement.entity.CourseInternId;
-import swp.internmanagement.internmanagement.entity.Task;
+import swp.internmanagement.internmanagement.entity.*;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.AddInternToCourseRequest;
-import swp.internmanagement.internmanagement.payload.response.GetAllInternInCourseResponse;
-import swp.internmanagement.internmanagement.payload.response.GetInternResultFromCourseResponse;
-import swp.internmanagement.internmanagement.payload.response.GetListInternResultFromCourseResponse;
-import swp.internmanagement.internmanagement.payload.response.InternResponse;
-import swp.internmanagement.internmanagement.repository.CourseInternRepository;
-import swp.internmanagement.internmanagement.repository.CourseRepository;
-import swp.internmanagement.internmanagement.repository.InternTaskRepository;
-import swp.internmanagement.internmanagement.repository.UserRepository;
+import swp.internmanagement.internmanagement.payload.response.*;
+import swp.internmanagement.internmanagement.repository.*;
 
 @Service
 public class CourseInternServiceImpl implements CourseInternService {
@@ -40,6 +31,9 @@ public class CourseInternServiceImpl implements CourseInternService {
 
     @Autowired
     private InternTaskRepository internTaskRepository;
+
+    @Autowired
+    private CourseFeedbackRepository courseFeedbackRepository;
 
     //This method is used by coordinator to add interns to course
     @Override
@@ -185,5 +179,32 @@ public class CourseInternServiceImpl implements CourseInternService {
         courseInternId.setCourseId(courseId);
         courseInternId.setInternId(internId);
         return courseInternRepository.existsById(courseInternId);
+    }
+
+    @Override
+    public ListEndedCourseByInternResponse getListEndedCourseByIntern(int internId) {
+        List<CourseIntern> courseInterns = courseInternRepository.findEndCoursesByInternId(internId);
+        List<EndedCourseByInternResponse> endedCourseByInternResponseList = new ArrayList<>();
+        CourseFeedbackId courseFeedbackId = new CourseFeedbackId();
+        for (CourseIntern courseIntern : courseInterns) {
+            EndedCourseByInternResponse endedCourseByInternResponse = new EndedCourseByInternResponse();
+            courseFeedbackId.setCourseId(courseIntern.getCourse().getId());
+            courseFeedbackId.setInternId(courseIntern.getIntern().getId());
+            endedCourseByInternResponse.setCompanyId(courseIntern.getCourse().getCompany().getId());
+            endedCourseByInternResponse.setCompanyName(courseIntern.getCourse().getCompany().getCompanyName());
+            endedCourseByInternResponse.setCourseId(courseIntern.getCourse().getId());
+            endedCourseByInternResponse.setCourseName(courseIntern.getCourse().getCourseDescription());
+            endedCourseByInternResponse.setMentorId(courseIntern.getCourse().getMentor().getId());
+            endedCourseByInternResponse.setMentorName(courseIntern.getCourse().getMentor().getFullName());
+            endedCourseByInternResponse.setStartDate(courseIntern.getCourse().getStartDate());
+            endedCourseByInternResponse.setEndDate(courseIntern.getCourse().getEndDate());
+            endedCourseByInternResponse.setStatus(courseIntern.getCourse().getStatus());
+            endedCourseByInternResponse.setFeedback(courseFeedbackRepository.existsById(courseFeedbackId));
+            endedCourseByInternResponseList.add(endedCourseByInternResponse);
+        }
+
+        ListEndedCourseByInternResponse listEndedCourseByInternResponse = new ListEndedCourseByInternResponse();
+        listEndedCourseByInternResponse.setEndedCourseByInternResponse(endedCourseByInternResponseList);
+        return listEndedCourseByInternResponse;
     }
 }

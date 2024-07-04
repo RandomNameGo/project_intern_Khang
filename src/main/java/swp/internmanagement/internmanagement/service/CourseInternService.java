@@ -4,6 +4,7 @@ import swp.internmanagement.internmanagement.entity.CourseIntern;
 import swp.internmanagement.internmanagement.payload.request.AddInternToCourseRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllInternInCourseResponse;
 import swp.internmanagement.internmanagement.payload.response.GetListInternResultFromCourseResponse;
+import swp.internmanagement.internmanagement.payload.response.ListEndedCourseByInternResponse;
 
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface CourseInternService {
     GetAllInternInCourseResponse getAllInternInCourseByCoordinator(int courseId, int coordinatorId);
 
     Boolean verifyCourseIntern(int internId, int courseId);
+
+    ListEndedCourseByInternResponse getListEndedCourseByIntern(int internId);
 }

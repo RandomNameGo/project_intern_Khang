@@ -56,4 +56,7 @@ public class Course {
     @JsonManagedReference
     private List<Task> tasks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<CourseFeedback> courseFeedbacks = new ArrayList<>();
 }

@@ -5,23 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import swp.internmanagement.internmanagement.entity.CourseFeedback;
 import swp.internmanagement.internmanagement.entity.CourseIntern;
 import swp.internmanagement.internmanagement.entity.InternTask;
+import swp.internmanagement.internmanagement.payload.request.SendCourseFeedbackRequest;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
 import swp.internmanagement.internmanagement.payload.response.ShowInternTaskResponse;
-import swp.internmanagement.internmanagement.service.CoordinatorFeedbackToInternService;
-import swp.internmanagement.internmanagement.service.CourseInternService;
-import swp.internmanagement.internmanagement.service.CourseService;
-import swp.internmanagement.internmanagement.service.InternDetailService;
-import swp.internmanagement.internmanagement.service.InternTaskService;
-import swp.internmanagement.internmanagement.service.MentorFeedbackInternService;
+import swp.internmanagement.internmanagement.service.*;
 
 @RestController
 @RequestMapping("/internbridge/intern")
@@ -45,6 +37,9 @@ public class InternController {
 
     @Autowired
     private InternDetailService internDetailService;
+
+    @Autowired
+    private CourseFeedbackService courseFeedbackService;
 
     //Show all course intern attended
     @GetMapping("/allCourse/{internId}")
@@ -102,8 +97,27 @@ public class InternController {
         }
     }
 
-    @GetMapping("course/verify/{internId}&{courseId}")
+    @GetMapping("/course/verify/{internId}&{courseId}")
     public ResponseEntity<?> verifyCourse(@PathVariable int internId, @PathVariable int courseId) {
         return ResponseEntity.ok(courseInternService.verifyCourseIntern(internId, courseId));
+    }
+
+    @GetMapping("/course/endedCourse/{internId}")
+    public ResponseEntity<?> getEndedCourse(@PathVariable int internId) {
+        try {
+            return ResponseEntity.ok(courseInternService.getListEndedCourseByIntern(internId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/course/feedback/{internId}&{courseId}")
+    public ResponseEntity<?> feedback(@RequestBody SendCourseFeedbackRequest sendCourseFeedbackRequest,
+                                      @PathVariable int internId, @PathVariable int courseId) {
+        try{
+            return new ResponseEntity<>(courseFeedbackService.sendCourseFeedback(sendCourseFeedbackRequest, internId, courseId), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
     }
 }
