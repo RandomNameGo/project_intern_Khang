@@ -23,14 +23,10 @@ public class EmailController {
     @GetMapping("/email")
     public String sendVerificationEmail() {
         Map<String, Object> templateModel = new HashMap<>();
-        templateModel.put("applicantName", "John");
-        templateModel.put("positionName", "IT");
-        templateModel.put("senderName", "Duy Anh");
-        templateModel.put("companyName", "fpt");
-        templateModel.put("senderPosition", "manager");
-        templateModel.put("contactInformation", "19123");        
+        templateModel.put("header", "John");
+        templateModel.put("message", "In the meantime, feel free to explore our <a href=\"http://www.example.com\">website</a> for more information about our services and features. We are constantly working to improve and add new functionalities to make your experience even better."); 
         try {
-            emailService.sendEmailReject("anhtdse184413@fpt.edu.vn", "Reject", templateModel);
+            emailService.sendEmailReplyReq("anhtdse184413@fpt.edu.vn", "Reject", templateModel);
             return "Email sent successfully";
         } catch (Exception e) {
             e.printStackTrace();

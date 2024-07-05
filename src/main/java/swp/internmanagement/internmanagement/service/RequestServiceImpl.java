@@ -1,6 +1,10 @@
 package swp.internmanagement.internmanagement.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +29,8 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private UserRepository userAccountRepository;
 
+    @Autowired
+    private EmailService emailService;
     @Override
     public Request saveRequest(HelpRequest helpRequest) {
         Request request = new Request();
@@ -81,14 +87,44 @@ public class RequestServiceImpl implements RequestService {
         }
         return sendHelpRequest;
     }
-
+    public static String extractCompanyEmail(String input) {
+        String emailRegex = "Company email</strong><br/><p>([^<]+)</p>";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            return null;
+        }
+    }
+    public static String extractCompanyName(String input) {
+        String nameRegex = "Company name</strong><br/><p>([^<]+)</p>";
+        Pattern pattern = Pattern.compile(nameRegex);
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            return null;
+        }
+    }
     @Override
     public String updateRequestStatus(int requestId) {
         Request request = requestRepository.findById(requestId).get();
+        Map<String, Object> templateModel = new HashMap<>(); 
         if(request.getRequestType().equals("Other")){
+            templateModel.put("header", "Response Request");
+            templateModel.put("message", "In the meantime, feel free to explore our <a href=\"http://www.example.com\">website</a> for more information about our services and features. We are constantly working to improve and add new functionalities to make your experience even better."); 
+            String email = request.getUser().getEmail();
+            emailService.sendEmailReplyReq(email, "Response Request", templateModel);
             request.setRequestStatus(true);
         }
         else if(request.getRequestType().equals("Create Company")){
+            String email = extractCompanyEmail(request.getRequestContent());
+            String company =extractCompanyName(request.getRequestContent());
+            templateModel.put("header", "Response Request Create Company of "+company);
+            templateModel.put("message1", "We are currently conducting a comprehensive review to ensure that your company meets the specific criteria and standards we have established. This review process is designed to assess your company's qualifications and suitability for our services. Rest assured, we will keep you informed of our progress and will contact you promptly once the review is complete. ");
+            templateModel.put("message2", "Please keep an eye on your email as we will contact you and send you an account to access our system. Thank you!! :)))"); 
+            emailService.sendEmailReplyReq(email, "Response Request Create Company of "+company, templateModel);
             request.setRequestStatus(true);
         }
         requestRepository.save(request);

@@ -137,7 +137,7 @@ public class AdminController {
     }
 
     @PutMapping("/request/updateStatus/{requestId}")
-    public ResponseEntity<?> updateRequestStatus(@PathVariable int requestId){
+    public ResponseEntity<?> updateRequestStatus(@PathVariable Integer requestId){
         try{
             return ResponseEntity.ok(requestService.updateRequestStatus(requestId));
         } catch (Exception e) {

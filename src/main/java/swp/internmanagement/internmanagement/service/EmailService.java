@@ -143,4 +143,21 @@ public class EmailService {
             e.printStackTrace();
         }
     }
+    public void sendEmailReplyReq(String to, String subject, Map<String, Object> templateModel) {
+        try {
+            Context context = new Context();
+            context.setVariables(templateModel);
+            String htmlContent = templateEngine.process("EmailCompletedReq", context);
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true);
+            helper.addInline("headerImage", new ClassPathResource("static/images/request.png"));
+            javaMailSender.send(message);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
