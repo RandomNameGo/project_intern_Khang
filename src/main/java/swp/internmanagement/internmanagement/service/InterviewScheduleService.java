@@ -4,8 +4,12 @@ import java.util.List;
 
 import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllScheduleOfManager;
+import swp.internmanagement.internmanagement.payload.response.GetAllScheduleResponse;
 
 public interface InterviewScheduleService {
     String addSchedule(AddScheduleRequest addScheduleRequest);
-    List<GetAllScheduleOfManager> getrAllScheduleOfManager(Integer companyId);
+
+    List<GetAllScheduleOfManager> getAllScheduleOfManager(Integer companyId);
+
+    GetAllScheduleResponse getAllSchedule(int companyId, int pageNo, int pageSize);
 }
