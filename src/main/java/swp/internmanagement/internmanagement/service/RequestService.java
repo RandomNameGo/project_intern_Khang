@@ -12,4 +12,6 @@ public interface RequestService {
     GetAllRequestResponse getRequests(int page, int size);
 
     SendHelpRequest saveHelpRequest(SendHelpRequest sendHelpRequest);
+
+    String updateRequestStatus(int requestId);
 }
