@@ -135,5 +135,13 @@ public class AdminController {
     public ResponseEntity<?> getAllCompany() {
         return ResponseEntity.ok(companyService.getAllCompany());
     }
-    
+
+    @PutMapping("/request/updateStatus/{requestId}")
+    public ResponseEntity<?> updateRequestStatus(@PathVariable int requestId){
+        try{
+            return ResponseEntity.ok(requestService.updateRequestStatus(requestId));
+        } catch (Exception e) {
+           return ResponseEntity.status(500).body("Failed to update request status.");
+        }
+    }
 }
