@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class SearchUsersFunctionByMentorResponse {
-    private List<UserInfoResponse> userInfoResponses;
+    private List<InternAndDetailResponse> userInfoResponses;
     private int pageNo;
     private int pageSize;
     private long totalItems;

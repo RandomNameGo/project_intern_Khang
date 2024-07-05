@@ -7,6 +7,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -127,6 +128,7 @@ public class EmailService {
         }
     }
 
+    @Async
     public void sendCertificate(String to, byte[] pdfData) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();

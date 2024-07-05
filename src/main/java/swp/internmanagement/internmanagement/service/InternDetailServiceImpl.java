@@ -29,7 +29,7 @@ public class InternDetailServiceImpl implements InternDetailService {
         if(!userRepository.existsById(internId)) {   //throw exception here
             return "Intern not found";
         }
-        InternDetail internDetail = internDetailRepository.findById(internId).get();
+        InternDetail internDetail = internDetailRepository.findByUserId(internId).get();
         internDetail.setWorkHistory(updateInternDetailRequest.getWorkHistory());
         internDetail.setEducationBackground(updateInternDetailRequest.getEducationBackground());
         internDetailRepository.save(internDetail);

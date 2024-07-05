@@ -30,6 +30,7 @@ import swp.internmanagement.internmanagement.payload.response.GetAllUserResponse
 import swp.internmanagement.internmanagement.payload.response.GetInternResultFromCourseResponse;
 import swp.internmanagement.internmanagement.payload.response.GetListAllInternResultResponse;
 import swp.internmanagement.internmanagement.payload.response.GetUserInSameCompanyResponse;
+import swp.internmanagement.internmanagement.payload.response.InternAndDetailResponse;
 import swp.internmanagement.internmanagement.payload.response.SearchUsersFunctionByMentorResponse;
 import swp.internmanagement.internmanagement.payload.response.UserInSystemResponse;
 import swp.internmanagement.internmanagement.payload.response.UserInfoResponse;
@@ -390,6 +391,13 @@ public class UserAccountServiceImpl implements UserAccountService {
             throw new RuntimeException("You are not allowed to access this company");
         }
     }
+    
+    public String editFormat(String title, String content){
+        String tilteInDb = "<strong>"+title+"</strong><br/>";
+        String contentInDb = "<p>"+content+"</p>";
+        String result = tilteInDb+contentInDb;
+        return result;
+    }
 
     @Override
     public SearchUsersFunctionByMentorResponse searchByManager(int companyId, int userId, String role, int pageNo, int pageSize) {
@@ -398,18 +406,19 @@ public class UserAccountServiceImpl implements UserAccountService {
         long totalItems = 0;
         int totalPages = 0;
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        List<UserInfoResponse> userInfoResponseList = new ArrayList<>();
+        List<InternAndDetailResponse> userInfoResponseList = new ArrayList<>();
         if(role == null){
             Page<UserAccount> userAccountPage = userAccountRepository.findAllByCompanyId(companyId, userId, pageable);
             List<UserAccount> userAccounts = userAccountPage.getContent();
             for (UserAccount userAccount : userAccounts) {
-                UserInfoResponse userInfoResponse = new UserInfoResponse();
-                userInfoResponse.setUser_id(userAccount.getId());
-                userInfoResponse.setUsername(userAccount.getUserName());
+                InternAndDetailResponse userInfoResponse = new InternAndDetailResponse();
+                userInfoResponse.setId(userAccount.getId());
+                userInfoResponse.setFullName(userAccount.getUserName());
                 userInfoResponse.setEmail(userAccount.getEmail());
                 userInfoResponse.setFullName(userAccount.getFullName());
                 userInfoResponse.setRole(userAccount.getRole());
                 userInfoResponse.setCompany_id(userAccount.getCompany().getId());
+                userInfoResponse.setCompanyName(userAccount.getCompany().getCompanyName());
                 userInfoResponseList.add(userInfoResponse);
                 pageNumber = userAccountPage.getNumber();
                 Size = userAccountPage.getSize();
@@ -420,13 +429,17 @@ public class UserAccountServiceImpl implements UserAccountService {
             Page<UserAccount> userAccountPage = userAccountRepository.findAllByRoleInCompany(companyId, userId, role, pageable);
             List<UserAccount> userAccounts = userAccountPage.getContent();
             for (UserAccount userAccount : userAccounts) {
-                UserInfoResponse userInfoResponse = new UserInfoResponse();
-                userInfoResponse.setUser_id(userAccount.getId());
-                userInfoResponse.setUsername(userAccount.getUserName());
+                InternAndDetailResponse userInfoResponse = new InternAndDetailResponse();
+                userInfoResponse.setId(userAccount.getId());
+                userInfoResponse.setFullName(userAccount.getUserName());
                 userInfoResponse.setEmail(userAccount.getEmail());
                 userInfoResponse.setFullName(userAccount.getFullName());
                 userInfoResponse.setRole(userAccount.getRole());
                 userInfoResponse.setCompany_id(userAccount.getCompany().getId());
+                userInfoResponse.setCompanyName(userAccount.getCompany().getCompanyName());
+                String workHis=editFormat("Work History:", userAccount.getInternDetails().getWorkHistory());
+                String edu=editFormat("Education Background:", userAccount.getInternDetails().getEducationBackground());
+                userInfoResponse.setDetail(workHis+edu);
                 userInfoResponseList.add(userInfoResponse);
                 pageNumber = userAccountPage.getNumber();
                 Size = userAccountPage.getSize();
