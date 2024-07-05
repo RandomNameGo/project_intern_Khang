@@ -12,4 +12,6 @@ public interface InterviewScheduleService {
     List<GetAllScheduleOfManager> getAllScheduleOfManager(Integer companyId);
 
     GetAllScheduleResponse getAllSchedule(int companyId, int pageNo, int pageSize);
+
+    String deleteSchedule(int scheduleId);
 }

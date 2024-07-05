@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class GetAllScheduleResponse {
-    private List<GetAllScheduleOfManager> schedules;
+    private List<ScheduleResponse> schedules;
     private int pageNo;
     private int pageSize;
     private long totalItems;

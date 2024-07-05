@@ -197,7 +197,16 @@ public class ManagerController {
         }
 
     }
-    
+
+    @DeleteMapping("/deleteSchedule/{scheduleId}")
+    public ResponseEntity<?> deleteSchedule(@PathVariable Integer scheduleId){
+        try {
+            return ResponseEntity.ok(interviewScheduleService.deleteSchedule(scheduleId));
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
 
     @GetMapping("/intern/internDetail/{companyId}")
     public ResponseEntity<?> getAllInternDetail(
