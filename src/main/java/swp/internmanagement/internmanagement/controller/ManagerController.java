@@ -211,6 +211,17 @@ public class ManagerController {
             return ResponseEntity.status(500).body("Failed to list intern detail.");
         }
     }
+
+    @GetMapping("/report/{companyId}&{managerId}")
+    public ResponseEntity<?> getAllReport(@PathVariable Integer companyId, @PathVariable Integer managerId){
+        try{
+            return ResponseEntity.ok(userAccountService.getListInternResult(companyId, managerId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+
+
     @PostMapping("/sendCetificate")
     public ResponseEntity<?> sendCertificate(
         @RequestParam("pdf") MultipartFile pdFile,
