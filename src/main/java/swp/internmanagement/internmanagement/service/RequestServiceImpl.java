@@ -81,4 +81,17 @@ public class RequestServiceImpl implements RequestService {
         }
         return sendHelpRequest;
     }
+
+    @Override
+    public String updateRequestStatus(int requestId) {
+        Request request = requestRepository.findById(requestId).get();
+        if(request.getRequestType().equals("Other")){
+            request.setRequestStatus(true);
+        }
+        else if(request.getRequestType().equals("Create Company")){
+            request.setRequestStatus(true);
+        }
+        requestRepository.save(request);
+        return "Updated request status successfully";
+    }
 }
