@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import swp.internmanagement.internmanagement.entity.JobApplication;
@@ -20,6 +23,7 @@ import swp.internmanagement.internmanagement.entity.Schedule;
 import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
 import swp.internmanagement.internmanagement.payload.request.ApplicationIdRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllScheduleOfManager;
+import swp.internmanagement.internmanagement.payload.response.GetAllScheduleResponse;
 import swp.internmanagement.internmanagement.repository.JobApplicationRepository;
 import swp.internmanagement.internmanagement.repository.ScheduleRepository;
 
@@ -76,7 +80,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         return "Added Success";
     }
     @Override
-    public List<GetAllScheduleOfManager> getrAllScheduleOfManager(Integer companyId) {
+    public List<GetAllScheduleOfManager> getAllScheduleOfManager(Integer companyId) {
         List<Schedule> listSchedule = scheduleRepository.findScheduleByCompanyId(companyId);
         Map<LocalDateTime, GetAllScheduleOfManager> scheduleMap = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
@@ -101,5 +105,42 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         }
     
         return new ArrayList<>(scheduleMap.values());
+    }
+
+    @Override
+    public GetAllScheduleResponse getAllSchedule(int companyId, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Schedule> schedules = scheduleRepository.findByCompanyId(companyId, pageable);
+        List<Schedule> scheduleList = schedules.getContent();
+        Map<LocalDateTime, GetAllScheduleOfManager> scheduleMap = new HashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        int count =0;
+        DateTimeFormatter isoFormatter = DateTimeFormatter.ISO_DATE_TIME;
+        for (Schedule schedule : scheduleList) {
+            LocalDateTime dateStart = LocalDateTime.parse(schedule.getScheduleTime().toString(), isoFormatter);
+            LocalDateTime dateEnd = dateStart.plusHours(2);
+            count++;
+            if (!scheduleMap.containsKey(dateStart)) {
+                GetAllScheduleOfManager scheduleOfManager = new GetAllScheduleOfManager();
+                scheduleOfManager.setStart(dateStart.format(formatter).toString());
+                scheduleOfManager.setEnd(dateEnd.format(formatter).toString());
+                scheduleOfManager.setTitle("InterView");
+                scheduleOfManager.setDescription("");
+                scheduleMap.put(dateStart, scheduleOfManager);
+            }
+
+            GetAllScheduleOfManager existingSchedule = scheduleMap.get(dateStart);
+            String newDescription = existingSchedule.getDescription() + "<p> Intern "+count+":" + schedule.getApplication().getFullName() + "</p>";
+            existingSchedule.setDescription(newDescription);
+        }
+        List<GetAllScheduleOfManager> schedulePage = new ArrayList<>(scheduleMap.values());
+
+        GetAllScheduleResponse getAllScheduleResponse = new GetAllScheduleResponse();
+        getAllScheduleResponse.setSchedules(schedulePage);
+        getAllScheduleResponse.setPageNo(pageNo);
+        getAllScheduleResponse.setPageSize(pageSize);
+        getAllScheduleResponse.setTotalItems(schedules.getTotalElements());
+        getAllScheduleResponse.setTotalPages(schedules.getTotalPages());
+        return getAllScheduleResponse;
     }
 }

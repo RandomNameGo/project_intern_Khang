@@ -175,12 +175,27 @@ public class ManagerController {
     ) {
         return ResponseEntity.ok(jobService.getAllJobsByCompanyId(companyId, pageNo, pageSize));
     }
+
     @GetMapping("/viewSchedule")
     public ResponseEntity<?> getSchedule(
         @RequestParam("companyid") Integer companyId
     ) {
         
-        return ResponseEntity.ok(interviewScheduleService.getrAllScheduleOfManager(companyId));
+        return ResponseEntity.ok(interviewScheduleService.getAllScheduleOfManager(companyId));
+    }
+
+    @GetMapping("/showSchedule/{companyId}")
+    public ResponseEntity<?> showSchedule(
+            @PathVariable Integer companyId,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        try {
+            return ResponseEntity.ok(interviewScheduleService.getAllSchedule(companyId, pageNo, pageSize));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+
     }
     
 
