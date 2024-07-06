@@ -43,6 +43,10 @@ public class TaskServiceImpl implements TaskService {
         throw new RuntimeException("Course has not started yet");
     }
 
+    String courseStartDate = course.getStartDate().format(inputFormatter);
+    String courseEndDate = course.getEndDate().format(inputFormatter);
+
+
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     LocalDate startDate = LocalDate.parse(createTaskRequest.getStartDate(), inputFormatter);
     LocalDate endDate = LocalDate.parse(createTaskRequest.getEndDate(), inputFormatter);
@@ -51,7 +55,7 @@ public class TaskServiceImpl implements TaskService {
     LocalDate startDateAfterConvert = LocalDate.parse(formattedStartDate, formatter);
     LocalDate endDateAfterConvert = LocalDate.parse(formattedEndDate, formatter);
     if (startDateAfterConvert.isAfter(endDateAfterConvert)) {
-        throw new Exception("Start date can't be after end date");
+        throw new Exception("Start date can't be after end date ");
     }
     if (startDateAfterConvert.isBefore(LocalDate.now())) {
         throw new Exception("Start date can't be before current date");
@@ -59,12 +63,14 @@ public class TaskServiceImpl implements TaskService {
     if (endDateAfterConvert.isBefore(LocalDate.now())) {
         throw new Exception("End date can't be before current date");
     }
+
     course = courseRepository.findById(courseId).orElseThrow(() -> new Exception("Course not found"));
+
     if (startDateAfterConvert.isBefore(course.getStartDate())) {
-        throw new Exception("Start date can't be before course start date");
+        throw new Exception("Start date can't be before course start date " + courseStartDate);
     }
     if (endDateAfterConvert.isAfter(course.getEndDate())) {
-        throw new Exception("End date can't be after course end date");
+        throw new Exception("End date can't be after course end date " + courseEndDate);
     }
     if (startDateAfterConvert.isEqual(endDateAfterConvert)) {
         throw new Exception("Task must be at least one day");

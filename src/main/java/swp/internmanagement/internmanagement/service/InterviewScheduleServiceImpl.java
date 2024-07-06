@@ -26,6 +26,7 @@ import swp.internmanagement.internmanagement.payload.response.GetAllScheduleOfMa
 import swp.internmanagement.internmanagement.payload.response.GetAllScheduleResponse;
 import swp.internmanagement.internmanagement.payload.response.ScheduleResponse;
 import swp.internmanagement.internmanagement.repository.JobApplicationRepository;
+import swp.internmanagement.internmanagement.repository.JobRepository;
 import swp.internmanagement.internmanagement.repository.ScheduleRepository;
 
 @Service
@@ -38,6 +39,8 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     private JobApplicationRepository applicationRepository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private JobApplicationRepository jobApplicationRepository;
 
     @Override
     public String addSchedule(AddScheduleRequest addScheduleRequest) {
@@ -154,6 +157,9 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     public String deleteSchedule(int scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).get();
         scheduleRepository.delete(schedule);
+        JobApplication jobApplication = jobApplicationRepository.findById(schedule.getApplication().getId()).get();
+        jobApplication.setStatus(5);
+        jobApplicationRepository.save(jobApplication);
         return "Deleted Successfully";
     }
 }
