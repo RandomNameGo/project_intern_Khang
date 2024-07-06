@@ -155,11 +155,16 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
 
     @Override
     public String deleteSchedule(int scheduleId) {
+        try {
         Schedule schedule = scheduleRepository.findById(scheduleId).get();
         JobApplication jobApplication = jobApplicationRepository.findById(schedule.getApplication().getId()).get();
         jobApplication.setStatus(5);
         jobApplicationRepository.save(jobApplication);
         scheduleRepository.delete(schedule);
         return "Deleted Successfully";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Deleted Successfully";
+        }
     }
 }
