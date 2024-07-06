@@ -25,7 +25,7 @@ public interface JobApplicationRepository extends JpaRepository <JobApplication,
     Page<JobApplication> findAllJob(Integer companyId, Integer status, Pageable pageable);
     // @Query("select ja from JobApplication ja where ja.status = 1 AND ja.companyId=:companyId")
     // Page<JobApplication> findByJob(Integer companyId, Integer status, Pageable pageable);
-    @Query("SELECT ja FROM JobApplication ja WHERE ja.job.company.id = :companyId AND (ja.status IS NULL OR ja.status = :status OR ja.status=3)  AND ja.schedules IS NULL")
+    @Query("SELECT ja FROM JobApplication ja WHERE ja.job.company.id = :companyId AND (ja.status = :status OR ja.status=3)  AND ja.schedules IS NULL")
     Page<JobApplication> findByJobCompanyIdAndStatusAndSchedulesIsNull(Integer companyId, Integer status, Pageable pageable);
 
 }

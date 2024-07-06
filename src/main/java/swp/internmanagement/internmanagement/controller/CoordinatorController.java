@@ -162,4 +162,27 @@ public class CoordinatorController {
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
+    @GetMapping("/showSchedule/{companyId}")
+    public ResponseEntity<?> showSchedule(
+            @PathVariable Integer companyId,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize
+    ) {
+        try {
+            return ResponseEntity.ok(interviewScheduleService.getAllSchedule(companyId, pageNo, pageSize));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+
+    }
+
+    @DeleteMapping("/deleteSchedule/{scheduleId}")
+    public ResponseEntity<?> deleteSchedule(@PathVariable Integer scheduleId){
+        try {
+            return ResponseEntity.ok(interviewScheduleService.deleteSchedule(scheduleId));
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
 }

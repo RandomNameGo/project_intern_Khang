@@ -116,7 +116,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
         Page<Schedule> schedules = scheduleRepository.findByCompanyId(companyId, pageable);
         List<Schedule> scheduleList = schedules.getContent();
         Map<Integer, ScheduleResponse> scheduleMap = new HashMap<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy'-'HH:mm");
         int count = 0;
         DateTimeFormatter isoFormatter = DateTimeFormatter.ISO_DATE_TIME;
         for (Schedule schedule : scheduleList) {

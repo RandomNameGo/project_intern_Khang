@@ -5,7 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import swp.internmanagement.internmanagement.entity.Field;
 import swp.internmanagement.internmanagement.entity.Job;
+import swp.internmanagement.internmanagement.entity.JobTempo;
 import swp.internmanagement.internmanagement.payload.response.CompanyRes;
 import swp.internmanagement.internmanagement.payload.response.GetAllJobRes;
 import swp.internmanagement.internmanagement.payload.response.GetAllJobsResponse;
@@ -41,6 +44,7 @@ public class JobServiceImpl implements JobService{
             jobRes.setId(job.getId());
             jobRes.setJobDescription(job.getJobDescription());
             jobRes.setJobName(job.getJobName());
+            jobRes.setField(job.getField());
             list.add(jobRes);
         }
         GetAllJobRes getAllJobsResponse = new GetAllJobRes();
@@ -54,19 +58,37 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public SearchJobsResponse getJobs(String jobName, int pageNo, int pageSize) {
+    public GetAllJobRes getJobs(String jobName,Integer fieldId, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Job> jobs = jobRepository.findJobs(jobName, pageable);
+        Page<Job> jobs = jobRepository.findJobs(jobName,fieldId, pageable);
         List<Job> listOfJobs = jobs.getContent();
+        List<jobRes> list = new ArrayList<>();
+        for (Job job : listOfJobs) {
+            jobRes jobRes = new jobRes();
+            CompanyRes companyRes = new CompanyRes();
+            Field field =new Field();
+            field.setFieldName(job.getField().getFieldName()); 
+            field.setId(job.getField().getId());
+            companyRes.setCompanyDescription(job.getCompany().getCompanyDescription());
+            companyRes.setCompanyName(job.getCompany().getCompanyName());
+            companyRes.setId(job.getCompany().getId());
+            companyRes.setLocation(job.getCompany().getLocation());
+            jobRes.setCompany(companyRes);
+            jobRes.setId(job.getId());
+            jobRes.setJobDescription(job.getJobDescription());
+            jobRes.setJobName(job.getJobName());
+            jobRes.setField(field);
+            list.add(jobRes);
+        }
 
-        SearchJobsResponse searchJobsResponse = new SearchJobsResponse();
-        searchJobsResponse.setJobs(listOfJobs);
-        searchJobsResponse.setPageNo(jobs.getNumber());
-        searchJobsResponse.setPageSize(jobs.getSize());
-        searchJobsResponse.setTotalItems(jobs.getTotalElements());
-        searchJobsResponse.setTotalPages(jobs.getTotalPages());
+        GetAllJobRes getAllJobsResponse = new GetAllJobRes();
+        getAllJobsResponse.setJobs(list);
+        getAllJobsResponse.setPageNo(jobs.getNumber());
+        getAllJobsResponse.setPageSize(jobs.getSize());
+        getAllJobsResponse.setTotalItems(jobs.getTotalElements());
+        getAllJobsResponse.setTotalPages(jobs.getTotalPages());
 
-        return searchJobsResponse;
+        return getAllJobsResponse;
     }
 
     @Override

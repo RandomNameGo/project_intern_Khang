@@ -10,8 +10,8 @@ import swp.internmanagement.internmanagement.entity.Job;
 import java.util.List;
 
 public interface JobRepository extends JpaRepository<Job, Integer> {
-    @Query("select j from Job j where j.jobName like  %?1%  or j.company.companyName like %?1% or j.field.fieldName like %?1%")
-    Page<Job> findJobs(String name, Pageable pageable);
+    @Query("select j from Job j where (j.jobName like %:name% or j.company.companyName like %:name%) and (:fieldId is null or j.field.id = :fieldId) ORDER BY j.id DESC")
+    Page<Job> findJobs(String name,Integer fieldId, Pageable pageable);
 
     @Query("select j from Job j where j.id = :id")
     Page<Job> findById(Integer id, Pageable pageable);

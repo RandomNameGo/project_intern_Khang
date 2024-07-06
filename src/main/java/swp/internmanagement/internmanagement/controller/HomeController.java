@@ -55,7 +55,7 @@ public class HomeController {
     @GetMapping("/jobs")
     public ResponseEntity<GetAllJobRes> getAllJobs(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false) int pageSize) {
         return ResponseEntity.ok(jobService.getAllJobs(pageNo, pageSize));
     }
 
@@ -75,11 +75,12 @@ public class HomeController {
     }
 
     @GetMapping("/jobs/{jobName}")
-    public ResponseEntity<SearchJobsResponse> getJob(
+    public ResponseEntity<GetAllJobRes> getJob(
             @PathVariable String jobName,
+            @RequestParam(value = "fieldId", required = false) Integer fieldId,
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {
-        return ResponseEntity.ok(jobService.getJobs(jobName, pageNo, pageSize));
+        return ResponseEntity.ok(jobService.getJobs(jobName,fieldId, pageNo, pageSize));
     }
 
     @GetMapping("/fields")

@@ -9,7 +9,7 @@ public interface JobService {
 
     GetAllJobRes getAllJobs(int pageNo, int pageSize);
 
-    SearchJobsResponse getJobs(String jobName, int pageNo, int pageSize);
+    GetAllJobRes getJobs(String jobName,Integer fieldId, int pageNo, int pageSize);
 
     Job getJobId(Integer id);
 
