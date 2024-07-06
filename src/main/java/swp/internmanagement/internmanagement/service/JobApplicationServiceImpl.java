@@ -1,5 +1,6 @@
 package swp.internmanagement.internmanagement.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,15 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import swp.internmanagement.internmanagement.entity.Company;
-import swp.internmanagement.internmanagement.entity.Field;
-import swp.internmanagement.internmanagement.entity.Job;
-import swp.internmanagement.internmanagement.entity.JobApplication;
-import swp.internmanagement.internmanagement.entity.JobTempo;
-import swp.internmanagement.internmanagement.entity.Schedule;
+import swp.internmanagement.internmanagement.entity.*;
 import swp.internmanagement.internmanagement.models.JobApplicationDTO;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
@@ -333,5 +330,16 @@ public class JobApplicationServiceImpl implements JobApplicationService {
             return matcher.group(1);
         }
         return null;
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void updateCourseStatus() {
+        LocalDate today = LocalDate.now();
+        List<JobApplication> jobApplications = jobApplicationRepository.findAll();
+        for (JobApplication jobApplication : jobApplications) {
+            if(jobApplication.getStatus() == 0){
+                jobApplicationRepository.delete(jobApplication);
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@ package swp.internmanagement.internmanagement.service;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
 import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
 import swp.internmanagement.internmanagement.payload.response.GetAllScheduleOfManager;
 import swp.internmanagement.internmanagement.payload.response.GetAllScheduleResponse;

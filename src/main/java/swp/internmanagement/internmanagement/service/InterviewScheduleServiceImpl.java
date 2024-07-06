@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.entity.Schedule;
 import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
@@ -56,19 +57,16 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             String time = addScheduleRequest.getTime();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
             LocalDateTime interviewDate = LocalDateTime.parse(time, dateTimeFormatter);
-            LocalTime workTime = LocalTime.of(9, 0);
-            LocalTime workTime2 = LocalTime.of(11, 30);
-            LocalTime workTime3 = LocalTime.of(13, 0);
-            LocalTime workTime4 = LocalTime.of(17, 30);
+            LocalTime workTime = LocalTime.of(7, 0);
+            LocalTime workTime4 = LocalTime.of(20, 0);
             JobApplication jobApp = job.get();
             if (interviewDate.isBefore(LocalDateTime.now())) {
                 throw new RuntimeException("The interview date is in the past");
             }
 
             if (interviewDate.toLocalTime().isBefore(workTime) ||
-                    (interviewDate.toLocalTime().isAfter(workTime2) && interviewDate.toLocalTime().isBefore(workTime3)) ||
                     interviewDate.toLocalTime().isAfter(workTime4)) {
-                throw new RuntimeException("The interview time must be in work time");
+                throw new RuntimeException("The interview time must be in 7:00 am to 8:00 pm");
             }
 
             Instant interviewInstant = interviewDate.toInstant(ZoneOffset.UTC);
@@ -154,12 +152,13 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
     }
 
     @Override
+    @Transactional
     public String deleteSchedule(int scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).get();
-        scheduleRepository.deleteById(scheduleId);
         JobApplication jobApplication = jobApplicationRepository.findById(schedule.getApplication().getId()).get();
         jobApplication.setStatus(5);
         jobApplicationRepository.save(jobApplication);
+        scheduleRepository.deleteScheduleById(scheduleId);
         return "Deleted Successfully";
     }
 }

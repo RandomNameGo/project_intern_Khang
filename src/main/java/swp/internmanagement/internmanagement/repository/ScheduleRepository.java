@@ -24,4 +24,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
     @Query("SELECT s FROM Schedule s WHERE s.application.job.company.id =:id")
     Page<Schedule> findByCompanyId(Integer id, Pageable pageable);
+
+    @Modifying
+    @Query("DELETE FROM Schedule s WHERE s.id = :scheduleId")
+    void deleteScheduleById(Integer scheduleId);
 }
