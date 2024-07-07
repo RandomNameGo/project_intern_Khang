@@ -1,6 +1,7 @@
 package swp.internmanagement.internmanagement.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -144,13 +145,6 @@ public class JobApplicationServiceImpl implements JobApplicationService {
                     Schedule schedule = scheduleRepository.findByJobApplicationId(jApplication.getId());
                     scheduleRepository.deleteByJobApplicationId(schedule.getApplication().getId());
                 }
-                return message;
-
-            }
-            if (status == 1 || status == 0) {
-                if(status ==1){
-                    message = "Accept CV successfully";
-                }
                 if(status ==0){
                     Map<String, Object> templateModel = new HashMap<>();
                     templateModel.put("applicantName", jApplication.getFullName());
@@ -162,49 +156,91 @@ public class JobApplicationServiceImpl implements JobApplicationService {
                     emailService.sendEmailReject("anhtdse184413@fpt.edu.vn", "Reject", templateModel);  
                     message = "Reject CV successfully";
                 }
+            }
                 jApplication.setStatus(status);
                 jobApplicationRepository.save(jApplication);
                 return message;
-            } 
-            return message;
     }
     public String checkStatus(JobApplication jobApplication, Integer status) throws Exception{
         Integer statusInJob = jobApplication.getStatus();
         String message = "";
+        if(statusInJob==null) {
+            if(status ==1){
+                message = "Accept successfully!";
+                return message;
+            }
+            if(status ==0){
+                message="Reject successfully!";
+                return message;
+            }
+            if(status ==2){
+                throw new Exception("Can not update pending status to pending interview");
+            }
+            if(status==3){
+                throw new Exception("Can not update pending status to absent status");
+            }
+            if(status ==4){
+                throw new Exception("Can not update pending status to passed status");
+            }
+            if(status ==5){
+                throw new Exception("Can not update pending status to pending rescheduling");
+            }
+        }
         if(status.equals(statusInJob)){
             message ="Update successfully";
             return message;
         }
-        if(statusInJob == 4){
-            throw new Exception("You can't update status with CV passed!");
+        if(statusInJob.equals(4)){
+            if(status ==3){
+                throw new Exception("Can not update passed status to absent");
+            }else if(status ==2){
+                throw new Exception("Can not update passed status to pending");
+            }else if(status ==1){
+                throw new Exception("Can not update passed status to accept");
+            }
+            else if(status==5){
+                throw new Exception("Can not update passed status to Pending Rescheduling");
+            }
         }
-        if(statusInJob == 3){
+        if(statusInJob.equals(3)){
             if(status != 0){
                 throw new Exception("Please contact to Internship Coordinator to set interview schedule!");
             }
             message = "Reject CV successfully";
             return message;
         }
-        if(statusInJob == 2 || statusInJob ==4){
+        if(statusInJob.equals(2)){
             if(status == 1){
-               throw new Exception("You can't not update status to Passed!");
+               throw new Exception("You can't not update status to Accept!");
             }
             if(status == 3){
                 message ="Update absent status successfully!";
-                // Schedule schedule = scheduleRepository.findByJobApplicationId(jobApplication.getId());
-                // System.out.println(schedule.getApplication().getId());
-                // scheduleRepository.deleteById(schedule.getId());
                 return message;
             }
-
             if(status == 4){
                 message = "Update Passed status successfully!";
                 return message;
             }
+            if(status ==0){
+                message ="Reject successfully";
+            }
+            if(status==5){
+                throw new Exception("Can not update passed status to Pending Rescheduling");
+            }
         }
-        if(statusInJob==1){
-            throw new Exception("Can't not update status");
+        if(statusInJob.equals(1)){
+           if(status==0||status ==2 || status ==3 || status ==4 || status ==5){
+                throw new Exception("Error to change status!!!");
+           }
         }
+        if(statusInJob.equals(5)){
+            if(status != 0){
+                throw new Exception("Please contact to Internship Coordinator to set interview schedule!!!!!!");
+            }
+            message = "Reject CV successfully";
+            return message;
+        }
+        
         return message;
     
     }
@@ -237,7 +273,8 @@ public class JobApplicationServiceImpl implements JobApplicationService {
                         ja.getFullName(),
                         ja.getEmail(),
                         ja.getJob().getCompany().getId(),
-                        ja.getJob().getCompany().getCompanyName()
+                        ja.getJob().getCompany().getCompanyName(),
+                        ja.getStatus()
                 ))
                 .collect(Collectors.toList());
 
@@ -281,7 +318,8 @@ public class JobApplicationServiceImpl implements JobApplicationService {
                                 ja.getFullName(),
                                 ja.getEmail(),
                                 ja.getJob().getCompany().getId(),
-                                ja.getJob().getCompany().getCompanyName()
+                                ja.getJob().getCompany().getCompanyName(),
+                                ja.getStatus()
                         ))
                         .collect(Collectors.toList());
         

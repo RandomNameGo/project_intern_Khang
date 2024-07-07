@@ -1,5 +1,6 @@
 package swp.internmanagement.internmanagement.service;
 
+import java.nio.file.Files;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +104,7 @@ public class EmailService {
         helper.addInline("logo", new ClassPathResource("static/images/mail.jpg"));
         helper.addInline("facebook", new ClassPathResource("static/images/Facebook_Logo.png"));
         helper.addInline("twitter", new ClassPathResource("static/images/twitter.png"));
+
         // helper.addInline("linkedin", new ClassPathResource("static/linkedin.png"));
         // helper.addInline("instagram", new ClassPathResource("static/instagram.png"));
 

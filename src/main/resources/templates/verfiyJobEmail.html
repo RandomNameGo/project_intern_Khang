@@ -3,6 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Email verification</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var endTime = new Date(new Date().getTime() + 5 * 60 * 1000); // Set end time to 5 minutes from now
+            var countdownElement = document.getElementById('countdown');
+            var interval = setInterval(function() {
+                var now = new Date().getTime();
+                var distance = endTime - now;
+                if (distance < 0) {
+                    clearInterval(interval);
+                    countdownElement.innerHTML = 'Expired';
+                } else {
+                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    countdownElement.innerHTML = minutes + 'm ' + seconds + 's ';
+                }
+            }, 1000);
+        });
+    </script>
 </head>
 <body>
     <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; text-align: center;">
@@ -13,6 +31,11 @@
         <p>Hi <span th:text="${firstName}">User</span>,</p>
         <p>You're almost set to start enjoying <span th:text="${companyName}">our services</span>. Simply click the link below to verify your email address and get started. The link expires in 48 hours.</p>
         <a th:href="@{${verificationLink}}" style="display: inline-block; padding: 10px 20px; color: white; background-color: #f44336; text-decoration: none; border-radius: 5px;">Verify my email address</a>
+        
+        <div style="margin-top: 20px;">
+            <p id="countdown"></p>
+        </div>
+        
         <div style="margin-top: 20px;">
             <p>800 Broadway Suit 1500 New York, NY 000423, USA</p>
             <p><a href="#" style="margin-right: 10px;">Privacy Policy</a><a href="#">Contact Details</a></p>

@@ -112,9 +112,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public String updateTask(CreateTaskRequest createTaskRequest, Integer id) throws Exception {
         Task task = taskRepository.findById(id).orElseThrow(() -> new Exception("Task not found"));
-        if (!courseRepository.existsById(id)) {
-            return null;
-        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate startDate = LocalDate.parse(createTaskRequest.getStartDate(), inputFormatter);
         LocalDate endDate = LocalDate.parse(createTaskRequest.getEndDate(), inputFormatter);
@@ -131,7 +128,7 @@ public class TaskServiceImpl implements TaskService {
         if (endDateAfterConvert.isBefore(LocalDate.now())) {
             throw new Exception("End date can't be before current date");
         }
-        Course course = courseRepository.findById(id).orElseThrow(() -> new Exception("Course not found"));
+        Course course = courseRepository.findById(task.getCourse().getId()).orElseThrow(() -> new Exception("Course not found"));
         if (startDateAfterConvert.isBefore(course.getStartDate())) {
             throw new Exception("Start date can't be before course start date");
         }

@@ -24,7 +24,6 @@ import swp.internmanagement.internmanagement.payload.request.SendHelpRequest;
 import swp.internmanagement.internmanagement.payload.response.CompanyNameResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllFieldsResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllJobRes;
-import swp.internmanagement.internmanagement.payload.response.SearchJobsResponse;
 import swp.internmanagement.internmanagement.service.CompanyService;
 import swp.internmanagement.internmanagement.service.FieldService;
 import swp.internmanagement.internmanagement.service.JobApplicationService;

@@ -17,12 +17,12 @@ public class SmsController {
 
     @PostMapping("/send")
     public String sendSms(
-        @RequestParam ("toNumber") String toNumber,
-        @RequestParam ("messageBody") String messageBody
+        @RequestParam("toNumber") String toNumber,
+        @RequestParam("messageBody") String messageBody
     ) {
-        String phoneNumber = "+"+toNumber;
+        String phoneNumber = "+" + toNumber;
         System.out.println(phoneNumber);
-        smsService.sendSms(phoneNumber, messageBody);
+        smsService.sendSms("+84961674823", messageBody);
         return "SMS sent successfully!";
     }
 }

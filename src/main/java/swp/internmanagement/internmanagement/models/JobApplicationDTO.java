@@ -15,5 +15,6 @@ public class JobApplicationDTO {
     private String email;
     private Integer companyId;
     private String companyName;
+    private Integer status;
 
 }
