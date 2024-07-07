@@ -21,7 +21,7 @@ public class Schedule {
     private Integer id;
 
     @NotNull
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JoinColumn(name = "application_id", nullable = false)
     @JsonBackReference
     private JobApplication application;
