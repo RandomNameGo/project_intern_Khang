@@ -61,7 +61,7 @@ public class InterviewScheduleServiceImpl implements InterviewScheduleService {
             LocalTime workTime4 = LocalTime.of(20, 0);
             JobApplication jobApp = job.get();
             if (interviewDate.isBefore(LocalDateTime.now())) {
-                throw new RuntimeException("The interview date is in the past");
+                throw new RuntimeException("The interview time is in the past " + LocalDateTime.now().format(dateTimeFormatter));
             }
 
             if (interviewDate.toLocalTime().isBefore(workTime) ||
