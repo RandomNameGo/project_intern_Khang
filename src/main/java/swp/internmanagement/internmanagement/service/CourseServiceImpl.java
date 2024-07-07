@@ -116,7 +116,7 @@ public class CourseServiceImpl implements CourseService {
         List<InternTask> internTasks = internTaskRepository.findInternTasksByCourseId(courseId);
         internTaskRepository.deleteAll(internTasks);
         taskRepository.deleteAll(tasks);
-        List<CourseIntern> courseInterns = courseInternRepository.findByCourseId(courseId);
+        List<CourseIntern> courseInterns = courseInternRepository.findAllByCourseId(courseId);
         courseInternRepository.deleteAll(courseInterns);
         courseRepository.deleteById(courseId);
         return "Deleted course";

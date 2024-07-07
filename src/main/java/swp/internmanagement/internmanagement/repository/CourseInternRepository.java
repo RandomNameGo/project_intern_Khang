@@ -24,4 +24,7 @@ public interface CourseInternRepository extends JpaRepository<CourseIntern, Cour
 
     @Query("select c from CourseIntern c where c.course.status is null and c.intern.id = :internId and c.intern.status is not null")
     List<CourseIntern> findEndCoursesByInternId(int internId);
+
+    @Query("select c from CourseIntern c where c.course.id = :courseId")
+    List<CourseIntern> findAllByCourseId(int courseId);
 }

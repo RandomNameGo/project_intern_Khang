@@ -29,9 +29,9 @@ public class CompanyServiceImpl implements CompanyService {
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
-    private TaskRepository taskRepository;
-    @Autowired
     private JobRepository jobRepository;
+    @Autowired
+    private CourseService courseService;
 
     @Override
     public boolean checkExistedCompanyAndInsert(CreateCompanyRequest companyRequest) {
@@ -62,10 +62,8 @@ public class CompanyServiceImpl implements CompanyService {
         }
         List<Course> courses = courseRepository.findByCompanyId(companyId);
         for (Course course : courses) {
-            List<Task> task = taskRepository.findAllInCourse(course.getId());
-            taskRepository.deleteAll(task);
+            courseService.deleteCourse(course.getId());
         }
-        courseRepository.deleteAll(courses);
         List<Job> jobs = jobRepository.findListByCompanyId(companyId);
         jobRepository.deleteAll(jobs);
         companyRepository.deleteById(companyId);
