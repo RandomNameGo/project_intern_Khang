@@ -59,4 +59,12 @@ public class CourseFeedbackServiceImpl implements CourseFeedbackService {
         courseFeedbackRepository.save(courseFeedback);
         return "Send Feedback Successfully";
     }
+
+    @Override
+    public Boolean verifyCourseFeedback(int internId, int courseId) {
+        CourseFeedbackId courseFeedbackId = new CourseFeedbackId();
+        courseFeedbackId.setCourseId(courseId);
+        courseFeedbackId.setInternId(internId);
+        return courseFeedbackRepository.existsById(courseFeedbackId);
+    }
 }

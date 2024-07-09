@@ -48,13 +48,6 @@ public class InternController {
     }
 
     @GetMapping("/course/task/{courseId}&{internId}")
-//    public ResponseEntity<GetAllTaskInCourseResponse> getAllTaskInCourse(
-//            @PathVariable int courseId,
-//            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-//            @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize
-//    ) {
-//        return ResponseEntity.ok(taskService.getTasks(courseId, pageNo, pageSize));
-//    }
     public ResponseEntity<ShowInternTaskResponse> getTask(@PathVariable int courseId, @PathVariable int internId) {
         return ResponseEntity.ok(internTaskService.getInternTaskByCourseId(courseId, internId));
     }
@@ -116,6 +109,15 @@ public class InternController {
                                       @PathVariable int internId, @PathVariable int courseId) {
         try{
             return new ResponseEntity<>(courseFeedbackService.sendCourseFeedback(sendCourseFeedbackRequest, internId, courseId), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/course/feedback/verify/{internId}&{courseId}")
+    public ResponseEntity<?> verifyCourseFeedback(@PathVariable int internId, @PathVariable int courseId) {
+        try{
+            return ResponseEntity.ok(courseFeedbackService.verifyCourseFeedback(internId, courseId));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(e.getMessage());
         }

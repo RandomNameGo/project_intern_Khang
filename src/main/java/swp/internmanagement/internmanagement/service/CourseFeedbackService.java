@@ -5,4 +5,6 @@ import swp.internmanagement.internmanagement.payload.request.SendCourseFeedbackR
 
 public interface CourseFeedbackService {
     String sendCourseFeedback(SendCourseFeedbackRequest sendCourseFeedbackRequest, int internId, int courseId);
+
+    Boolean verifyCourseFeedback(int internId, int courseId);
 }
