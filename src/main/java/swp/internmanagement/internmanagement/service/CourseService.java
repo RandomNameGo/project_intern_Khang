@@ -2,10 +2,7 @@ package swp.internmanagement.internmanagement.service;
 
 import swp.internmanagement.internmanagement.entity.Course;
 import swp.internmanagement.internmanagement.payload.request.CreateCourseRequest;
-import swp.internmanagement.internmanagement.payload.response.GetAllActivitiesInAllCourseResponse;
-import swp.internmanagement.internmanagement.payload.response.GetAllCourseByMentorIdResponse;
-import swp.internmanagement.internmanagement.payload.response.GetAllCourseInCompanyResponse;
-import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
+import swp.internmanagement.internmanagement.payload.response.*;
 
 import java.util.List;
 
@@ -31,7 +28,7 @@ public interface CourseService {
 
     GetCourseNameResponse getCourseNameByMentorId(int courseId, int mentorId);
 
-    List<Course> getAllEndCourses(int companyId);
+    List<CourseResponse> getAllEndCourses(int companyId);
 
     Boolean verifyCourse(int courseId, int mentorId);
 }

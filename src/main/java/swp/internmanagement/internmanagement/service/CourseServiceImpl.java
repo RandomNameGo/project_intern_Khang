@@ -277,10 +277,25 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> getAllEndCourses(int coordinatorId) {
+    public List<CourseResponse> getAllEndCourses(int coordinatorId) {
         UserAccount coordinator = userRepository.findById(coordinatorId).get();
         int companyId = coordinator.getCompany().getId();
-        return courseRepository.findEndCourse(companyId);
+        List<Course> courseList = courseRepository.findByCompanyId(companyId);
+        List<CourseResponse> courseResponseList = new ArrayList<>();
+        for(Course course : courseList) {
+            CourseResponse courseResponse = new CourseResponse();
+            courseResponse.setCourseId(course.getId());
+            courseResponse.setCourseName(course.getCourseDescription());
+            courseResponse.setCompanyId(course.getCompany().getId());
+            courseResponse.setCompanyName(course.getCompany().getCompanyName());
+            courseResponse.setMentorId(course.getMentor().getId());
+            courseResponse.setMentorName(course.getMentor().getFullName());
+            courseResponse.setStartDate(course.getStartDate());
+            courseResponse.setEndDate(course.getEndDate());
+            courseResponse.setStatus(course.getStatus());
+            courseResponseList.add(courseResponse);
+        }
+        return courseResponseList;
     }
 
     @Override
