@@ -91,7 +91,7 @@ public class UserAccount {
     private List<Request> requests = new ArrayList<>();
 
     @OneToMany(mappedBy = "mentor", orphanRemoval = true, cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonManagedReference
     private List<Course> courses = new ArrayList<>();
 
     @OneToOne(mappedBy = "user",  orphanRemoval = true ,cascade = CascadeType.ALL )
