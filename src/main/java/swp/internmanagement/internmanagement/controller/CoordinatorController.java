@@ -45,6 +45,9 @@ public class CoordinatorController {
     @Autowired
     private CoordinatorFeedbackToInternService coordinatorFeedbackToInternService;
 
+    @Autowired
+    private CourseFeedbackService courseFeedbackService;
+
     //show mentor and intern in the same company
     @GetMapping("search/{companyId}")
     public ResponseEntity<GetUserInSameCompanyResponse> search(
@@ -182,6 +185,15 @@ public class CoordinatorController {
             return ResponseEntity.ok(interviewScheduleService.deleteSchedule(scheduleId));
         }
         catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/course/feedback/{courseId}&{coordinatorId}")
+    public ResponseEntity<?> getCourseFeedback(@PathVariable int courseId, @PathVariable int coordinatorId) {
+        try{
+            return ResponseEntity.ok(courseFeedbackService.getAllCourseFeedback(courseId,coordinatorId));
+        }catch (Exception e) {
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }

@@ -9,10 +9,15 @@ import swp.internmanagement.internmanagement.entity.CourseFeedbackId;
 import swp.internmanagement.internmanagement.entity.CourseInternId;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.SendCourseFeedbackRequest;
+import swp.internmanagement.internmanagement.payload.response.CourseFeedbackResponse;
 import swp.internmanagement.internmanagement.repository.CourseFeedbackRepository;
 import swp.internmanagement.internmanagement.repository.CourseInternRepository;
 import swp.internmanagement.internmanagement.repository.CourseRepository;
 import swp.internmanagement.internmanagement.repository.UserRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CourseFeedbackServiceImpl implements CourseFeedbackService {
@@ -66,5 +71,26 @@ public class CourseFeedbackServiceImpl implements CourseFeedbackService {
         courseFeedbackId.setCourseId(courseId);
         courseFeedbackId.setInternId(internId);
         return courseFeedbackRepository.existsById(courseFeedbackId);
+    }
+
+    @Override
+    public List<CourseFeedbackResponse> getAllCourseFeedback(int courseId, int coordinatorId) {
+
+        UserAccount userAccount = userRepository.findById(coordinatorId).get();
+        Course course = courseRepository.findById(courseId).get();
+        if(!Objects.equals(course.getCompany().getId(), userAccount.getCompany().getId())) {
+            throw new RuntimeException( "You are not in this course");
+        }
+        List<CourseFeedback> courseFeedbacks = courseFeedbackRepository.findByCourseId(courseId);
+        List<CourseFeedbackResponse> courseFeedbackResponses = new ArrayList<>();
+        for (CourseFeedback courseFeedback : courseFeedbacks) {
+            CourseFeedbackResponse courseFeedbackResponse = new CourseFeedbackResponse();
+            courseFeedbackResponse.setInternId(courseFeedback.getIntern().getId());
+            courseFeedbackResponse.setInternName(courseFeedback.getIntern().getFullName());
+            courseFeedbackResponse.setFeedbackContent(courseFeedback.getFeedbackContent());
+            courseFeedbackResponses.add(courseFeedbackResponse);
+        }
+
+        return courseFeedbackResponses;
     }
 }
