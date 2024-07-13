@@ -73,8 +73,18 @@ public class CourseInternServiceImpl implements CourseInternService {
     }
 
     @Override
-    public List<CourseIntern> geCoursesByInternId(int internId) {
-        return courseInternRepository.findByInternId(internId);
+    public List<CourseInternResponse> geCoursesByInternId(int internId) {
+        List<CourseIntern> courseInterns = courseInternRepository.findByInternId(internId);
+        List<CourseInternResponse> courseInternResponses = new ArrayList<>();
+        for (CourseIntern courseIntern : courseInterns) {
+            CourseInternResponse courseInternResponse = new CourseInternResponse();
+            courseInternResponse.setCourseId(courseIntern.getCourse().getId());
+            courseInternResponse.setCompanyId(courseIntern.getIntern().getCompany().getId());
+            courseInternResponse.setCourseName(courseIntern.getCourse().getCourseDescription());
+            courseInternResponse.setMentorName(courseIntern.getCourse().getMentor().getFullName());
+            courseInternResponses.add(courseInternResponse);
+        }
+        return courseInternResponses;
     }
 
     @Override

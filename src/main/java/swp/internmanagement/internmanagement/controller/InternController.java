@@ -11,6 +11,7 @@ import swp.internmanagement.internmanagement.entity.CourseFeedback;
 import swp.internmanagement.internmanagement.entity.CourseIntern;
 import swp.internmanagement.internmanagement.entity.InternTask;
 import swp.internmanagement.internmanagement.payload.request.SendCourseFeedbackRequest;
+import swp.internmanagement.internmanagement.payload.response.CourseInternResponse;
 import swp.internmanagement.internmanagement.payload.response.GetCourseNameResponse;
 import swp.internmanagement.internmanagement.payload.response.ShowInternTaskResponse;
 import swp.internmanagement.internmanagement.service.*;
@@ -43,7 +44,7 @@ public class InternController {
 
     //Show all course intern attended
     @GetMapping("/allCourse/{internId}")
-    public ResponseEntity<List<CourseIntern>> getCourse(@PathVariable int internId) {
+    public ResponseEntity<List<CourseInternResponse>> getCourse(@PathVariable int internId) {
         return ResponseEntity.ok(courseInternService.geCoursesByInternId(internId));
     }
 

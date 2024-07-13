@@ -2,6 +2,7 @@ package swp.internmanagement.internmanagement.service;
 
 import swp.internmanagement.internmanagement.entity.CourseIntern;
 import swp.internmanagement.internmanagement.payload.request.AddInternToCourseRequest;
+import swp.internmanagement.internmanagement.payload.response.CourseInternResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllInternInCourseResponse;
 import swp.internmanagement.internmanagement.payload.response.GetListInternResultFromCourseResponse;
 import swp.internmanagement.internmanagement.payload.response.ListEndedCourseByInternResponse;
@@ -12,7 +13,7 @@ public interface CourseInternService {
 
     String addInternToCourse(List<AddInternToCourseRequest> request, int courseId);
 
-    List<CourseIntern> geCoursesByInternId(int internId);
+    List<CourseInternResponse> geCoursesByInternId(int internId);
 
     void updateResult(int internId, int courseId);
 
