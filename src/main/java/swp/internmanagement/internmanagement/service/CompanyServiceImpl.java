@@ -12,15 +12,14 @@ import org.springframework.stereotype.Service;
 import swp.internmanagement.internmanagement.entity.Company;
 import swp.internmanagement.internmanagement.entity.Course;
 import swp.internmanagement.internmanagement.entity.Job;
-import swp.internmanagement.internmanagement.entity.Task;
 import swp.internmanagement.internmanagement.payload.request.CreateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.request.UpdateCompanyRequest;
+import swp.internmanagement.internmanagement.payload.response.CompanyLogoRes;
 import swp.internmanagement.internmanagement.payload.response.CompanyNameResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllCompanyResponse;
 import swp.internmanagement.internmanagement.repository.CompanyRepository;
 import swp.internmanagement.internmanagement.repository.CourseRepository;
 import swp.internmanagement.internmanagement.repository.JobRepository;
-import swp.internmanagement.internmanagement.repository.TaskRepository;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
@@ -41,6 +40,7 @@ public class CompanyServiceImpl implements CompanyService {
                 Optional<Company> company = companyRepository.findByCompanyName(companyRequest.getCompanyName());
                 if (!company.isPresent()) {
                     Company companyCreate = new Company();
+                    companyCreate.setImage(companyRequest.getImage().getBytes());
                     companyCreate.setCompanyDescription(companyRequest.getCompanyDescription());
                     companyCreate.setCompanyName(companyRequest.getCompanyName());
                     companyCreate.setLocation(companyRequest.getLocation());
@@ -102,7 +102,7 @@ public class CompanyServiceImpl implements CompanyService {
     public GetAllCompanyResponse getAllCompanyResponse(int pageNo, int pageSize) {
         try {
             Pageable pageable = PageRequest.of(pageNo, pageSize);
-            Page<Company> company = companyRepository.findAll(pageable);
+            Page<Company> company = companyRepository.getAllCompany(pageable);
             List<Company> companyList = company.getContent();
             GetAllCompanyResponse getAllCompanyResponse = new GetAllCompanyResponse();
             getAllCompanyResponse.setCompanyList(companyList);
@@ -123,5 +123,15 @@ public class CompanyServiceImpl implements CompanyService {
         CompanyNameResponse companyNameResponse = new CompanyNameResponse();
         companyNameResponse.setCompanyName(company.getCompanyName());
         return companyNameResponse;
+    }
+    @Override
+    public CompanyLogoRes getLogo(Integer jobId) {
+        Job job =jobRepository.findById(jobId).get();
+        CompanyLogoRes companyLogoRes = new CompanyLogoRes();
+        companyLogoRes.setImage(job.getCompany().getImage());
+        if(job.getCompany().getImage() == null){
+            return null;
+        }
+        return companyLogoRes;
     }
 }

@@ -46,6 +46,10 @@ public class Company {
     @Column(name = "location", nullable = false, length = 50)
     private String location;
 
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
+
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Job> jobs = new ArrayList<>();

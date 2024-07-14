@@ -2,7 +2,6 @@ package swp.internmanagement.internmanagement.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +20,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import swp.internmanagement.internmanagement.entity.*;
+import swp.internmanagement.internmanagement.entity.Company;
+import swp.internmanagement.internmanagement.entity.Field;
+import swp.internmanagement.internmanagement.entity.Job;
+import swp.internmanagement.internmanagement.entity.JobApplication;
+import swp.internmanagement.internmanagement.entity.JobTempo;
+import swp.internmanagement.internmanagement.entity.Schedule;
 import swp.internmanagement.internmanagement.models.JobApplicationDTO;
 import swp.internmanagement.internmanagement.models.UserAccount;
 import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
@@ -262,7 +266,7 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     @Override
     public AcceptedJobApplicationResponse getAllAcceptedJobApplication(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<JobApplication> jobApplicationPage = jobApplicationRepository.findByStatus(1, pageable);
+        Page<JobApplication> jobApplicationPage = jobApplicationRepository.findByStatus(4, pageable);
         
         List<JobApplicationDTO> jobApplicationDTOs = jobApplicationPage.getContent().stream()
                 .map(ja -> new JobApplicationDTO(

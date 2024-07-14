@@ -47,7 +47,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public GetAllRequestResponse getRequests(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Request> requests = requestRepository.findAll(pageable);
+        Page<Request> requests = requestRepository.findAllRequest(pageable);
         List<Request> requestList = requests.getContent();
 
         GetAllRequestResponse response = new GetAllRequestResponse();

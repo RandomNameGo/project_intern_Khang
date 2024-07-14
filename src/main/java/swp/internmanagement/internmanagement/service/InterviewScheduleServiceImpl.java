@@ -17,8 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
 import swp.internmanagement.internmanagement.entity.JobApplication;
 import swp.internmanagement.internmanagement.entity.Schedule;
 import swp.internmanagement.internmanagement.payload.request.AddScheduleRequest;
@@ -27,7 +27,6 @@ import swp.internmanagement.internmanagement.payload.response.GetAllScheduleOfMa
 import swp.internmanagement.internmanagement.payload.response.GetAllScheduleResponse;
 import swp.internmanagement.internmanagement.payload.response.ScheduleResponse;
 import swp.internmanagement.internmanagement.repository.JobApplicationRepository;
-import swp.internmanagement.internmanagement.repository.JobRepository;
 import swp.internmanagement.internmanagement.repository.ScheduleRepository;
 
 @Service

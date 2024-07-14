@@ -2,6 +2,7 @@ package swp.internmanagement.internmanagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import swp.internmanagement.internmanagement.payload.request.CreateCompanyRequest;
 import swp.internmanagement.internmanagement.payload.request.UpdateCompanyRequest;
@@ -74,19 +76,30 @@ public class AdminController {
     }
 
     @PostMapping("/createCompany")
-    public ResponseEntity<?> createCompany(@RequestBody CreateCompanyRequest companyRequest) {
-        try {
-            boolean check = companyService.checkExistedCompanyAndInsert(companyRequest);
-            if (check) {
-                return ResponseEntity.ok("Create job submitted successfully.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Failed to create company.");
+    public ResponseEntity<?> createCompany(
+        @RequestParam("companyName") String companyName,
+        @RequestParam("companyDescription") String companyDescription,
+        @RequestParam("location") String location,
+        @RequestParam("image") MultipartFile image) {
+    try {
+        CreateCompanyRequest companyRequest = new CreateCompanyRequest();
+        companyRequest.setCompanyName(companyName);
+        companyRequest.setCompanyDescription(companyDescription);
+        companyRequest.setLocation(location);
+        companyRequest.setImage(image);
+        
+        boolean check = companyService.checkExistedCompanyAndInsert(companyRequest);
+        if (check) {
+            return ResponseEntity.ok("Create job submitted successfully.");
         }
+    } catch (Exception e) {
+        e.printStackTrace();
         return ResponseEntity.status(500).body("Failed to create company.");
     }
+    return ResponseEntity.status(500).body("Failed to create company.");
+}
     @GetMapping("/viewCompany")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllCompanyInCurrent(
         @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
         @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize

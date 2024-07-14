@@ -1,5 +1,9 @@
 package swp.internmanagement.internmanagement.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,17 +12,11 @@ import org.springframework.stereotype.Service;
 
 import swp.internmanagement.internmanagement.entity.Field;
 import swp.internmanagement.internmanagement.entity.Job;
-import swp.internmanagement.internmanagement.entity.JobTempo;
 import swp.internmanagement.internmanagement.payload.response.CompanyRes;
 import swp.internmanagement.internmanagement.payload.response.GetAllJobRes;
 import swp.internmanagement.internmanagement.payload.response.GetAllJobsResponse;
-import swp.internmanagement.internmanagement.payload.response.SearchJobsResponse;
 import swp.internmanagement.internmanagement.payload.response.jobRes;
 import swp.internmanagement.internmanagement.repository.JobRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class JobServiceImpl implements JobService{

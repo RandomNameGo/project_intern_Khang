@@ -3,7 +3,9 @@ package swp.internmanagement.internmanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,7 @@ import swp.internmanagement.internmanagement.entity.Job;
 import swp.internmanagement.internmanagement.payload.request.JobApplicationRequest;
 import swp.internmanagement.internmanagement.payload.request.LoginRequest;
 import swp.internmanagement.internmanagement.payload.request.SendHelpRequest;
+import swp.internmanagement.internmanagement.payload.response.CompanyLogoRes;
 import swp.internmanagement.internmanagement.payload.response.CompanyNameResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllFieldsResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllJobRes;
@@ -190,5 +193,16 @@ public class HomeController {
             return ResponseEntity.status(500).body("Error to activate");
         }
         return ResponseEntity.status(500).body("Error to activate");
+    }
+    @GetMapping("/companyLogo/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
+        CompanyLogoRes image = companyService.getLogo(id);
+        if (image == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "logo" + "\"")
+                .body(image.getImage());
     }
 }
