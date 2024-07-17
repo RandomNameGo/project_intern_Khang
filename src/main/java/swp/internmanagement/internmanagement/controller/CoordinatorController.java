@@ -74,7 +74,7 @@ public class CoordinatorController {
     //       }
 
     //create a course
-    @PostMapping("createCourse/{companyId}")
+    @PostMapping("/createCourse/{companyId}")
     public ResponseEntity<?> createCourse(@RequestBody CreateCourseRequest createCourseRequest, @PathVariable int companyId) {
         try{
             return new ResponseEntity<>(courseService.addCourse(createCourseRequest, companyId), HttpStatus.CREATED);
