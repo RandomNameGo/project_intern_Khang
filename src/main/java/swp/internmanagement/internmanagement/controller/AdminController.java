@@ -46,7 +46,7 @@ public class AdminController {
     @Autowired
     private JobService jobService;
 
-    @GetMapping("/request")
+    @GetMapping(value = "/request", produces = "application/json")
     public ResponseEntity<GetAllRequestResponse> getAllRequestResponse(
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize) {

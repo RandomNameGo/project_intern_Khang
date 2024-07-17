@@ -1,13 +1,12 @@
 package swp.internmanagement.internmanagement.service;
 
-import swp.internmanagement.internmanagement.entity.CourseIntern;
+import java.util.List;
+
 import swp.internmanagement.internmanagement.payload.request.AddInternToCourseRequest;
 import swp.internmanagement.internmanagement.payload.response.CourseInternResponse;
 import swp.internmanagement.internmanagement.payload.response.GetAllInternInCourseResponse;
 import swp.internmanagement.internmanagement.payload.response.GetListInternResultFromCourseResponse;
 import swp.internmanagement.internmanagement.payload.response.ListEndedCourseByInternResponse;
-
-import java.util.List;
 
 public interface CourseInternService {
 

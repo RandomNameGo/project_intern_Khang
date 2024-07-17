@@ -84,7 +84,7 @@ public class CoordinatorController {
     }
 
     //add intern to course
-    @PostMapping("addIntern/{courseId}")
+    @PostMapping("/addIntern/{courseId}")
     public ResponseEntity<String> addIntern(@RequestBody List<AddInternToCourseRequest> addInternToCourseRequest, @PathVariable int courseId) {
         try {
             return  new ResponseEntity<>(courseInternService.addInternToCourse(addInternToCourseRequest, courseId), HttpStatus.CREATED);
