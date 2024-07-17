@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface CourseRepository extends JpaRepository<Course, Integer> {
 
-    @Query("select c from Course c where c.mentor.id = :mentorId")
+    @Query("select c from Course c where c.mentor.id = :mentorId and c.status is not null")
     List<Course> findByMentor(int mentorId);
 
     @Query("select c from Course c where c.company.id = :companyId")

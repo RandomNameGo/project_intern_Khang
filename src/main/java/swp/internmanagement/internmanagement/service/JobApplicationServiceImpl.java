@@ -376,8 +376,10 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void updateCourseStatus() {
-        LocalDate today = LocalDate.now();
         List<JobApplication> jobApplications = jobApplicationRepository.findAll();
+        if(jobApplications.isEmpty()){
+            return;
+        }
         for (JobApplication jobApplication : jobApplications) {
             if(jobApplication.getStatus() == 0){
                 jobApplicationRepository.delete(jobApplication);

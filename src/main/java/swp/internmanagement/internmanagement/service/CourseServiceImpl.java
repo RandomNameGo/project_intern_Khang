@@ -280,7 +280,7 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseResponse> getAllEndCourses(int coordinatorId) {
         UserAccount coordinator = userRepository.findById(coordinatorId).get();
         int companyId = coordinator.getCompany().getId();
-        List<Course> courseList = courseRepository.findByCompanyId(companyId);
+        List<Course> courseList = courseRepository.findEndCourse(companyId);
         List<CourseResponse> courseResponseList = new ArrayList<>();
         for(Course course : courseList) {
             CourseResponse courseResponse = new CourseResponse();
